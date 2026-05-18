@@ -54,6 +54,8 @@ export const InventoryTab: React.FC<InventoryTabProps> = ({ character, onCharact
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [infusionFilter, setInfusionFilter] = useState<ItemInfusion | 'all'>('all');
   const [wlFilter, setWlFilter] = useState<number | 'all'>('all');
+  const [showAddAllWLDialog, setShowAddAllWLDialog] = useState(false);
+  const [addAllWL, setAddAllWL] = useState<number>(0);
   const itemRefs = React.useRef<Map<number, HTMLDivElement>>(new Map());
 
   const refreshItems = useCallback((inventoryInstance?: Inventory) => {
@@ -198,11 +200,33 @@ export const InventoryTab: React.FC<InventoryTabProps> = ({ character, onCharact
   };
 
   const handleCalibrateWL = () => {
-    const calibratedWL = inventory.calibrateWeaponLevel();
+    const calibratedWL = inventory.calibrateWeaponLevel(true);
     setWeaponLevel(calibratedWL);
     setSearchQuery('');
     setWlFilter(calibratedWL);
     onCharacterUpdate();
+  };
+
+  const handleAddAll = () => {
+    if (activeSubTab === 'weapons') {
+      setAddAllWL(weaponLevel);
+      setShowAddAllWLDialog(true);
+    } else {
+      const collectionType = SUB_TAB_TO_COLLECTION[activeSubTab];
+      inventory.addAllItems(collectionType);
+      refreshItems();
+      onCharacterUpdate();
+    }
+  };
+
+  const handleConfirmAddAllWeapons = () => {
+    inventory.addAllItems(ItemCollectionType.Weapon, addAllWL);
+    if (safeMode) {
+      inventory.calibrateWeaponLevel();
+    }
+    refreshItems();
+    onCharacterUpdate();
+    setShowAddAllWLDialog(false);
   };
 
   const getInfusionName = (infusion: ItemInfusion): string => {
@@ -240,6 +264,17 @@ export const InventoryTab: React.FC<InventoryTabProps> = ({ character, onCharact
       <div className="inventory-header">
         <button className="create-item-button" onClick={() => setShowCreateDialog(true)}>
           + Create Item
+        </button>
+        <button className="create-item-button add-all-button" onClick={handleAddAll}>
+          + Add All
+        </button>
+        <button className="delete-button clear-all-button" onClick={() => {
+          const collectionType = SUB_TAB_TO_COLLECTION[activeSubTab];
+          inventory.clearAllItems(collectionType);
+          refreshItems();
+          onCharacterUpdate();
+        }}>
+          Clear All
         </button>
 
         <div className="inventory-search">
@@ -393,6 +428,39 @@ export const InventoryTab: React.FC<InventoryTabProps> = ({ character, onCharact
           onItemUpdated={handleItemUpdated}
           safeMode={safeMode}
         />
+      )}
+
+      {showAddAllWLDialog && (
+        <div className="dialog-overlay" onClick={() => setShowAddAllWLDialog(false)}>
+          <div className="dialog-content dialog-content-small" onClick={(e) => e.stopPropagation()}>
+            <div className="dialog-header">
+              <h2>Add All Weapons</h2>
+              <button className="close-button" onClick={() => setShowAddAllWLDialog(false)}>×</button>
+            </div>
+            <div className="dialog-body">
+              <div className="form-group">
+                <label>Target Weapon Level (0–15)</label>
+                <select
+                  value={addAllWL}
+                  onChange={(e) => setAddAllWL(parseInt(e.target.value))}
+                  className="filter-select"
+                >
+                  {Array.from({ length: 16 }, (_, i) => (
+                    <option key={i} value={i}>{i}</option>
+                  ))}
+                </select>
+              </div>
+              <p className="info-text">
+                Each weapon will be added at the highest upgrade level that keeps its WL at or below the selected value.
+                Weapons whose minimum WL exceeds this value will be skipped.
+              </p>
+            </div>
+            <div className="dialog-footer">
+              <button className="cancel-button" onClick={() => setShowAddAllWLDialog(false)}>Cancel</button>
+              <button className="create-button" onClick={handleConfirmAddAllWeapons}>Add All</button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

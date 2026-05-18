@@ -1,4 +1,5 @@
 export { FileUpload } from './FileUpload';
+export { AppearanceTab } from './AppearanceTab';
 export { CharacterList } from './CharacterList';
 export { TabPanel } from './TabPanel';
 export { GeneralTab } from './GeneralTab';

@@ -1,18 +1,19 @@
 import { useState, useCallback } from 'react';
 import { SaveFileEditor } from '../lib/SaveFileEditor';
 import { SaveFileEditorNintendo, detectPlatform } from '../lib/SaveFileEditorNintendo';
+import { SaveFileEditorPS4 } from '../lib/SaveFileEditorPS4';
 import { Character } from '../lib/Character';
 import { FileHandle, getFileSystemAdapter } from '../lib/adapters';
 import { getFilePathFromHandle, extractFilename } from '../lib/filePathUtils';
 
-type SaveEditor = SaveFileEditor | SaveFileEditorNintendo;
+type SaveEditor = SaveFileEditor | SaveFileEditorNintendo | SaveFileEditorPS4;
 
 export interface UseDS1SaveEditorResult {
   saveEditor: SaveEditor | null;
   characters: Character[];
   selectedCharacterIndex: number | null;
   originalFilename: string;
-  platform: 'pc' | 'nintendo' | 'unknown';
+  platform: 'pc' | 'nintendo' | 'ps4' | 'unknown';
 
   handleFileLoaded: (file: File, fileHandle: FileHandle | null) => Promise<void>;
   handleCharacterSelect: (index: number) => void;
@@ -24,7 +25,7 @@ export interface UseDS1SaveEditorResult {
 
 export const useDS1SaveEditor = (): UseDS1SaveEditorResult => {
   const [saveEditor, setSaveEditor] = useState<SaveEditor | null>(null);
-  const [platform, setPlatform] = useState<'pc' | 'nintendo' | 'unknown'>('unknown');
+  const [platform, setPlatform] = useState<'pc' | 'nintendo' | 'ps4' | 'unknown'>('unknown');
   const [characters, setCharacters] = useState<Character[]>([]);
   const [selectedCharacterIndex, setSelectedCharacterIndex] = useState<number | null>(null);
   const [, setUpdateTrigger] = useState(0);
@@ -38,12 +39,16 @@ export const useDS1SaveEditor = (): UseDS1SaveEditorResult => {
       );
       setOriginalFilename(filePath);
 
-      // Detect platform by file size
-      const detectedPlatform = detectPlatform(file.size);
+      // Detect platform: PS4 by filename, otherwise by file size
+      const isPS4 = file.name.startsWith('userdata');
+      const detectedPlatform = isPS4 ? 'ps4' : detectPlatform(file.size);
       setPlatform(detectedPlatform);
 
       let editor: SaveEditor;
-      if (detectedPlatform === 'nintendo') {
+      if (detectedPlatform === 'ps4') {
+        editor = await SaveFileEditorPS4.fromFileData(file, fileHandle);
+        console.log('Loaded PS4 save file');
+      } else if (detectedPlatform === 'nintendo') {
         editor = await SaveFileEditorNintendo.fromFileData(file, fileHandle);
         console.log('Loaded Nintendo Switch save file');
       } else {

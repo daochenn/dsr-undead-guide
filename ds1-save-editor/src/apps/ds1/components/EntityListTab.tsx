@@ -29,6 +29,7 @@ export const EntityListTab: React.FC<EntityListTabProps> = ({ character, onChara
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [flashMap, setFlashMap] = useState<Record<string, 'kill' | 'revive'>>({});
 
   const loadEntities = async () => {
     try {
@@ -51,6 +52,11 @@ export const EntityListTab: React.FC<EntityListTabProps> = ({ character, onChara
     loadEntities();
   }, [character]);
 
+  const flash = (name: string, type: 'kill' | 'revive') => {
+    setFlashMap(prev => ({ ...prev, [name]: type }));
+    setTimeout(() => setFlashMap(prev => { const n = { ...prev }; delete n[name]; return n; }), 350);
+  };
+
   const handleRevive = (entity: Npc) => {
     try {
       if (!character || typeof npcEditor.setNpcAlive !== 'function') {
@@ -59,6 +65,7 @@ export const EntityListTab: React.FC<EntityListTabProps> = ({ character, onChara
         return;
       }
       npcEditor.setNpcAlive(entity.name, true);
+      flash(entity.name, 'revive');
       onCharacterUpdate();
     } catch (err: any) {
       console.error(`Error reviving ${config.entityType}:`, err);
@@ -74,6 +81,7 @@ export const EntityListTab: React.FC<EntityListTabProps> = ({ character, onChara
         return;
       }
       npcEditor.setNpcAlive(entity.name, false);
+      flash(entity.name, 'kill');
       onCharacterUpdate();
     } catch (err: any) {
       console.error(`Error killing ${config.entityType}:`, err);
@@ -116,34 +124,38 @@ export const EntityListTab: React.FC<EntityListTabProps> = ({ character, onChara
       </div>
 
       <div className="entity-list">
-        {filteredEntities.map((entity, index) => (
-          <div key={index} className={`entity-item entity-item--${config.entityType}`}>
-            <div className="entity-info">
-              <span className="entity-name">
-                {config.nameTransform ? config.nameTransform(entity.name) : entity.name}
-                {entity.warning && (
-                  <span className="warning-icon" title={entity.warning}>
-                    ⚠️
-                  </span>
-                )}
-              </span>
+        {filteredEntities.map((entity, index) => {
+          const f = flashMap[entity.name];
+          return (
+            <div
+              key={index}
+              className={`entity-item entity-item--${config.entityType}${f ? ` entity-item--flash-${f}` : ''}`}
+            >
+              <div className="entity-info">
+                <span className="entity-name">
+                  {config.nameTransform ? config.nameTransform(entity.name) : entity.name}
+                  {entity.warning && (
+                    <span className="warning-icon" title={entity.warning}>⚠️</span>
+                  )}
+                </span>
+              </div>
+              <div className="entity-actions">
+                <button
+                  className={`kill-button${f === 'kill' ? ' kill-button--flash' : ''}`}
+                  onClick={() => handleKill(entity)}
+                >
+                  Kill
+                </button>
+                <button
+                  className={`revive-button${f === 'revive' ? ' revive-button--flash' : ''}`}
+                  onClick={() => handleRevive(entity)}
+                >
+                  Revive
+                </button>
+              </div>
             </div>
-            <div className="entity-actions">
-              <button
-                className="kill-button"
-                onClick={() => handleKill(entity)}
-              >
-                Kill
-              </button>
-              <button
-                className="revive-button"
-                onClick={() => handleRevive(entity)}
-              >
-                Revive
-              </button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ import { MetaTags } from './MetaTags';
 import { ErrorPage } from './ErrorPage';
 import { ErrorBoundary } from './ErrorBoundary';
 import { AboutFullPage, TermsFullPage, DS1TutorialPage, FixSavePage, MergeExportPage } from '../apps/ds1/components';
+import { OffsetSearchTab } from '../apps/ds3/components';
 
 // Wrapper to use ErrorPage with React Router hooks
 const ErrorPageWrapper: React.FC<{ errorType?: 'notFound' | 'redirect' | 'general' }> = ({ errorType }) => {
@@ -181,6 +182,12 @@ const MergeExportPageWrapper: React.FC = () => {
   return <MergeExportPage onClose={() => navigate('/')} />;
 };
 
+// DS3 Offset Search Page Wrapper
+const DS3OffsetSearchWrapper: React.FC = () => {
+  const navigate = useNavigate();
+  return <OffsetSearchTab onClose={() => navigate('/ds3')} />;
+};
+
 export const Router: React.FC = () => {
   return (
     <ErrorBoundary>
@@ -201,6 +208,7 @@ export const Router: React.FC = () => {
           <Route path="/ds1/fix-save" element={<FixSavePageWrapper />} />
           <Route path="/ds1/merge-export" element={<MergeExportPageWrapper />} />
           <Route path="/ds3" element={<DS3AppWrapper />} />
+          <Route path="/ds3/offset-search" element={<DS3OffsetSearchWrapper />} />
           <Route path="/eldenring" element={<ComingSoon title="Elden Ring" gameId="eldenring" />} />
 
           {/* 404 - catch all unknown routes */}

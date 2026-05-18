@@ -5,9 +5,9 @@ import {
   PlayerClass,
   CLASS_NAMES,
   CLASS_STARTING_STATS,
-  // TEMPORARILY DISABLED - VIGOR_TO_HP,
-  // TEMPORARILY DISABLED - ATTUNEMENT_TO_FP,
-  // TEMPORARILY DISABLED - ENDURANCE_TO_STAMINA
+  VIGOR_TO_HP,
+  ATTUNEMENT_TO_FP,
+  ENDURANCE_TO_STAMINA,
 } from './constants';
 
 /**
@@ -109,6 +109,16 @@ export class DS3Character {
   }
 
   /**
+   * Invalidate the cached pattern offset.
+   * Must be called after any operation that shifts bytes in the data buffer
+   * (e.g. GA table manipulation inserts/deletes bytes, moving the pattern).
+   */
+  invalidatePatternCache(): void {
+    this.patternOffset = null;
+    this.patternSearched = false;
+  }
+
+  /**
    * Check if character slot is empty
    */
   get isEmpty(): boolean {
@@ -172,23 +182,33 @@ export class DS3Character {
     return (this.data[offset] & mask) !== 0;
   }
 
-  // ===== NAME (MOCK) =====
-  /**
-   * Get character name (MOCK - returns placeholder)
-   * TODO: Implement actual name reading when offset is known
-   */
+  // ===== NAME =====
   get name(): string {
     if (this.isEmpty) return '';
-    return `Character ${this.slotIndex + 1}`;
+    try {
+      const offset = this.getOffset('NAME');
+      let result = '';
+      for (let i = 0; i < 32; i += 2) {
+        const charCode = this.data[offset + i] | (this.data[offset + i + 1] << 8);
+        if (charCode === 0) break;
+        result += String.fromCharCode(charCode);
+      }
+      return result;
+    } catch {
+      return '';
+    }
   }
 
-  /**
-   * Set character name (MOCK - not implemented yet)
-   * TODO: Implement actual name writing when offset is known
-   */
-  set name(_value: string) {
-    // TODO: Implement when offset is known
-    console.warn('Name setter not implemented yet');
+  set name(value: string) {
+    if (this.isEmpty) return;
+    const offset = this.getOffset('NAME');
+    for (let i = 0; i < 32; i++) this.data[offset + i] = 0;
+    const maxChars = Math.min(value.length, 16);
+    for (let i = 0; i < maxChars; i++) {
+      const code = value.charCodeAt(i);
+      this.data[offset + i * 2] = code & 0xFF;
+      this.data[offset + i * 2 + 1] = (code >> 8) & 0xFF;
+    }
   }
 
   // ===== LEVEL =====
@@ -271,10 +291,9 @@ export class DS3Character {
   }
 
   /**
-   * Set stat value (1 byte)
-   * @param _autoUpdateDerived - TEMPORARILY DISABLED - if true, auto-update HP/FP/Stamina based on stat tables
+   * Set stat value (1 byte). Always recalculates HP/FP/Stamina for VIG/ATN/END.
    */
-  setStat(statName: string, value: number, _autoUpdateDerived: boolean = false): void {
+  setStat(statName: string, value: number): void {
     const offsetKey = DS3Character.STAT_MAP[statName];
     if (!offsetKey) {
       console.warn(`Unknown stat: ${statName}`);
@@ -286,27 +305,16 @@ export class DS3Character {
     const offset = this.getOffset(offsetKey as keyof typeof RELATIVE_OFFSETS);
     this.data[offset] = value & 0xFF;
 
-    // Auto-update derived stats if in safe mode - TEMPORARILY DISABLED
-    /*
-    if (autoUpdateDerived) {
-      if (statName === 'VIG') {
-        const hp = VIGOR_TO_HP[value];
-        if (typeof hp === 'number') {
-          this.hp = hp;
-        }
-      } else if (statName === 'ATN') {
-        const fp = ATTUNEMENT_TO_FP[value];
-        if (typeof fp === 'number') {
-          this.fp = fp;
-        }
-      } else if (statName === 'END') {
-        const stamina = ENDURANCE_TO_STAMINA[value];
-        if (typeof stamina === 'number') {
-          this.stamina = stamina;
-        }
-      }
+    if (statName === 'VIG') {
+      const hp = VIGOR_TO_HP[value];
+      if (typeof hp === 'number') this.hp = hp;
+    } else if (statName === 'ATN') {
+      const fp = ATTUNEMENT_TO_FP[value];
+      if (typeof fp === 'number') this.fp = fp;
+    } else if (statName === 'END') {
+      const stamina = ENDURANCE_TO_STAMINA[value];
+      if (typeof stamina === 'number') this.stamina = stamina;
     }
-    */
   }
 
   // ===== DERIVED STATS =====
@@ -494,34 +502,17 @@ export class DS3Character {
 
   /**
    * Update all derived stats (HP, FP, Stamina, Level) based on current stats
-   * Used in safe mode - TEMPORARILY DISABLED (HP/FP/Stamina updates)
    */
   updateDerivedStats(): void {
-    // TEMPORARILY DISABLED - Update HP from Vigor
-    /*
     const hp = VIGOR_TO_HP[this.getStat('VIG')];
-    if (typeof hp === 'number') {
-      this.hp = hp;
-    }
-    */
+    if (typeof hp === 'number') this.hp = hp;
 
-    // TEMPORARILY DISABLED - Update FP from Attunement
-    /*
     const fp = ATTUNEMENT_TO_FP[this.getStat('ATN')];
-    if (typeof fp === 'number') {
-      this.fp = fp;
-    }
-    */
+    if (typeof fp === 'number') this.fp = fp;
 
-    // TEMPORARILY DISABLED - Update Stamina from Endurance
-    /*
     const stamina = ENDURANCE_TO_STAMINA[this.getStat('END')];
-    if (typeof stamina === 'number') {
-      this.stamina = stamina;
-    }
-    */
+    if (typeof stamina === 'number') this.stamina = stamina;
 
-    // Update Level
     this.level = this.calculateLevel();
   }
 }

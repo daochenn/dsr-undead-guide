@@ -354,6 +354,18 @@ export class Inventory {
   private static readonly ITEM_SIZE = 28;
   private static readonly MAX_SLOTS = 2048;
 
+  // Weapon hand slots store a slot index + cached item ID copy at dataOffset.
+  // When upgrade level changes, the cached copy must be updated.
+  // C# InventoryEditor uses INVENTORY_START = 0x370 - 30*28 = 0x28, so its slot indices
+  // are TS slot index + 30. We check both numberings to be safe.
+  private static readonly EQUIPMENT_SLOTS = [
+    { base: 0x02A8, data: 0x314 }, // LeftHand1
+    { base: 0x02AC, data: 0x318 }, // RightHand1
+    { base: 0x02B0, data: 0x31C }, // LeftHand2
+    { base: 0x02B4, data: 0x320 }, // RightHand2
+  ];
+  private static readonly CSHARP_SLOT_OFFSET = 30;
+
   constructor(character: Character) {
     this.character = character;
   }
@@ -401,7 +413,7 @@ export class Inventory {
     this.character.setByte(0x0179, value & 0xFF);
   }
 
-  calibrateWeaponLevel(): number {
+  calibrateWeaponLevel(exact = false): number {
     const allItems = this.getAllItems();
     let maxWL = 0;
 
@@ -414,19 +426,33 @@ export class Inventory {
       }
     }
 
-    this.weaponLevel = maxWL;
-    return maxWL;
+    // exact=true (user clicked button): set to actual max, can decrease.
+    // exact=false (automatic): only increase — anti-cheat detects weapon > WL, not WL > weapon.
+    if (exact || maxWL > this.weaponLevel) {
+      this.weaponLevel = maxWL;
+    }
+
+    return this.weaponLevel;
   }
 
   public getWeaponLevel(item: InventoryItem): number {
     const itemInfo = item.itemInfo;
-    if (!itemInfo || !itemInfo.MaxUpgrade || item.collectionType !== ItemCollectionType.Weapon) {
+    if (!itemInfo || item.collectionType !== ItemCollectionType.Weapon) {
       return 0;
     }
 
-    // Special case for Pyromancy Flame (Ascended)
+    // Pyromancy Flame (Ascended) — always WL 15 (requires +15 regular flame to craft)
     if (item.baseItemId === 0x145320) {
       return 15;
+    }
+
+    // Pyromancy Flame (regular) — WL equals upgrade level (upgrades 0–15, ID-encoded as 1330000 + level*100)
+    if (item.baseItemId === 0x144B50) {
+      return item.upgradeLevel;
+    }
+
+    if (!itemInfo.MaxUpgrade) {
+      return 0;
     }
 
     if (itemInfo.MaxUpgrade === 5) {
@@ -494,6 +520,35 @@ export class Inventory {
 
     const itemData = item.getRawData();
     data.set(itemData, offset);
+
+    if (!item.isEmpty) {
+      this.syncEquipmentSlots(slotIndex);
+    }
+  }
+
+  // After changing an item's upgrade level or infusion, the item ID at each equipment
+  // slot's dataOffset must be updated to match. The game validates this copy at runtime.
+  private syncEquipmentSlots(tsSlotIndex: number): void {
+    const data = this.character.getRawData();
+    const invItemOffset = Inventory.INVENTORY_START + tsSlotIndex * Inventory.ITEM_SIZE;
+
+    for (const slot of Inventory.EQUIPMENT_SLOTS) {
+      const stored =
+        data[slot.base] |
+        (data[slot.base + 1] << 8) |
+        (data[slot.base + 2] << 16) |
+        (data[slot.base + 3] << 24);
+
+      if (stored === -1) continue; // 0xFFFFFFFF = empty
+
+      // Check both TS numbering and C# numbering (C# slot = TS slot + 30)
+      if (stored === tsSlotIndex || stored === tsSlotIndex + Inventory.CSHARP_SLOT_OFFSET) {
+        data[slot.data]     = data[invItemOffset + 4];
+        data[slot.data + 1] = data[invItemOffset + 5];
+        data[slot.data + 2] = data[invItemOffset + 6];
+        data[slot.data + 3] = data[invItemOffset + 7];
+      }
+    }
   }
 
   findExistingItem(itemInfo: Item, upgradeLevel: number, infusion: ItemInfusion): InventoryItem | null {
@@ -587,6 +642,14 @@ export class Inventory {
     this.writeSlot(slotIndex, emptyItem);
   }
 
+  clearAllItems(collectionType: ItemCollectionType): number {
+    const items = this.getItemsByType(collectionType);
+    for (const item of items) {
+      this.deleteItem(item.slotIndex);
+    }
+    return items.length;
+  }
+
   private updateItemsNumber(slotIndex: number): void {
     const data = this.character.getRawData();
     const currentMax =
@@ -625,6 +688,140 @@ export class Inventory {
     if (this.itemsDatabase.specials?.includes(item)) return ItemCollectionType.Special;
 
     return ItemCollectionType.Unknown;
+  }
+
+  /**
+   * Compute the upgrade level for a weapon so its Weapon Level does not exceed targetWL.
+   * Returns null if the weapon cannot be at or below targetWL even at upgrade 0.
+   */
+  private computeUpgradeLevelForWL(item: Item, targetWL: number): number | null {
+    const itemId = this.parseHex(item.Id);
+
+    // Pyromancy Flame (regular) — upgrades 0–15 via ID encoding, WL = upgradeLevel
+    if (itemId === 0x144B50) {
+      return Math.min(targetWL, 15);
+    }
+
+    // Pyromancy Flame (Ascended) — always counts as WL 15, upgrades 0–5 via ID encoding
+    // Only give if WL >= 15 (crafted from regular flame at +15)
+    if (itemId === 0x145320) {
+      return targetWL >= 15 ? 5 : null;
+    }
+
+    const maxUpgrade = item.MaxUpgrade;
+
+    // No upgrade possible → WL = 0, always valid
+    if (!maxUpgrade || maxUpgrade === 0) {
+      return 0;
+    }
+
+    if (maxUpgrade === 5) {
+      // Boss/special weapons: WL = 5 + upgradeLevel * 2, minimum WL is 5
+      if (targetWL < 5) return null;
+      return Math.min(Math.floor((targetWL - 5) / 2), 5);
+    }
+
+    if (maxUpgrade === 15) {
+      // Standard weapons (standard infusion): WL = upgradeLevel
+      return Math.min(targetWL, 15);
+    }
+
+    // Fallback for unusual MaxUpgrade values
+    return Math.min(targetWL, maxUpgrade);
+  }
+
+  /**
+   * Add all items of the given collection type to the inventory.
+   * For weapons, targetWL limits which weapons are added and at what upgrade level.
+   * Returns the count of items added or updated.
+   */
+  addAllItems(
+    collectionType: ItemCollectionType,
+    targetWL?: number
+  ): number {
+    const db = this.itemsDatabase;
+    if (!db) return 0;
+
+    // Items to always skip
+    const SKIP_NAMES = new Set([
+      // Estus Flask (all variants)
+      'Estus Flask', 'Estus Flask (empty)',
+      'Estus Flask + 1', 'Estus Flask + 1 (empty)',
+      'Estus Flask + 2', 'Estus Flask + 2 (empty)',
+      'Estus Flask + 3', 'Estus Flask + 3 (empty)',
+      'Estus Flask + 4', 'Estus Flask + 4 (empty)',
+      'Estus Flask + 5', 'Estus Flask + 5 (empty)',
+      'Estus Flask + 6', 'Estus Flask + 6 (empty)',
+      'Estus Flask + 7', 'Estus Flask + 7 (empty)',
+      // Bare fists (not a real weapon)
+      'Fists',
+      // Empty/invisible armor slots
+      'No helm', 'No armor', 'No gauntlets', 'No legs',
+      // Egg-curse sorcerer head
+      'Bloated Sorcerer Head',
+      // Dragon transformation stones (DragonHead / DragonBody)
+      'Dragon Head Stone', 'Dragon Torso Stone',
+      // Internal/dummy items (SpiderEgg / NoMagic equivalents)
+      'Egg', 'Big Egg',
+    ]);
+
+    let items: Item[] = [];
+    switch (collectionType) {
+      case ItemCollectionType.Weapon:      items = db.weapon_items || []; break;
+      case ItemCollectionType.Armor:       items = db.armor_items || []; break;
+      case ItemCollectionType.Ring:        items = db.ring_items || []; break;
+      case ItemCollectionType.Usable:      items = db.usable_items || []; break;
+      case ItemCollectionType.Material:    items = db.material_items || []; break;
+      case ItemCollectionType.Key:         items = db.key_items || []; break;
+      case ItemCollectionType.Magic:       items = db.magic_items || []; break;
+      case ItemCollectionType.Ammunition:  items = db.ammunition_items || []; break;
+      default: return 0;
+    }
+
+    let count = 0;
+    // Deduplicate by name within a single Add All run
+    // (some items appear multiple times in the DB with different IDs)
+    const seenNames = new Set<string>();
+
+    for (const item of items) {
+      if (SKIP_NAMES.has(item.Name)) continue;
+      if (seenNames.has(item.Name)) continue;
+      seenNames.add(item.Name);
+
+      if (collectionType === ItemCollectionType.Weapon) {
+        const wl = targetWL ?? this.weaponLevel;
+        const upgradeLevel = this.computeUpgradeLevelForWL(item, wl);
+        if (upgradeLevel === null) continue;
+        const slotIndex = this.addItem(item, 1, upgradeLevel, ItemInfusion.Standard);
+        if (slotIndex !== null) count++;
+
+      } else if (collectionType === ItemCollectionType.Ring) {
+        // Duplicates allowed for rings
+        const slotIndex = this.addItem(item, 1, 0, ItemInfusion.Standard);
+        if (slotIndex !== null) count++;
+
+      } else if (collectionType === ItemCollectionType.Armor) {
+        // Duplicates allowed, add at max upgrade level
+        const maxUpgrade = item.MaxUpgrade || 0;
+        const slotIndex = this.addItem(item, 1, maxUpgrade, ItemInfusion.Standard);
+        if (slotIndex !== null) count++;
+
+      } else {
+        // No duplicates for all other categories
+        const maxQty = Math.max(1, item.MaxStackCount || 1);
+        if ((item.MaxStackCount || 1) <= 1) {
+          // Non-stackable: skip if already exists
+          const existing = this.findExistingItem(item, 0, ItemInfusion.Standard);
+          if (existing) continue;
+        }
+        // For stackable items, addItem will update quantity of existing to max.
+        // Passing maxQty ensures: min(existing + maxQty, maxQty) = maxQty.
+        const slotIndex = this.addItem(item, maxQty, 0, ItemInfusion.Standard);
+        if (slotIndex !== null) count++;
+      }
+    }
+
+    return count;
   }
 
   static getMaxUpgradeForInfusion(baseMaxUpgrade: number, infusion: ItemInfusion): number {

@@ -168,6 +168,99 @@ export class Character {
     this.data[0x012A] = value & 0xFF;
   }
 
+  get physique(): number {
+    return this.data[0x012F];
+  }
+
+  set physique(value: number) {
+    this.data[0x012F] = value & 0xFF;
+  }
+
+  get hairstyle(): number {
+    return this.data[0x0175] | (this.data[0x0176] << 8) | (this.data[0x0177] << 16) | (this.data[0x0178] << 24);
+  }
+
+  set hairstyle(value: number) {
+    this.data[0x0175] = value & 0xFF;
+    this.data[0x0176] = (value >> 8) & 0xFF;
+    this.data[0x0177] = (value >> 16) & 0xFF;
+    this.data[0x0178] = (value >> 24) & 0xFF;
+  }
+
+  private readFloat32LE(offset: number): number {
+    const buf = new ArrayBuffer(4);
+    const view = new DataView(buf);
+    view.setUint8(0, this.data[offset]);
+    view.setUint8(1, this.data[offset + 1]);
+    view.setUint8(2, this.data[offset + 2]);
+    view.setUint8(3, this.data[offset + 3]);
+    return view.getFloat32(0, true);
+  }
+
+  private writeFloat32LE(offset: number, value: number): void {
+    const buf = new ArrayBuffer(4);
+    const view = new DataView(buf);
+    view.setFloat32(0, value, true);
+    this.data[offset] = view.getUint8(0);
+    this.data[offset + 1] = view.getUint8(1);
+    this.data[offset + 2] = view.getUint8(2);
+    this.data[offset + 3] = view.getUint8(3);
+  }
+
+  getHairColor(): [number, number, number] {
+    return [
+      this.readFloat32LE(0xe414),
+      this.readFloat32LE(0xe418),
+      this.readFloat32LE(0xe41c),
+    ];
+  }
+
+  setHairColor(r: number, g: number, b: number): void {
+    this.writeFloat32LE(0xe414, r);
+    this.writeFloat32LE(0xe418, g);
+    this.writeFloat32LE(0xe41c, b);
+    if (this.readFloat32LE(0xe420) === 0) {
+      this.writeFloat32LE(0xe420, 1.0);
+    }
+  }
+
+  getEyeColor(): [number, number, number] {
+    return [
+      this.readFloat32LE(0xe424),
+      this.readFloat32LE(0xe428),
+      this.readFloat32LE(0xe42c),
+    ];
+  }
+
+  setEyeColor(r: number, g: number, b: number): void {
+    this.writeFloat32LE(0xe424, r);
+    this.writeFloat32LE(0xe428, g);
+    this.writeFloat32LE(0xe42c, b);
+    if (this.readFloat32LE(0xe430) === 0) {
+      this.writeFloat32LE(0xe430, 1.0);
+    }
+  }
+
+  getFaceData(): Uint8Array {
+    return new Uint8Array(this.data.slice(0xe434, 0xe466));
+  }
+
+  setFaceData(data: Uint8Array): void {
+    for (let i = 0; i < Math.min(data.length, 50); i++) {
+      this.data[0xe434 + i] = data[i];
+    }
+  }
+
+  getSkinColor(): Uint8Array {
+    return new Uint8Array(this.data.slice(0xe466, 0xe498));
+  }
+
+  setSkinColor(data: Uint8Array): void {
+    for (let i = 0; i < Math.min(data.length, 50); i++) {
+      this.data[0xe466 + i] = data[i];
+    }
+  }
+
   get playerClass(): PlayerClass {
     return this.data[0x012E] as PlayerClass;
   }

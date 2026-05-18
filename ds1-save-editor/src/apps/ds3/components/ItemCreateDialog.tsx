@@ -20,6 +20,7 @@ export const ItemCreateDialog: React.FC<ItemCreateDialogProps> = ({
   const [availableItems, setAvailableItems] = useState<Item[]>([]);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
+  const [storageQty, setStorageQty] = useState<number>(0);
   const [upgradeLevel, setUpgradeLevel] = useState<number>(0);
   const [infusion, setInfusion] = useState<ItemInfusion>(ItemInfusion.Standard);
   const [maxUpgrade, setMaxUpgrade] = useState<number>(0);
@@ -100,7 +101,8 @@ export const ItemCreateDialog: React.FC<ItemCreateDialogProps> = ({
 
   const handleItemSelect = (item: Item) => {
     setSelectedItem(item);
-    setQuantity(Math.min(1, item.MaxStackCount));
+    setQuantity(item.MaxStackCount);
+    setStorageQty(item.MaxStackCount > 1 ? item.MaxStackCount : 0);
     setUpgradeLevel(0);
     setInfusion(ItemInfusion.Standard);
   };
@@ -116,6 +118,9 @@ export const ItemCreateDialog: React.FC<ItemCreateDialogProps> = ({
         infusion,
         targetSlot
       );
+      if (storageQty > 0 && selectedItem.MaxStackCount > 1) {
+        inventory.setStorageQuantity(selectedItem, storageQty);
+      }
       onItemCreated(slotIndex);
       onClose();
     } catch (error) {
@@ -265,15 +270,26 @@ export const ItemCreateDialog: React.FC<ItemCreateDialogProps> = ({
           {selectedItem && (
             <>
               {canStack && (
-                <div className="form-group">
-                  <label>Quantity (max: {selectedItem.MaxStackCount})</label>
-                  <NumberInput
-                    value={quantity}
-                    onChange={setQuantity}
-                    min={1}
-                    max={selectedItem.MaxStackCount}
-                  />
-                </div>
+                <>
+                  <div className="form-group">
+                    <label>Quantity (max: {selectedItem.MaxStackCount})</label>
+                    <NumberInput
+                      value={quantity}
+                      onChange={setQuantity}
+                      min={1}
+                      max={selectedItem.MaxStackCount}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Box Quantity (max: 600)</label>
+                    <NumberInput
+                      value={storageQty}
+                      onChange={setStorageQty}
+                      min={0}
+                      max={600}
+                    />
+                  </div>
+                </>
               )}
 
               {canInfuse && (

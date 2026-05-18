@@ -2,16 +2,25 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Character } from '../lib/Character';
 
+const PLATFORM_LABELS: Record<string, string> = {
+  pc: 'PC',
+  ps4: 'PS4',
+  nintendo: 'Nintendo Switch',
+  unknown: 'Unknown',
+};
+
 interface CharacterListProps {
   characters: Character[];
   selectedIndex: number | null;
   onSelectCharacter: (index: number) => void;
+  platform?: 'pc' | 'nintendo' | 'ps4' | 'unknown' | null;
 }
 
 export const CharacterList: React.FC<CharacterListProps> = ({
   characters,
   selectedIndex,
-  onSelectCharacter
+  onSelectCharacter,
+  platform,
 }) => {
   const [isToolsExpanded, setIsToolsExpanded] = useState(false);
   const navigate = useNavigate();
@@ -24,11 +33,16 @@ export const CharacterList: React.FC<CharacterListProps> = ({
     navigate('/ds1/merge-export');
   };
 
+  const nonEmpty = characters.filter(c => !c.isEmpty).length;
+
   return (
     <div className="character-list">
       {characters.length > 0 && (
         <>
-          <h3>Characters</h3>
+          <div className="char-list-header">
+            <span className="char-list-title">Characters</span>
+            <span className="char-list-count">{nonEmpty} / {characters.length}</span>
+          </div>
           <div className="character-slots">
             {characters.map((char, index) => (
               <div
@@ -40,7 +54,7 @@ export const CharacterList: React.FC<CharacterListProps> = ({
                   {char.isEmpty ? 'Empty Slot' : char.name || 'Unnamed'}
                 </div>
                 <div className="character-level">
-                  {char.isEmpty ? '' : `Level ${char.level}`}
+                  {char.isEmpty ? '' : `Lv ${char.level}`}
                 </div>
               </div>
             ))}
@@ -50,6 +64,11 @@ export const CharacterList: React.FC<CharacterListProps> = ({
 
       {/* Tools Section */}
       <div className="tools-section">
+        {platform && (
+          <div className="platform-badge">
+            Platform: <strong>{PLATFORM_LABELS[platform] ?? platform}</strong>
+          </div>
+        )}
         <div
           className={`tools-header ${isToolsExpanded ? 'expanded' : ''}`}
           onClick={() => setIsToolsExpanded(!isToolsExpanded)}
@@ -70,9 +89,22 @@ export const CharacterList: React.FC<CharacterListProps> = ({
       </div>
 
       <style>{`
+        .platform-badge {
+          padding: 0.3rem 0.6rem;
+          background-color: rgba(0, 0, 0, 0.2);
+          border: 1px solid rgba(255, 107, 53, 0.2);
+          border-radius: 4px;
+          color: #666;
+          font-size: 0.72rem;
+        }
+
+        .platform-badge strong {
+          color: #a08050;
+        }
+
         .tools-section {
-          margin-top: 1rem;
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          margin-top: 0.5rem;
+          border-top: 1px solid rgba(255, 255, 255, 0.06);
           padding-top: 0.5rem;
         }
 
@@ -80,18 +112,21 @@ export const CharacterList: React.FC<CharacterListProps> = ({
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 0.75rem;
-          background: rgba(255, 107, 53, 0.1);
-          border: 1px solid rgba(255, 107, 53, 0.3);
+          padding: 0.5rem 0.65rem;
+          background: rgba(255, 107, 53, 0.06);
+          border: 1px solid rgba(255, 107, 53, 0.18);
           border-radius: 4px;
           cursor: pointer;
-          transition: all 0.2s;
+          transition: all 0.15s;
           user-select: none;
+          font-size: 0.8rem;
+          color: #888;
         }
 
         .tools-header:hover {
-          background: rgba(255, 107, 53, 0.15);
-          border-color: rgba(255, 107, 53, 0.5);
+          background: rgba(255, 107, 53, 0.1);
+          border-color: rgba(255, 107, 53, 0.35);
+          color: #bbb;
         }
 
         .tools-header.expanded {
@@ -100,36 +135,36 @@ export const CharacterList: React.FC<CharacterListProps> = ({
         }
 
         .expand-icon {
-          font-size: 0.8rem;
+          font-size: 0.7rem;
           transition: transform 0.2s;
         }
 
         .tools-content {
-          background: rgba(0, 0, 0, 0.3);
-          border: 1px solid rgba(255, 107, 53, 0.3);
+          background: rgba(0, 0, 0, 0.2);
+          border: 1px solid rgba(255, 107, 53, 0.18);
           border-top: none;
           border-bottom-left-radius: 4px;
           border-bottom-right-radius: 4px;
-          padding: 0.5rem;
+          padding: 0.35rem;
         }
 
         .tool-link {
           display: block;
           width: 100%;
-          padding: 0.75rem;
+          padding: 0.5rem 0.65rem;
           background: transparent;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          border-radius: 4px;
-          color: #fff;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 3px;
+          color: #aaa;
           text-align: left;
           cursor: pointer;
-          transition: all 0.2s;
-          font-size: 0.9rem;
+          transition: all 0.15s;
+          font-size: 0.8rem;
         }
 
         .tool-link:hover {
-          background: rgba(255, 107, 53, 0.1);
-          border-color: rgba(255, 107, 53, 0.5);
+          background: rgba(255, 107, 53, 0.07);
+          border-color: rgba(255, 107, 53, 0.35);
           transform: translateX(4px);
         }
       `}</style>

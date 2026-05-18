@@ -91,95 +91,132 @@ export const BonfiresTab: React.FC<BonfiresTabProps> = ({ character, onCharacter
 
       <style>{`
         .bonfires-tab {
-          padding: 1rem;
+          padding: 0;
+        }
+
+        .bonfires-tab h2 {
+          font-size: 0.95rem;
+          font-weight: 600;
+          color: #c0c0c0;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin: 0 0 0.75rem;
+          padding-bottom: 0.4rem;
+          border-bottom: 1px solid rgba(255, 107, 53, 0.25);
         }
 
         .bonfire-info {
           display: flex;
           flex-direction: column;
-          gap: 1.5rem;
+          gap: 0.75rem;
         }
 
         .status-section {
-          background: rgba(255, 255, 255, 0.05);
-          padding: 1rem;
+          background: rgba(255, 255, 255, 0.03);
+          padding: 0.65rem 0.85rem;
           border-radius: 4px;
+          border: 1px solid #252525;
+        }
+
+        .status-section h3 {
+          font-size: 0.75rem;
+          font-weight: 600;
+          color: #666;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin: 0 0 0.5rem;
         }
 
         .status-display {
-          margin: 1rem 0 0;
+          margin: 0;
         }
 
         .status-indicator {
           display: inline-block;
-          padding: 0.5rem 1rem;
-          border-radius: 4px;
-          font-weight: bold;
+          padding: 0.3rem 0.65rem;
+          border-radius: 3px;
+          font-weight: 500;
+          font-size: 0.82rem;
         }
 
         .status-indicator.unlocked {
-          background: rgba(76, 175, 80, 0.2);
-          color: #4caf50;
+          background: rgba(76, 175, 80, 0.1);
+          color: #5a9a5a;
+          border: 1px solid rgba(76, 175, 80, 0.25);
         }
 
         .status-indicator.locked {
-          background: rgba(255, 152, 0, 0.2);
-          color: #ff9800;
+          background: rgba(255, 152, 0, 0.08);
+          color: #a07830;
+          border: 1px solid rgba(255, 152, 0, 0.2);
         }
 
         .actions-section {
           display: flex;
           flex-direction: column;
-          gap: 0.5rem;
+          gap: 0.35rem;
         }
 
         .primary-button {
-          background: #4caf50;
-          color: white;
-          border: none;
-          padding: 1rem 2rem;
-          font-size: 1rem;
-          font-weight: bold;
+          background: rgba(76, 175, 80, 0.12);
+          color: #5a9a5a;
+          border: 1px solid rgba(76, 175, 80, 0.3);
+          padding: 0.5rem 1.25rem;
+          font-size: 0.875rem;
+          font-weight: 500;
           border-radius: 4px;
           cursor: pointer;
-          transition: background 0.2s;
+          transition: background 0.15s, border-color 0.15s;
+          align-self: flex-start;
         }
 
         .primary-button:hover:not(:disabled) {
-          background: #45a049;
+          background: rgba(76, 175, 80, 0.18);
+          border-color: rgba(76, 175, 80, 0.5);
         }
 
         .primary-button:disabled {
-          background: rgba(76, 175, 80, 0.3);
+          opacity: 0.4;
           cursor: not-allowed;
         }
 
         .info-section {
-          background: rgba(33, 150, 243, 0.1);
-          padding: 1rem;
+          background: rgba(33, 150, 243, 0.05);
+          padding: 0.65rem 0.85rem;
           border-radius: 4px;
-          border-left: 4px solid #2196f3;
+          border-left: 2px solid rgba(33, 150, 243, 0.3);
         }
 
         .info-section h4 {
-          margin-top: 0;
-          margin-bottom: 0.5rem;
+          margin: 0 0 0.4rem;
+          font-size: 0.78rem;
+          color: #888;
+          font-weight: 600;
         }
 
         .info-section ul {
           margin: 0;
-          padding-left: 1.5rem;
+          padding-left: 1.25rem;
+          color: #666;
+          font-size: 0.78rem;
+          line-height: 1.6;
         }
 
         .info-section li {
-          margin: 0.25rem 0;
+          margin: 0.15rem 0;
+        }
+
+        .info-section strong {
+          color: #888;
         }
 
         .error-message {
-          background: rgba(244, 67, 54, 0.1);
-          padding: 1rem;
+          background: rgba(244, 67, 54, 0.07);
+          padding: 0.6rem 0.75rem;
           border-radius: 4px;
-          border-left: 4px solid #f44336;
+          border-left: 2px solid rgba(244, 67, 54, 0.4);
+          color: #c05050;
+          font-size: 0.82rem;
         }
       `}</style>
     </div>

@@ -86,7 +86,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onFileLoaded, onAutoLoad
       <input
         ref={fileInputRef}
         type="file"
-        accept=".sl2"
+        accept=".sl2,.co2"
         onChange={handleFileChange}
         style={{ display: 'none' }}
       />

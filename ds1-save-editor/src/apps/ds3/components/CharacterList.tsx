@@ -12,9 +12,14 @@ export const CharacterList: React.FC<CharacterListProps> = ({
   selectedIndex,
   onSelectCharacter
 }) => {
+  const nonEmpty = characters.filter(c => !c.isEmpty).length;
+
   return (
     <div className="character-list">
-      <h3>Characters</h3>
+      <div className="char-list-header">
+        <span className="char-list-title">Characters</span>
+        <span className="char-list-count">{nonEmpty} / {characters.length}</span>
+      </div>
       <div className="character-slots">
         {characters.map((char, index) => (
           <div
@@ -26,7 +31,7 @@ export const CharacterList: React.FC<CharacterListProps> = ({
               {char.isEmpty ? 'Empty Slot' : char.name || 'Unnamed'}
             </div>
             <div className="character-level">
-              {char.isEmpty ? '' : `Level ${char.level}`}
+              {char.isEmpty ? '' : `Lv ${char.level}`}
             </div>
           </div>
         ))}

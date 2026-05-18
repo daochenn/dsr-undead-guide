@@ -11,15 +11,15 @@ interface TauriFileHandle {
   path: string;
 }
 
-const LAST_FILE_KEY = 'ds1_last_file_path';
-
 export class TauriFSAdapter extends IFileSystemAdapter {
   private dialog: any = null;
   private fs: any = null;
   private pluginsLoaded: Promise<void> | null = null;
+  private readonly storageKey: string;
 
-  constructor() {
+  constructor(storageKey = 'ds1_last_file_path') {
     super();
+    this.storageKey = storageKey;
 
     // Start loading Tauri plugins asynchronously
     // Check if window.__TAURI__ or __TAURI_INTERNALS__ exists
@@ -68,7 +68,7 @@ export class TauriFSAdapter extends IFileSystemAdapter {
     return true; // Tauri supports auto-loading via localStorage + file path
   }
 
-  async openFile(): Promise<FileData> {
+  async openFile(options?: { defaultPath?: string }): Promise<FileData> {
     console.log('[TauriFSAdapter] openFile() called');
 
     try {
@@ -85,9 +85,10 @@ export class TauriFSAdapter extends IFileSystemAdapter {
       title: 'Open Dark Souls Save File',
       filters: [{
         name: 'Dark Souls Save File',
-        extensions: ['sl2']
+        extensions: ['sl2', 'co2']
       }],
-      multiple: false
+      multiple: false,
+      ...(options?.defaultPath ? { defaultPath: options.defaultPath } : {})
     });
 
     if (!filePath) {
@@ -161,14 +162,14 @@ export class TauriFSAdapter extends IFileSystemAdapter {
       timestamp: Date.now()
     };
 
-    localStorage.setItem(LAST_FILE_KEY, JSON.stringify(lastFileInfo));
+    localStorage.setItem(this.storageKey, JSON.stringify(lastFileInfo));
   }
 
   async loadLastFile(): Promise<FileData | null> {
     await this.ensurePluginsLoaded();
 
     // Get last file path from localStorage
-    const lastFileInfoStr = localStorage.getItem(LAST_FILE_KEY);
+    const lastFileInfoStr = localStorage.getItem(this.storageKey);
     if (!lastFileInfoStr) {
       return null;
     }
@@ -181,7 +182,7 @@ export class TauriFSAdapter extends IFileSystemAdapter {
       const exists = await this.fs.exists(filePath);
       if (!exists) {
         console.log('Last file no longer exists:', filePath);
-        localStorage.removeItem(LAST_FILE_KEY);
+        localStorage.removeItem(this.storageKey);
         return null;
       }
 
@@ -201,7 +202,7 @@ export class TauriFSAdapter extends IFileSystemAdapter {
       };
     } catch (err) {
       console.warn('Failed to load last file:', err);
-      localStorage.removeItem(LAST_FILE_KEY);
+      localStorage.removeItem(this.storageKey);
       return null;
     }
   }

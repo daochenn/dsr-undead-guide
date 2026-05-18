@@ -1,12 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppLayout } from '../../shared/components/Layout';
-import { FileActions } from '../../shared/components/FileSystem';
 import { FileUpload, CharacterList, TabPanel, TermsPage, AboutPage } from './components';
 import { useDS1SaveEditor } from './hooks';
 import { MetaTags } from '../../core/MetaTags';
+import { extractFilename } from './lib/filePathUtils';
 
-// Use relative path for logo to work in both web and Electron
 const logoImg = (import.meta.env.MODE === 'static' || typeof window !== 'undefined' && window.location.protocol === 'file:')
   ? 'logo.png'
   : '/logo.png';
@@ -15,12 +14,37 @@ interface DS1AppProps {
   onHome?: () => void;
 }
 
+function useTimeAgo(date: Date | null): string {
+  const [label, setLabel] = useState('');
+
+  const compute = useCallback(() => {
+    if (!date) return '';
+    const secs = Math.floor((Date.now() - date.getTime()) / 1000);
+    if (secs < 60) return 'loaded just now';
+    const mins = Math.floor(secs / 60);
+    if (mins < 60) return `loaded ${mins} min ago`;
+    const hours = Math.floor(mins / 60);
+    return `loaded ${hours} hour${hours > 1 ? 's' : ''} ago`;
+  }, [date]);
+
+  useEffect(() => {
+    if (!date) { setLabel(''); return; }
+    setLabel(compute());
+    const id = setInterval(() => setLabel(compute()), 30_000);
+    return () => clearInterval(id);
+  }, [date, compute]);
+
+  return label;
+}
+
 export const DS1App: React.FC<DS1AppProps> = ({ onHome }) => {
   const navigate = useNavigate();
   const {
     saveEditor,
     characters,
     selectedCharacterIndex,
+    originalFilename,
+    platform,
     handleFileLoaded,
     handleCharacterSelect,
     handleCharacterUpdate,
@@ -32,14 +56,22 @@ export const DS1App: React.FC<DS1AppProps> = ({ onHome }) => {
   const [showTerms, setShowTerms] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
   const [isAutoLoading, setIsAutoLoading] = useState(false);
+  const [safeMode, setSafeMode] = useState(true);
+  const [loadedAt, setLoadedAt] = useState<Date | null>(null);
 
-  const handleTutorial = () => {
-    navigate('/ds1/tutorial');
-  };
+  const timeAgo = useTimeAgo(loadedAt);
+
+  useEffect(() => {
+    if (saveEditor) setLoadedAt(new Date());
+  }, [saveEditor]);
+
+  const handleTutorial = () => navigate('/ds1/tutorial');
 
   const selectedCharacter = selectedCharacterIndex !== null
     ? characters[selectedCharacterIndex]
     : null;
+
+  const filename = saveEditor ? extractFilename(originalFilename) : '';
 
   const sidebar = (
     <>
@@ -56,6 +88,7 @@ export const DS1App: React.FC<DS1AppProps> = ({ onHome }) => {
         characters={characters}
         selectedIndex={selectedCharacterIndex}
         onSelectCharacter={handleCharacterSelect}
+        platform={saveEditor ? platform : null}
       />
     </>
   );
@@ -156,19 +189,42 @@ export const DS1App: React.FC<DS1AppProps> = ({ onHome }) => {
         showGameNav={true}
         currentGame="ds1"
       >
+        {saveEditor && (
+          <div className="ds1-subheader">
+            <div className="ds1-subheader-info">
+              <span className="ds1-filename">{filename}</span>
+              {timeAgo && <span className="ds1-loaded-label">{timeAgo}</span>}
+            </div>
+            <div className="ds1-subheader-actions">
+              <button className="ds1-action-btn" onClick={handleReload}>
+                ⟳ Reload
+              </button>
+              <button
+                className="ds1-safemode-btn"
+                onClick={() => setSafeMode(v => !v)}
+                title="Auto-adjust Level, HP, Stamina based on stats. Prevents Weapon Level editing."
+              >
+                <span className={`ds1-safemode-dot ${safeMode ? 'on' : 'off'}`}>●</span>
+                Safe Mode
+                <span className={`ds1-safemode-badge ${safeMode ? 'on' : 'off'}`}>
+                  {safeMode ? 'ON' : 'OFF'}
+                </span>
+              </button>
+              <button className="ds1-action-btn" onClick={handleSave}>
+                Save
+              </button>
+              <button className="ds1-action-btn" onClick={handleSaveAs}>
+                Save As
+              </button>
+            </div>
+          </div>
+        )}
+
         <TabPanel
           character={selectedCharacter}
           onCharacterUpdate={handleCharacterUpdate}
-          onReload={handleReload}
+          safeMode={safeMode}
         />
-
-        {saveEditor && (
-          <FileActions
-            onSave={handleSave}
-            onSaveAs={handleSaveAs}
-            onReload={handleReload}
-          />
-        )}
       </AppLayout>
 
       {showTerms && <TermsPage onClose={() => setShowTerms(false)} />}

@@ -58,8 +58,12 @@ export const useDS3SaveEditor = (fileUploadRef: RefObject<FileUploadRef>): UseDS
 
     try {
       setUpdateTrigger(prev => prev + 1);
-      // Always download since we don't have file handle
-      await saveEditor.downloadSaveFile(originalFilename);
+      if (saveEditor.hasFileHandle()) {
+        // Tauri: write directly to the original file
+        await saveEditor.saveToOriginalFile();
+      } else {
+        await saveEditor.downloadSaveFile(originalFilename);
+      }
     } catch (error) {
       console.error('Error saving file:', error);
       alert('Error saving file. Please try again.');

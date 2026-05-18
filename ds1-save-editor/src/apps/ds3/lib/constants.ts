@@ -18,6 +18,8 @@ export const CHARACTER_PATTERN = new Uint8Array([
 
 // Relative offsets from pattern position (pattern start + offset)
 export const RELATIVE_OFFSETS = {
+  NAME: -0xC8,
+
   SOULS: -0xDC,
   LEVEL: -0xE0,
 
@@ -306,4 +308,19 @@ export const ENDURANCE_TO_STAMINA: Record<number, number> = {
   86: 167, 87: 167, 88: 168, 89: 168, 90: 168,
   91: 168, 92: 168, 93: 168, 94: 169, 95: 169,
   96: 169, 97: 169, 98: 169, 99: 170
+};
+
+// Covenant badge inventory bytes — collected from game saves via Cheat Engine.
+// byte13_upper: upper nibble of inventory byte 13 (item-specific, game validates it)
+// byte14, byte15: inventory bytes 14-15 (item-specific, game validates it)
+export const COVENANT_BADGE_INVENTORY: Record<number, { byte13_upper: number; byte14: number; byte15: number }> = {
+  0x20002710: { byte13_upper: 0x0, byte14: 0x8A, byte15: 0x02 }, // Blade of the Darkmoon
+  0x20002724: { byte13_upper: 0xC, byte14: 0x9C, byte15: 0x02 }, // Watchdogs of Farron
+  0x2000272E: { byte13_upper: 0x0, byte14: 0xA3, byte15: 0x02 }, // Aldrich Faithful
+  0x20002738: { byte13_upper: 0x4, byte14: 0x77, byte15: 0x02 }, // Warrior of Sunlight
+  0x20002742: { byte13_upper: 0x8, byte14: 0x96, byte15: 0x02 }, // Mound-Makers
+  0x2000274C: { byte13_upper: 0x8, byte14: 0x7D, byte15: 0x02 }, // Way of Blue
+  0x20002756: { byte13_upper: 0xC, byte14: 0x83, byte15: 0x02 }, // Blue Sentinel
+  0x20002760: { byte13_upper: 0x4, byte14: 0x90, byte15: 0x02 }, // Rosaria's Fingers
+  0x2000276A: { byte13_upper: 0x4, byte14: 0xA9, byte15: 0x02 }, // Spears of the Church
 };

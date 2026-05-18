@@ -527,6 +527,21 @@
           "offset": "0x16D6C",
           "bit": 7,
           "reverse": true
+        },
+        {
+          "offset": "0x127",
+          "bit": 2,
+          "reverse": true
+        },
+        {
+          "offset": "0xF96",
+          "bit": 2,
+          "reverse": true
+        },
+        {
+          "offset": "0x16358",
+          "bit": 0,
+          "reverse": true
         }
       ]
     },
@@ -1110,6 +1125,46 @@
         },
         {
           "offset": "0xEF",
+          "bit": 3,
+          "reverse": false
+        },
+        {
+          "offset": "0x1493",
+          "bit": 7,
+          "reverse": true
+        },
+        {
+          "offset": "0x1496",
+          "bit": 3,
+          "reverse": true
+        },
+        {
+          "offset": "0x11856",
+          "bit": 2,
+          "reverse": true
+        },
+        {
+          "offset": "0x16D8E",
+          "bit": 7,
+          "reverse": true
+        },
+        {
+          "offset": "0x1462",
+          "bit": 0,
+          "reverse": true
+        },
+        {
+          "offset": "0x1497",
+          "bit": 0,
+          "reverse": true
+        },
+        {
+          "offset": "0xEF",
+          "bit": 1,
+          "reverse": true
+        },
+        {
+          "offset": "0xEF",
           "bit": 5,
           "reverse": false
         },
@@ -1176,46 +1231,6 @@
         {
           "offset": "0x16DF6",
           "bit": 1,
-          "reverse": true
-        },
-        {
-          "offset": "0xEF",
-          "bit": 1,
-          "reverse": true
-        },
-        {
-          "offset": "0xEF",
-          "bit": 3,
-          "reverse": false
-        },
-        {
-          "offset": "0x1493",
-          "bit": 7,
-          "reverse": true
-        },
-        {
-          "offset": "0x1496",
-          "bit": 3,
-          "reverse": true
-        },
-        {
-          "offset": "0x11856",
-          "bit": 2,
-          "reverse": true
-        },
-        {
-          "offset": "0x16D8E",
-          "bit": 7,
-          "reverse": true
-        },
-        {
-          "offset": "0x1462",
-          "bit": 0,
-          "reverse": true
-        },
-        {
-          "offset": "0x1497",
-          "bit": 0,
           "reverse": true
         }
       ]
@@ -1887,6 +1902,146 @@
         {
           "offset": "0x16D6C",
           "bit": 2,
+          "reverse": true
+        },
+        {
+          "offset": "0xB1",
+          "bit": 7,
+          "reverse": true
+        },
+        {
+          "offset": "0xC4",
+          "bit": 7,
+          "reverse": true
+        },
+        {
+          "offset": "0x111",
+          "bit": 1,
+          "reverse": false
+        },
+        {
+          "offset": "0x116",
+          "bit": 6,
+          "reverse": true
+        },
+        {
+          "offset": "0x1493",
+          "bit": 2,
+          "reverse": true
+        },
+        {
+          "offset": "0x1495",
+          "bit": 6,
+          "reverse": true
+        },
+        {
+          "offset": "0x149E",
+          "bit": 4,
+          "reverse": true
+        },
+        {
+          "offset": "0x469D",
+          "bit": 1,
+          "reverse": true
+        },
+        {
+          "offset": "0x5F55",
+          "bit": 5,
+          "reverse": true
+        },
+        {
+          "offset": "0x14A54",
+          "bit": 4,
+          "reverse": true
+        },
+        {
+          "offset": "0x1545E",
+          "bit": 4,
+          "reverse": true
+        },
+        {
+          "offset": "0x26",
+          "bit": 6,
+          "reverse": true
+        },
+        {
+          "offset": "0xAD",
+          "bit": 0,
+          "reverse": true
+        },
+        {
+          "offset": "0xB1",
+          "bit": 7,
+          "reverse": true
+        },
+        {
+          "offset": "0xC4",
+          "bit": 2,
+          "reverse": true
+        },
+        {
+          "offset": "0x110",
+          "bit": 6,
+          "reverse": false
+        },
+        {
+          "offset": "0x116",
+          "bit": 6,
+          "reverse": true
+        },
+        {
+          "offset": "0x149C",
+          "bit": 5,
+          "reverse": true
+        },
+        {
+          "offset": "0x149C",
+          "bit": 7,
+          "reverse": true
+        },
+        {
+          "offset": "0x3762",
+          "bit": 3,
+          "reverse": true
+        },
+        {
+          "offset": "0x3795",
+          "bit": 3,
+          "reverse": true
+        },
+        {
+          "offset": "0x3796",
+          "bit": 5,
+          "reverse": true
+        },
+        {
+          "offset": "0x379A",
+          "bit": 0,
+          "reverse": true
+        },
+        {
+          "offset": "0x5F57",
+          "bit": 3,
+          "reverse": true
+        },
+        {
+          "offset": "0x1455B",
+          "bit": 6,
+          "reverse": true
+        },
+        {
+          "offset": "0x14A54",
+          "bit": 0,
+          "reverse": true
+        },
+        {
+          "offset": "0x14A54",
+          "bit": 2,
+          "reverse": true
+        },
+        {
+          "offset": "0x14A54",
+          "bit": 3,
           "reverse": true
         }
       ]
@@ -3580,7 +3735,7 @@
       "name": "Moonlight Butterfly (boss)",
       "bits": [
         {
-          "offset": "0x21C6",
+          "offset": "0x1EC6",
           "bit": 3,
           "reverse": true
         }
@@ -3620,7 +3775,12 @@
       "name": "Manus, Father of the Abyss (boss)",
       "bits": [
         {
-          "offset": "0x55",
+          "offset": "0x54",
+          "bit": 6,
+          "reverse": true
+        },
+        {
+          "offset": "0x2356",
           "bit": 5,
           "reverse": true
         }
@@ -3630,8 +3790,8 @@
       "name": "Bed of Chaos (boss)",
       "bits": [
         {
-          "offset": "0x54",
-          "bit": 6,
+          "offset": "0x55",
+          "bit": 5,
           "reverse": true
         }
       ]

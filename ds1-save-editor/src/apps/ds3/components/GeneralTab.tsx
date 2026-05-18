@@ -64,7 +64,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ character, onCharacterUp
     if (changes.length > 0) {
       for (const ch of changes) {
         // setStat may update derived stats synchronously in your implementation
-        character.setStat(ch.stat, ch.to, true);
+        character.setStat(ch.stat, ch.to);
       }
     }
 
@@ -114,7 +114,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ character, onCharacterUp
       numValue = Math.max(minStat, numValue);
     }
 
-    character.setStat(statName, numValue, safeMode);
+    character.setStat(statName, numValue);
 
     if (safeMode) {
       // recalc synchronously after setStat
@@ -143,7 +143,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ character, onCharacterUp
           corrections.push({ stat: statName, from: current, to: min });
         }
       }
-      for (const c of corrections) character.setStat(c.stat, c.to, true);
+      for (const c of corrections) character.setStat(c.stat, c.to);
       character.level = calculateLevel();
     }
 
@@ -271,6 +271,12 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ character, onCharacterUp
     onCharacterUpdate();
   };
 
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    character.name = e.target.value;
+    bump();
+    onCharacterUpdate();
+  };
+
   const handleExportToBinary = () => {
     try {
       const rawData = character.getRawData();
@@ -322,6 +328,17 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ character, onCharacterUp
 
         <div className="info-column">
           <h3>General</h3>
+
+          <div className="form-group">
+            <label>Name</label>
+            <input
+              type="text"
+              value={character.name}
+              onChange={handleNameChange}
+              maxLength={16}
+              placeholder="Character name"
+            />
+          </div>
 
           <div className="form-group">
             <label>Class</label>
@@ -385,32 +402,11 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ character, onCharacterUp
             </div>
           </div>
 
-          <div className="form-group" style={{ marginTop: '20px', padding: '10px', backgroundColor: '#d1ecf1', borderRadius: '4px' }}>
-            <p style={{ margin: 0, fontSize: '0.9em' }}>
-              <strong>ℹ️ Note:</strong> Character name editing is not yet available.
-            </p>
-          </div>
-
-          <div className="form-group" style={{ marginTop: '20px' }}>
-            <button
-              onClick={handleExportToBinary}
-              style={{
-                width: '100%',
-                padding: '10px 20px',
-                backgroundColor: '#007bff',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '1em',
-                fontWeight: 'bold'
-              }}
-              onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#0056b3')}
-              onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#007bff')}
-            >
+          <div className="form-group" style={{ marginTop: '0.75rem' }}>
+            <button className="ds3-export-btn" onClick={handleExportToBinary}>
               📥 Export Character Data (.bin)
             </button>
-            <p style={{ margin: '8px 0 0 0', fontSize: '0.85em', color: '#666' }}>
+            <p className="ds3-export-hint">
               Download raw decrypted character data for pattern analysis
             </p>
           </div>

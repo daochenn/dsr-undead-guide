@@ -260,46 +260,48 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ character, onCharacterUp
             </select>
           </div>
 
-          <div className="form-group">
-            <label>HP</label>
-            <NumberInput
-              value={character.hp}
-              onChange={handleHpChange}
-              min={0}
-              max={9999}
-              disabled={safeMode}
-            />
+          <div className="form-row">
+            <div className="form-group">
+              <label>HP</label>
+              <NumberInput
+                value={character.hp}
+                onChange={handleHpChange}
+                min={0}
+                max={9999}
+                disabled={safeMode}
+              />
+            </div>
+            <div className="form-group">
+              <label>Souls</label>
+              <NumberInput
+                value={character.souls}
+                onChange={handleSoulsChange}
+                min={0}
+                max={999999999}
+              />
+            </div>
           </div>
 
-          <div className="form-group">
-            <label>Stamina</label>
-            <NumberInput
-              value={character.stamina}
-              onChange={handleStaminaChange}
-              min={0}
-              max={999}
-              disabled={safeMode}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Souls</label>
-            <NumberInput
-              value={character.souls}
-              onChange={handleSoulsChange}
-              min={0}
-              max={999999999}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>NG+</label>
-            <NumberInput
-              value={character.ngPlus}
-              onChange={handleNgPlusChange}
-              min={0}
-              max={99}
-            />
+          <div className="form-row">
+            <div className="form-group">
+              <label>Stamina</label>
+              <NumberInput
+                value={character.stamina}
+                onChange={handleStaminaChange}
+                min={0}
+                max={999}
+                disabled={safeMode}
+              />
+            </div>
+            <div className="form-group">
+              <label>NG+</label>
+              <NumberInput
+                value={character.ngPlus}
+                onChange={handleNgPlusChange}
+                min={0}
+                max={99}
+              />
+            </div>
           </div>
 
         </div>

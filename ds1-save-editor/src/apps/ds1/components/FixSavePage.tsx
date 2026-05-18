@@ -6,6 +6,7 @@ import { SaveFileEditor } from '../lib/SaveFileEditor';
 import { SlotGrid } from './SlotGrid';
 import { ConfirmModal } from './ConfirmModal';
 import { embedSaveData } from '../lib/saveEmbedder';
+import { getFileSystemAdapter } from '../lib/adapters';
 
 interface FixSavePageProps {
   onClose?: () => void;
@@ -98,16 +99,16 @@ export const FixSavePage: React.FC<FixSavePageProps> = ({ onClose }) => {
     loadDefaultSave();
   }, []);
 
-  const handleUserFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
+  const handleUserFileSelect = async () => {
+    const adapter = getFileSystemAdapter();
     try {
-      const editor = await SaveFileEditor.fromFile(file);
+      const fileData = await adapter.openFile();
+      const editor = await SaveFileEditor.fromFileData(fileData.file, fileData.handle);
       setUserSaveEditor(editor);
       setSelectedSlot(null);
       console.log('User save loaded successfully');
-    } catch (error) {
+    } catch (error: any) {
+      if (error.message === 'User cancelled file selection') return;
       console.error('Error loading user save:', error);
       showModal(
         'Error',
@@ -134,12 +135,16 @@ export const FixSavePage: React.FC<FixSavePageProps> = ({ onClose }) => {
         'character'
       );
 
-      // Download the result
-      await modifiedEditor.downloadSaveFile('DRAKS0005.sl2');
+      // In Tauri: save via adapter; otherwise download
+      if (modifiedEditor.hasFileHandle()) {
+        await modifiedEditor.saveToOriginalFile();
+      } else {
+        await modifiedEditor.saveToNewFile('DRAKS0005.sl2');
+      }
 
       showModal(
         'Success',
-        `Successfully fixed slot ${selectedSlot}!\n\nYour save file has been downloaded.\nSlot ${selectedSlot} now has a fixed structure with your character data restored.`,
+        `Successfully fixed slot ${selectedSlot}!\n\nYour save file has been saved.\nSlot ${selectedSlot} now has a fixed structure with your character data restored.`,
         () => {},
         'success',
         'OK'
@@ -189,15 +194,9 @@ export const FixSavePage: React.FC<FixSavePageProps> = ({ onClose }) => {
               <div className="upload-section">
                 <div className="upload-box">
                   <h3>Step 1: Select Your Save File</h3>
-                  <label className="file-upload-button">
-                    <input
-                      type="file"
-                      accept=".sl2"
-                      onChange={handleUserFileSelect}
-                      style={{ display: 'none' }}
-                    />
+                  <button className="file-upload-button" onClick={handleUserFileSelect}>
                     {userSaveEditor ? '✓ Save Loaded - Click to Change' : '📁 Select Save File'}
-                  </label>
+                  </button>
                   {userSaveEditor && (
                     <p className="success-text">Save file loaded successfully!</p>
                   )}
@@ -223,7 +222,7 @@ export const FixSavePage: React.FC<FixSavePageProps> = ({ onClose }) => {
                       onClick={handleEmbed}
                       disabled={!canEmbed}
                     >
-                      {isProcessing ? '⏳ Processing...' : '🔧 Fix Slot & Download'}
+                      {isProcessing ? '⏳ Processing...' : '🔧 Fix Slot & Save'}
                     </button>
                     {selectedSlot !== null && (
                       <div className="embed-info">
@@ -244,7 +243,7 @@ export const FixSavePage: React.FC<FixSavePageProps> = ({ onClose }) => {
                 </div>
 
                 <div className="warning-box" style={{ marginTop: '1.5rem' }}>
-                  <strong>Important:</strong> The modified DRAKS0005.sl2 will be downloaded.
+                  <strong>Important:</strong> The modified DRAKS0005.sl2 will be saved.
                   Only slot 0 of DRAKS0005.sl2 is modified - all other slots (1-9) remain unchanged.
                   Replace the game's save file with this modified version to use your character.
                 </div>

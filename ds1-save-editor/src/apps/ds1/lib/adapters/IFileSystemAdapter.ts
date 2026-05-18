@@ -22,9 +22,10 @@ export interface SaveOptions {
 export abstract class IFileSystemAdapter {
   /**
    * Opens a file picker dialog and returns the selected file
+   * @param options - Optional: defaultPath to open the dialog in
    * @returns FileData with File object and handle (if supported)
    */
-  abstract openFile(): Promise<FileData>;
+  abstract openFile(options?: { defaultPath?: string }): Promise<FileData>;
 
   /**
    * Saves data to the original file using the handle

@@ -44,11 +44,29 @@ export function createFileSystemAdapter(): IFileSystemAdapter {
 let adapterInstance: IFileSystemAdapter | null = null;
 
 /**
- * Gets the singleton file system adapter instance
+ * Gets the singleton file system adapter instance (DS1)
  */
 export function getFileSystemAdapter(): IFileSystemAdapter {
   if (!adapterInstance) {
     adapterInstance = createFileSystemAdapter();
   }
   return adapterInstance;
+}
+
+// Separate singleton for DS3
+let adapterInstanceDS3: IFileSystemAdapter | null = null;
+
+/**
+ * Gets the DS3-specific file system adapter (separate last-file storage key)
+ */
+export function getDS3FileSystemAdapter(): IFileSystemAdapter {
+  if (!adapterInstanceDS3) {
+    const env = detectEnvironment();
+    if (env === 'tauri') {
+      adapterInstanceDS3 = new TauriFSAdapter('ds3_last_file_path');
+    } else {
+      adapterInstanceDS3 = new WebFSAdapter();
+    }
+  }
+  return adapterInstanceDS3;
 }

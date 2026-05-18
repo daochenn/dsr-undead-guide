@@ -44,7 +44,7 @@ export class WebFSAdapter extends IFileSystemAdapter {
     });
   }
 
-  async openFile(): Promise<FileData> {
+  async openFile(_options?: { defaultPath?: string }): Promise<FileData> {
     console.log('[WebFSAdapter] openFile() called');
 
     // Try File System Access API first
@@ -54,7 +54,7 @@ export class WebFSAdapter extends IFileSystemAdapter {
         const [fileHandle] = await window.showOpenFilePicker({
           types: [{
             description: 'Dark Souls Save File',
-            accept: { 'application/octet-stream': ['.sl2'] }
+            accept: { 'application/x-dark-souls-save': ['.sl2', '.co2'] }
           }],
           multiple: false
         });
@@ -84,7 +84,7 @@ export class WebFSAdapter extends IFileSystemAdapter {
     return new Promise((resolve, reject) => {
       const input = document.createElement('input');
       input.type = 'file';
-      input.accept = '.sl2';
+      input.accept = '.sl2,.co2';
 
       input.onchange = () => {
         const file = input.files?.[0];
@@ -126,7 +126,7 @@ export class WebFSAdapter extends IFileSystemAdapter {
           suggestedName: options?.suggestedName || 'edited_save.sl2',
           types: [{
             description: 'Dark Souls Save File',
-            accept: { 'application/octet-stream': ['.sl2'] }
+            accept: { 'application/x-dark-souls-save': ['.sl2', '.co2'] }
           }]
         });
 

@@ -71,6 +71,58 @@ export const VIT_TO_HP: Record<number, number> = {
   96: 1881, 97: 1888, 98: 1894, 99: 1900
 };
 
+export const PHYSIQUE_NAMES = [
+  'Average', 'Slim', 'Very Slim', 'Large', 'Very Large',
+  'Large Upper Body', 'Large Lower Body', 'Top-heavy', 'Tiny Head'
+];
+
+export const HAIRSTYLE_FEMALE = [
+  'Shaved', 'Very Short', 'Wave', 'Straight A', 'Straight B',
+  'Ponytail A', 'Ponytail B', 'Pigtails', 'Bun', 'Braided'
+];
+
+export const HAIRSTYLE_MALE = [
+  'Shaved', 'Receding', 'Short', 'Swept Back', 'Ponytail',
+  'Wild', 'Parted Center', 'Semi-Long', 'Curly', 'Bobbed'
+];
+
+export const HAIRSTYLE_SAVE_BASE = 0x500; // 1280
+
+export const FACE_PARAM_LABELS: string[] = [
+  'Face Width (0=Wide, 255=Narrow)',
+  'Face Height (0=Short, 255=Tall)',
+  'Face Depth (0=Shallow, 255=Deep)',
+  'Face Horiz. Spacing (0=Wide, 255=Narrow)',
+  'Face Vert. Spacing (0=Short, 255=Long)',
+  'Nose Length (0=Short, 255=Long)',
+  'Nose/Forehead Ratio (0=Nose, 255=Forehead)',
+  'Face Emphasis Vert. (0=Large Forehead, 255=Large Nose)',
+  'Face Emphasis Horiz. (0=Narrow Sides, 255=Wide Sides)',
+  'Eye/Nose-Mouth Ratio (0=Large Nose, 255=Large Eyes)',
+  'Feature Width/Depth (0=Narrow/Deep, 255=Wide/Shallow)',
+  'Brow Width',
+  'Brow Depth',
+  'Eyebrow-Eye Dist. (0=Long, 255=Short)',
+  'Feature Distance (0=Short, 255=Long)',
+  'Nose Width vs Features (0=Narrow Nose, 255=Wide Nose)',
+  'Mouth Size (0=Large, 255=Small)',
+  'Nose Width (0=Wide, 255=Narrow)',
+  'Feature Arch (0=Downward, 255=Upward)',
+  'Eye Size (0=Large, 255=Small)',
+  'Eye Position (0=Up, 255=Down)',
+  'Jaw Shape (0=Round, 255=Sharp)',
+  'Feature Slant (0=Inward, 255=Outward)',
+  'Mouth Expression (0=Happy, 255=Sad)',
+  'Lip Shape (0=Pursed, 255=Closed)',
+  'Lip Fullness (0=Large, 255=Small)',
+  'Lip Asperity (0=Concave, 255=Convex)',
+  'Lip Thickness A (0=Small, 255=Large)',
+  'Mouth Asperity (0=Convex, 255=Concave)',
+  'Mouth Slant (0=Up, 255=Down)',
+  'Occlusion (0=Down, 255=Up)',
+  'Lip Thickness B (0=Thin, 255=Thick)',
+];
+
 export const END_TO_STAMINA: Record<number, number> = {
   1: 80, 2: 81, 3: 82, 4: 83, 5: 84,
   6: 86, 7: 87, 8: 88, 9: 90, 10: 91,
