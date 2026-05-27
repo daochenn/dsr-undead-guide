@@ -1146,6 +1146,12 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.item-detail-equipped {
+  color: #c8a84b;
+  border-color: rgba(200, 168, 75, 0.35);
+  background-color: rgba(200, 168, 75, 0.08);
+}
+
 .item-actions {
   display: flex;
   gap: 0.3rem;

@@ -57,6 +57,7 @@ export const InventoryTab: React.FC<InventoryTabProps> = ({ character, onCharact
   const [wlFilter, setWlFilter] = useState<number | 'all'>('all');
   const [showAddAllWLDialog, setShowAddAllWLDialog] = useState(false);
   const [addAllWL, setAddAllWL] = useState<number>(0);
+  const [equippedSlots, setEquippedSlots] = useState<Map<number, string>>(new Map());
   const parentRef = useRef<HTMLDivElement>(null);
   const pendingScrollSlot = useRef<number | null>(null);
 
@@ -95,6 +96,7 @@ export const InventoryTab: React.FC<InventoryTabProps> = ({ character, onCharact
 
     setItems(filteredItems);
     setWeaponLevel(inv.weaponLevel);
+    setEquippedSlots(inv.getEquippedWeaponSlots());
   }, [inventory, activeSubTab, safeMode, searchQuery, infusionFilter, wlFilter]);
 
   // Recreate inventory when character changes
@@ -138,6 +140,7 @@ export const InventoryTab: React.FC<InventoryTabProps> = ({ character, onCharact
 
         setItems(filteredItems);
         setWeaponLevel(newInventory.weaponLevel);
+        setEquippedSlots(newInventory.getEquippedWeaponSlots());
       } catch (error) {
         console.error('Error loading inventory:', error);
         alert(`Failed to load items database: ${error instanceof Error ? error.message : String(error)}\n\nPlease ensure items.json is available.`);
@@ -399,6 +402,9 @@ export const InventoryTab: React.FC<InventoryTabProps> = ({ character, onCharact
                       )}
                       {item.infusion !== ItemInfusion.Standard && (
                         <span className="item-detail">{getInfusionName(item.infusion)}</span>
+                      )}
+                      {equippedSlots.has(item.slotIndex) && (
+                        <span className="item-detail item-detail-equipped">{equippedSlots.get(item.slotIndex)}</span>
                       )}
                     </div>
                   </div>
