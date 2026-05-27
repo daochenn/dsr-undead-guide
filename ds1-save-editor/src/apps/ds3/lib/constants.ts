@@ -41,6 +41,7 @@ export const RELATIVE_OFFSETS = {
   ESTUS_MAX: -0x4E,
   ASHEN_ESTUS_MAX: -0x4D,
   CLASS: -0xA2,
+  WEAPON_MEMORY: -0x9D,
 } as const;
 
 // Maximum values

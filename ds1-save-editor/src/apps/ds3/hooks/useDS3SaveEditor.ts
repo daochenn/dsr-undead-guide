@@ -9,6 +9,7 @@ export interface UseDS3SaveEditorResult {
   characters: DS3Character[];
   selectedCharacterIndex: number | null;
   originalFilename: string;
+  isSlotActive: (slotIndex: number) => boolean;
 
   handleFileLoaded: (file: File, fileHandle: FileHandle | null) => Promise<void>;
   handleCharacterSelect: (index: number) => void;
@@ -55,31 +56,17 @@ export const useDS3SaveEditor = (fileUploadRef: RefObject<FileUploadRef>): UseDS
 
   const handleSave = useCallback(async () => {
     if (!saveEditor) return;
-
-    try {
-      setUpdateTrigger(prev => prev + 1);
-      if (saveEditor.hasFileHandle()) {
-        // Tauri: write directly to the original file
-        await saveEditor.saveToOriginalFile();
-      } else {
-        await saveEditor.downloadSaveFile(originalFilename);
-      }
-    } catch (error) {
-      console.error('Error saving file:', error);
-      alert('Error saving file. Please try again.');
+    setUpdateTrigger(prev => prev + 1);
+    if (saveEditor.hasFileHandle()) {
+      await saveEditor.saveToOriginalFile();
+    } else {
+      await saveEditor.downloadSaveFile(originalFilename);
     }
   }, [saveEditor, originalFilename]);
 
   const handleSaveAs = useCallback(async () => {
     if (!saveEditor) return;
-
-    try {
-      // Use original filename for Save As
-      await saveEditor.saveToNewFile(originalFilename);
-    } catch (error) {
-      console.error('Error saving file:', error);
-      alert('Error saving file. Please try again.');
-    }
+    await saveEditor.saveToNewFile(originalFilename);
   }, [saveEditor, originalFilename]);
 
   const handleReload = useCallback(() => {
@@ -87,11 +74,16 @@ export const useDS3SaveEditor = (fileUploadRef: RefObject<FileUploadRef>): UseDS
     fileUploadRef.current?.openFileDialog();
   }, [fileUploadRef]);
 
+  const isSlotActive = useCallback((slotIndex: number): boolean => {
+    return saveEditor ? saveEditor.isSlotActive(slotIndex) : false;
+  }, [saveEditor]);
+
   return {
     saveEditor,
     characters,
     selectedCharacterIndex,
     originalFilename,
+    isSlotActive,
     handleFileLoaded,
     handleCharacterSelect,
     handleCharacterUpdate,

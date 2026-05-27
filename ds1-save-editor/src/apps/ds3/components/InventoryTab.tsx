@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { DS3Character } from '../lib/Character';
 import { DS3Inventory, ItemCollectionType, DS3InventoryItem, ItemInfusion } from '../lib/Inventory';
 import { ItemCreateDialog } from './ItemCreateDialog';
 import { ItemEditDialog } from './ItemEditDialog';
+import { NumberInput } from '../../ds1/components/NumberInput';
 
 interface InventoryTabProps {
   character: DS3Character;
@@ -46,7 +48,12 @@ export const InventoryTab: React.FC<InventoryTabProps> = ({ character, onCharact
   const [upgradeFilter, setUpgradeFilter] = useState<number | 'all'>('all');
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [editingItem, setEditingItem] = useState<DS3InventoryItem | null>(null);
-  const itemRefs = React.useRef<Map<number, HTMLDivElement>>(new Map());
+  const [weaponMemory, setWeaponMemory] = useState<number>(0);
+  const [showAddAllWLDialog, setShowAddAllWLDialog] = useState(false);
+  const [addAllWL, setAddAllWL] = useState<number>(0);
+
+  const parentRef = useRef<HTMLDivElement>(null);
+  const pendingScrollSlot = useRef<number | null>(null);
 
   // Weapons with MaxUpgrade=5 count each level as 2 WL (so +5 = WL 10)
   const getEffectiveWL = (item: DS3InventoryItem): number => {
@@ -57,6 +64,7 @@ export const InventoryTab: React.FC<InventoryTabProps> = ({ character, onCharact
   const refreshItems = useCallback((inv?: DS3Inventory) => {
     const instance = inv || inventory;
     if (!instance) return;
+    setWeaponMemory(instance.weaponMemory);
     const collectionType = SUB_TAB_TO_COLLECTION[activeSubTab];
     let filtered = instance.getItemsByType(collectionType);
 
@@ -108,22 +116,33 @@ export const InventoryTab: React.FC<InventoryTabProps> = ({ character, onCharact
     if (!loading && inventory) refreshItems();
   }, [activeSubTab, loading, searchQuery, infusionFilter, upgradeFilter, safeMode, inventory, refreshItems]);
 
+  // Scroll to a newly added item after items state updates
+  useEffect(() => {
+    if (pendingScrollSlot.current === null) return;
+    const idx = items.findIndex(item => item.slotIndex === pendingScrollSlot.current);
+    if (idx >= 0) virtualizer.scrollToIndex(idx, { behavior: 'smooth' });
+    pendingScrollSlot.current = null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items]);
+
+  const virtualizer = useVirtualizer({
+    count: items.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 48,
+    overscan: 10,
+    measureElement: el => el.getBoundingClientRect().height,
+  });
+
   const handleItemCreated = (slotIndex: number | null) => {
+    if (slotIndex !== null) pendingScrollSlot.current = slotIndex;
     refreshItems();
     onCharacterUpdate();
-    if (slotIndex !== null) {
-      setTimeout(() => {
-        itemRefs.current.get(slotIndex)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 100);
-    }
   };
 
   const handleDeleteItem = (slotIndex: number) => {
-    if (confirm('Are you sure you want to delete this item?')) {
-      inventory.deleteItem(slotIndex);
-      refreshItems();
-      onCharacterUpdate();
-    }
+    inventory.deleteItem(slotIndex);
+    refreshItems();
+    onCharacterUpdate();
   };
 
   const handleItemUpdated = () => {
@@ -132,17 +151,41 @@ export const InventoryTab: React.FC<InventoryTabProps> = ({ character, onCharact
   };
 
   const handleAddAll = () => {
-    inventory.addAllItems(SUB_TAB_TO_COLLECTION[activeSubTab]);
+    if (activeSubTab === 'weapons') {
+      setAddAllWL(weaponMemory);
+      setShowAddAllWLDialog(true);
+    } else {
+      inventory.addAllItems(SUB_TAB_TO_COLLECTION[activeSubTab]);
+      refreshItems();
+      onCharacterUpdate();
+    }
+  };
+
+  const handleConfirmAddAllWeapons = () => {
+    inventory.addAllItems(ItemCollectionType.Weapon, addAllWL);
+    inventory.calibrateWeaponMemory();
+    setWeaponMemory(inventory.weaponMemory);
+    refreshItems();
+    onCharacterUpdate();
+    setShowAddAllWLDialog(false);
+  };
+
+  const handleClearAll = () => {
+    inventory.clearAllItems(SUB_TAB_TO_COLLECTION[activeSubTab]);
     refreshItems();
     onCharacterUpdate();
   };
 
-  const handleClearAll = () => {
-    if (confirm('Clear all items in this category?')) {
-      inventory.clearAllItems(SUB_TAB_TO_COLLECTION[activeSubTab]);
-      refreshItems();
-      onCharacterUpdate();
-    }
+  const handleWeaponMemoryChange = (numValue: number) => {
+    inventory.weaponMemory = numValue;
+    setWeaponMemory(numValue);
+    onCharacterUpdate();
+  };
+
+  const handleCalibrateWM = () => {
+    const calibrated = inventory.calibrateWeaponMemory(true);
+    setWeaponMemory(calibrated);
+    onCharacterUpdate();
   };
 
   const getInfusionName = (inf: ItemInfusion): string => {
@@ -254,6 +297,26 @@ export const InventoryTab: React.FC<InventoryTabProps> = ({ character, onCharact
             </select>
           </div>
         )}
+
+        {activeSubTab === 'weapons' && (
+          <div className="weapon-level-display">
+            <label>Weapon Memory:</label>
+            <NumberInput
+              value={weaponMemory}
+              onChange={handleWeaponMemoryChange}
+              min={0}
+              max={10}
+              disabled={safeMode}
+            />
+            <button
+              className="calibrate-button"
+              onClick={handleCalibrateWM}
+              title="Calibrate Weapon Memory"
+            >
+              Calibrate
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="sub-tabs">
@@ -268,31 +331,34 @@ export const InventoryTab: React.FC<InventoryTabProps> = ({ character, onCharact
         ))}
       </div>
 
-      <div className="inventory-content">
+      <div className="inventory-content" ref={parentRef}>
         {items.length === 0 ? (
           <div className="no-items">No items in this category</div>
         ) : (
-          <div className="items-list">
-            {items.map(item => {
+          <div style={{ height: `${virtualizer.getTotalSize()}px`, position: 'relative' }}>
+            {virtualizer.getVirtualItems().map(virtualRow => {
+              const item = items[virtualRow.index];
               const storageQty = getStorageQty(item);
               return (
                 <div
-                  key={item.slotIndex}
-                  className="item-row"
-                  ref={el => {
-                    if (el) itemRefs.current.set(item.slotIndex, el);
-                    else itemRefs.current.delete(item.slotIndex);
+                  key={virtualRow.key}
+                  data-index={virtualRow.index}
+                  ref={virtualizer.measureElement}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    paddingBottom: '2px',
+                    transform: `translateY(${virtualRow.start}px)`,
                   }}
                 >
+                <div className="item-row">
                   <div className="item-info">
                     <span className="item-name">{formatItemDisplay(item)}</span>
                     <div className="item-details">
                       {showQtyColumn && (
-                        <span className="item-detail">
-                          {storageQty > 0
-                            ? `${item.quantity} / ${storageQty}`
-                            : `Qty: ${item.quantity}`}
-                        </span>
+                        <span className="item-detail">Qty: {item.quantity} / {storageQty}</span>
                       )}
                     </div>
                   </div>
@@ -300,6 +366,7 @@ export const InventoryTab: React.FC<InventoryTabProps> = ({ character, onCharact
                     <button className="edit-button" onClick={() => setEditingItem(item)}>Edit</button>
                     <button className="delete-button" onClick={() => handleDeleteItem(item.slotIndex)}>Delete</button>
                   </div>
+                </div>
                 </div>
               );
             })}
@@ -325,6 +392,39 @@ export const InventoryTab: React.FC<InventoryTabProps> = ({ character, onCharact
           onItemUpdated={handleItemUpdated}
           safeMode={safeMode}
         />
+      )}
+
+      {showAddAllWLDialog && (
+        <div className="dialog-overlay" onClick={() => setShowAddAllWLDialog(false)}>
+          <div className="dialog-content dialog-content-small" onClick={e => e.stopPropagation()}>
+            <div className="dialog-header">
+              <h2>Add All Weapons</h2>
+              <button className="close-button" onClick={() => setShowAddAllWLDialog(false)}>×</button>
+            </div>
+            <div className="dialog-body">
+              <div className="form-group">
+                <label>Target Weapon Level (0–10)</label>
+                <select
+                  value={addAllWL}
+                  onChange={e => setAddAllWL(parseInt(e.target.value))}
+                  className="filter-select"
+                >
+                  {Array.from({ length: 11 }, (_, i) => (
+                    <option key={i} value={i}>{i}</option>
+                  ))}
+                </select>
+              </div>
+              <p className="info-text">
+                Regular weapons (+10 max) will be added at the selected level.
+                Unique weapons (+5 max) will be added at half the level (rounded down).
+              </p>
+            </div>
+            <div className="dialog-footer">
+              <button className="cancel-button" onClick={() => setShowAddAllWLDialog(false)}>Cancel</button>
+              <button className="create-button" onClick={handleConfirmAddAllWeapons}>Add All</button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

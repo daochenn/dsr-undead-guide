@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { Character } from '../lib/Character';
 import { Inventory, ItemCollectionType, ItemInfusion, InventoryItem } from '../lib/Inventory';
 import { ItemCreateDialog } from './ItemCreateDialog';
@@ -56,7 +57,8 @@ export const InventoryTab: React.FC<InventoryTabProps> = ({ character, onCharact
   const [wlFilter, setWlFilter] = useState<number | 'all'>('all');
   const [showAddAllWLDialog, setShowAddAllWLDialog] = useState(false);
   const [addAllWL, setAddAllWL] = useState<number>(0);
-  const itemRefs = React.useRef<Map<number, HTMLDivElement>>(new Map());
+  const parentRef = useRef<HTMLDivElement>(null);
+  const pendingScrollSlot = useRef<number | null>(null);
 
   const refreshItems = useCallback((inventoryInstance?: Inventory) => {
     const inv = inventoryInstance || inventory;
@@ -155,22 +157,30 @@ export const InventoryTab: React.FC<InventoryTabProps> = ({ character, onCharact
     }
   }, [activeSubTab, loading, searchQuery, infusionFilter, wlFilter, safeMode, inventory, refreshItems]);
 
+  // Scroll to newly added item after items state updates
+  useEffect(() => {
+    if (pendingScrollSlot.current === null) return;
+    const idx = items.findIndex(item => item.slotIndex === pendingScrollSlot.current);
+    if (idx >= 0) virtualizer.scrollToIndex(idx, { behavior: 'smooth' });
+    pendingScrollSlot.current = null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items]);
+
+  const virtualizer = useVirtualizer({
+    count: items.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 48,
+    overscan: 10,
+    measureElement: el => el.getBoundingClientRect().height,
+  });
+
   const handleItemCreated = (slotIndex: number | null) => {
     if (safeMode) {
       inventory.calibrateWeaponLevel();
     }
+    if (slotIndex !== null) pendingScrollSlot.current = slotIndex;
     refreshItems();
     onCharacterUpdate();
-
-    // Scroll to the newly added item
-    if (slotIndex !== null) {
-      setTimeout(() => {
-        const element = itemRefs.current.get(slotIndex);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      }, 100);
-    }
   };
 
   const handleDeleteItem = (slotIndex: number) => {
@@ -359,53 +369,47 @@ export const InventoryTab: React.FC<InventoryTabProps> = ({ character, onCharact
         ))}
       </div>
 
-      <div className="inventory-content">
+      <div className="inventory-content" ref={parentRef}>
         {items.length === 0 ? (
           <div className="no-items">No items in this category</div>
         ) : (
-          <div className="items-list">
-            {items.map((item) => (
-              <div
-                key={item.slotIndex}
-                className="item-row"
-                ref={(el) => {
-                  if (el) {
-                    itemRefs.current.set(item.slotIndex, el);
-                  } else {
-                    itemRefs.current.delete(item.slotIndex);
-                  }
-                }}
-              >
-                <div className="item-info">
-                  <span className="item-name">{formatItemDisplay(item)}</span>
-                  <div className="item-details">
-                    {item.quantity > 1 && (
-                      <span className="item-detail">Quantity: {item.quantity}</span>
-                    )}
-                    {item.infusion !== ItemInfusion.Standard && (
-                      <span className="item-detail">Infusion: {getInfusionName(item.infusion)}</span>
-                    )}
-                    {item.upgradeLevel > 0 && (
-                      <span className="item-detail">Upgrade: +{item.upgradeLevel}</span>
-                    )}
+          <div style={{ height: `${virtualizer.getTotalSize()}px`, position: 'relative' }}>
+            {virtualizer.getVirtualItems().map((virtualRow) => {
+              const item = items[virtualRow.index];
+              return (
+                <div
+                  key={virtualRow.key}
+                  data-index={virtualRow.index}
+                  ref={virtualizer.measureElement}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    paddingBottom: '2px',
+                    transform: `translateY(${virtualRow.start}px)`,
+                  }}
+                >
+                <div className="item-row">
+                  <div className="item-info">
+                    <span className="item-name">{formatItemDisplay(item)}</span>
+                    <div className="item-details">
+                      {item.quantity > 1 && (
+                        <span className="item-detail">Qty: {item.quantity}</span>
+                      )}
+                      {item.infusion !== ItemInfusion.Standard && (
+                        <span className="item-detail">{getInfusionName(item.infusion)}</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="item-actions">
+                    <button className="edit-button" onClick={() => handleEditItem(item)}>Edit</button>
+                    <button className="delete-button" onClick={() => handleDeleteItem(item.slotIndex)}>Delete</button>
                   </div>
                 </div>
-                <div className="item-actions">
-                  <button
-                    className="edit-button"
-                    onClick={() => handleEditItem(item)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="delete-button"
-                    onClick={() => handleDeleteItem(item.slotIndex)}
-                  >
-                    Delete
-                  </button>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

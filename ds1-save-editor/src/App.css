@@ -298,6 +298,17 @@
   cursor: not-allowed;
 }
 
+.character-slot.deleted {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.character-deleted-badge {
+  color: #555;
+  font-style: italic;
+  font-size: 0.8em;
+}
+
 .character-name {
   color: #e0e0e0;
   font-weight: 500;
@@ -1093,85 +1104,88 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 0.75rem;
-  background: #1c1c1c;
-  border: 1px solid #272727;
-  border-radius: 4px;
-  transition: border-color 0.15s ease;
+  padding: 0.45rem 0.65rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: none;
+  border-left: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  transition: background 0.15s ease;
 }
 
 .item-row:hover {
-  background: #202020;
-  border-color: #353535;
+  background: rgba(255, 255, 255, 0.055);
+  border-left-color: rgba(255, 255, 255, 0.2);
   box-shadow: none;
 }
 
 .item-info {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.25rem;
   flex: 1;
 }
 
 .item-name {
-  color: #c0c0c0;
+  color: #b8b8b8;
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 0.85rem;
 }
 
 .item-details {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.4rem;
   flex-wrap: wrap;
 }
 
 .item-detail {
-  color: #555;
+  color: #909090;
   font-size: 0.72rem;
   padding: 0.1rem 0.35rem;
-  background-color: #181818;
+  background-color: rgba(255, 255, 255, 0.05);
   border-radius: 3px;
-  border: 1px solid #272727;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .item-actions {
   display: flex;
-  gap: 0.35rem;
+  gap: 0.3rem;
 }
 
 .edit-button {
-  padding: 0.28rem 0.6rem;
-  background: #1e2a33;
-  color: #8ab0c0;
-  border: 1px solid #2a4050;
-  border-radius: 4px;
-  font-size: 0.78rem;
+  padding: 0.25rem 0.6rem;
+  background: rgba(50, 120, 180, 0.15);
+  color: #6090c0;
+  border: 1px solid rgba(50, 120, 180, 0.3);
+  border-radius: 3px;
+  font-size: 0.75rem;
   cursor: pointer;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease;
   font-weight: 500;
 }
 
 .edit-button:hover {
-  border-color: #4a7a90;
-  color: #a0c8d8;
+  background: rgba(50, 120, 180, 0.22);
+  border-color: rgba(50, 120, 180, 0.55);
+  color: #80aad8;
   transform: none;
   box-shadow: none;
 }
 
 .delete-button {
-  padding: 0.28rem 0.6rem;
-  background: #2a1e1e;
-  color: #a06060;
-  border: 1px solid #3a2828;
-  border-radius: 4px;
-  font-size: 0.78rem;
+  padding: 0.25rem 0.6rem;
+  background: rgba(200, 50, 50, 0.15);
+  color: #b05050;
+  border: 1px solid rgba(200, 50, 50, 0.3);
+  border-radius: 3px;
+  font-size: 0.75rem;
   cursor: pointer;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease;
   font-weight: 500;
 }
 
 .delete-button:hover {
-  border-color: #6a3a3a;
+  background: rgba(200, 50, 50, 0.22);
+  border-color: rgba(200, 50, 50, 0.55);
   color: #c07070;
   transform: none;
   box-shadow: none;

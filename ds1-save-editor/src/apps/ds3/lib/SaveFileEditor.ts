@@ -17,10 +17,16 @@ const STAT_ORDER = ['VIG', 'ATN', 'END', 'VIT', 'STR', 'DEX', 'INT', 'FTH', 'LCK
  * Handles BND4 format with AES-CBC encryption
  * Based on DS3SaveEditor.cs ReadSave and WriteSave methods
  */
+// entry10 offset of the 10-byte per-slot active flag array.
+// 0x01 = slot has an active (non-deleted) character, 0x00 = empty or deleted.
+const SLOT_ACTIVE_FLAGS_OFFSET = 0x1098;
+
 export class DS3SaveFileEditor {
   private saveData: Uint8Array;
   private characters: DS3Character[] = [];
   private fileHandle: FileHandle | null = null;
+  /** Per-slot active flags read from entry10. Index = slot number. */
+  private slotActiveFlags: boolean[] = [];
 
   private constructor(saveData: Uint8Array, fileHandle?: FileHandle) {
     this.saveData = saveData;
@@ -54,7 +60,40 @@ export class DS3SaveFileEditor {
 
     const editor = new DS3SaveFileEditor(saveData, fileHandle || undefined);
     await editor.loadCharacters();
+    await editor.loadSlotActiveFlags();
     return editor;
+  }
+
+  /**
+   * Decrypt entry10 and read the 10-byte per-slot active flag array at offset 0x1098.
+   * Falls back to all-true (show all non-empty slots) if entry10 is unavailable.
+   */
+  private async loadSlotActiveFlags(): Promise<void> {
+    try {
+      const entryCount = new DataView(this.saveData.buffer).getUint32(0x0C, true);
+      if (entryCount < 11) return; // no entry10
+
+      const entry10 = await this.loadCharacter(10); // same decrypt logic
+      const data = entry10.getRawData();
+
+      this.slotActiveFlags = [];
+      for (let i = 0; i < 10; i++) {
+        const off = SLOT_ACTIVE_FLAGS_OFFSET + i;
+        this.slotActiveFlags[i] = off < data.length ? data[off] === 0x01 : false;
+      }
+      console.log('[DS3] Slot active flags:', this.slotActiveFlags);
+    } catch (err) {
+      console.warn('[DS3] Could not read slot active flags:', err);
+      // fallback: treat all non-empty slots as active
+      this.slotActiveFlags = Array(10).fill(true);
+    }
+  }
+
+  /**
+   * Returns true if the given character slot contains an active (non-deleted) character.
+   */
+  isSlotActive(slotIndex: number): boolean {
+    return this.slotActiveFlags[slotIndex] === true;
   }
 
   /**
@@ -147,6 +186,26 @@ export class DS3SaveFileEditor {
    */
   getCharacter(slotIndex: number): DS3Character | undefined {
     return this.characters.find(char => char.slotIndex === slotIndex);
+  }
+
+  /**
+   * Total number of BND4 entries (character slots + system entries).
+   */
+  getEntryCount(): number {
+    return new DataView(this.saveData.buffer).getUint32(0x0C, true);
+  }
+
+  /**
+   * Decrypt any BND4 entry by index and return it as a DS3Character.
+   * Works for all entries including system entries 10, 11, etc.
+   * getRawData() on the result gives the raw decrypted bytes.
+   */
+  async getRawEntry(entryIndex: number): Promise<DS3Character> {
+    const count = this.getEntryCount();
+    if (entryIndex < 0 || entryIndex >= count) {
+      throw new Error(`Entry index ${entryIndex} out of range (0–${count - 1})`);
+    }
+    return this.loadCharacter(entryIndex);
   }
 
   /**
@@ -251,13 +310,7 @@ export class DS3SaveFileEditor {
   async saveToNewFile(suggestedName?: string): Promise<void> {
     const data = await this.exportSaveFile();
     const adapter = getFileSystemAdapter();
-
-    try {
-      await adapter.saveAsNewFile(data, { suggestedName: suggestedName || 'DS30000.sl2' });
-    } catch (error) {
-      console.error('Failed to save with File System Access API, falling back to download:', error);
-      await this.downloadSaveFile(suggestedName || 'DS30000.sl2');
-    }
+    await adapter.saveAsNewFile(data, { suggestedName: suggestedName || 'DS30000.sl2' });
   }
 
   /**

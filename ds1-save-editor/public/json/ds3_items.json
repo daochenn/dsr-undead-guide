@@ -646,7 +646,8 @@
       "Category": "greatswords",
       "Name": "Greatsword of Artorias !!!!!!!!!!!!!!!!",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -1382,7 +1383,7 @@
       "Id": "0x008D4BE0",
       "MaxStackCount": 1,
       "Category": "halberds",
-      "Name": "Crucifix of the Mad King (Halberd)",
+      "Name": "Crucifix of the Mad King",
       "MaxUpgrade": 5,
       "Durability": null
     },
@@ -1481,7 +1482,7 @@
       "Id": "0x009B2E90",
       "MaxStackCount": 1,
       "Category": "halberds",
-      "Name": "Splitleaf Greatsword (It's a Halberd)",
+      "Name": "Splitleaf Greatsword",
       "MaxUpgrade": 10,
       "Durability": null
     },
@@ -1895,7 +1896,7 @@
       "Id": "0x00D77440",
       "MaxStackCount": 1,
       "Category": "bows",
-      "Name": "White Tree Bow (White Birch Bow)",
+      "Name": "White Birch Bow",
       "MaxUpgrade": 5,
       "Durability": null
     },
@@ -2585,21 +2586,13 @@
     },
     {
       "Type": "0x0",
-      "Id": "0x00015F90",
-      "MaxStackCount": 1,
-      "Category": "torches",
-      "Name": "Torch",
-      "MaxUpgrade": 0,
-      "Durability": null
-    },
-    {
-      "Type": "0x0",
       "Id": "0x00100590",
       "MaxStackCount": 1,
       "Category": "straightswords",
       "Name": "Blood-stained Short Sword",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2608,7 +2601,8 @@
       "Category": "axes",
       "Name": "Missionary's Axe",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2617,7 +2611,8 @@
       "Category": "greataxes",
       "Name": "Dragon King Greataxe",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2626,7 +2621,8 @@
       "Category": "greathammers",
       "Name": "Four Knights Hammer",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2635,7 +2631,8 @@
       "Category": "greathammers",
       "Name": "Hammer of the Great Tree",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2644,7 +2641,8 @@
       "Category": "spears",
       "Name": "Channeler's Trident",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2653,7 +2651,8 @@
       "Category": "halberds",
       "Name": "Ancient Dragon Halberd",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2662,7 +2661,8 @@
       "Category": "reapers",
       "Name": "Lothric's Scythe",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2671,7 +2671,8 @@
       "Category": "reapers",
       "Name": "Scythe of Want",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2680,7 +2681,8 @@
       "Category": "staves",
       "Name": "Sacred Beast Catalyst",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2689,7 +2691,8 @@
       "Category": "flames",
       "Name": "Flickering Pyromancy Flame",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2698,7 +2701,8 @@
       "Category": "flames",
       "Name": "Strong Pyromancy Flame",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2707,7 +2711,8 @@
       "Category": "flames",
       "Name": "Deep Pyromancy Flame",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2716,7 +2721,8 @@
       "Category": "flames",
       "Name": "Pitch-Dark Pyromancy Flame",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2725,7 +2731,8 @@
       "Category": "crossbows",
       "Name": "Shield Crossbow",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2734,7 +2741,8 @@
       "Category": "standardshields",
       "Name": "Prince's Shield",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2743,7 +2751,8 @@
       "Category": "standardshields",
       "Name": "Cleric's Parma",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2752,7 +2761,8 @@
       "Category": "greatshields",
       "Name": "Ancient Dragon Great Shield",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2761,7 +2771,8 @@
       "Category": "straightswords",
       "Name": "Golden Dual Swords",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2770,7 +2781,8 @@
       "Category": "straightswords",
       "Name": "Broken Sword with Glow",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2779,7 +2791,8 @@
       "Category": "daggers",
       "Name": "transparent dagger",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2788,7 +2801,8 @@
       "Category": "straightswords",
       "Name": "transparent sword",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2797,7 +2811,8 @@
       "Category": "greatswords",
       "Name": "transparent greatsword",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2806,7 +2821,8 @@
       "Category": "curvedswords",
       "Name": "transparent curved sword",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2815,7 +2831,8 @@
       "Category": "axes",
       "Name": "transparent axe",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2824,7 +2841,8 @@
       "Category": "greataxes",
       "Name": "transparent greataxe",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2833,7 +2851,8 @@
       "Category": "hammers",
       "Name": "transparent mace",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2842,7 +2861,8 @@
       "Category": "halberds",
       "Name": "transparent halberd",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2851,7 +2871,8 @@
       "Category": "staves",
       "Name": "transparent staff",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2860,7 +2881,8 @@
       "Category": "whips",
       "Name": "transparent whip",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2869,7 +2891,8 @@
       "Category": "greatbows",
       "Name": "transparent greatbow",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2878,7 +2901,8 @@
       "Category": "fists",
       "Name": "transparent caestus",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2887,7 +2911,8 @@
       "Category": "axes",
       "Name": "transparent paired axe",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2896,7 +2921,8 @@
       "Category": "straightswords",
       "Name": "transparent paired sword",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2905,7 +2931,8 @@
       "Category": "fists",
       "Name": "transparent demon fist",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2914,7 +2941,8 @@
       "Category": "hammers",
       "Name": "transparent paired hammers",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2923,7 +2951,8 @@
       "Category": "standardshields",
       "Name": "transparent round shield",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2932,7 +2961,8 @@
       "Category": "torches",
       "Name": "transparent torch",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2941,7 +2971,8 @@
       "Category": "straightswords",
       "Name": "Twinswords with torch effect",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x0",
@@ -2950,7 +2981,8 @@
       "Category": "weapons",
       "Name": "Fists",
       "MaxUpgrade": 0,
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     }
   ],
   "armor_items": [
@@ -5484,6 +5516,14 @@
     },
     {
       "Type": "0x10000000",
+      "Id": "0x113138B8",
+      "MaxStackCount": 1,
+      "Category": "leggings",
+      "Name": "Vilhelm's Leggings",
+      "Durability": null
+    },
+    {
+      "Type": "0x10000000",
       "Id": "0x139B2820",
       "MaxStackCount": 1,
       "Category": "helms",
@@ -5560,7 +5600,8 @@
       "MaxStackCount": 1,
       "Category": "leggings",
       "Name": "Loincloth Not the one already in the game",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -5728,7 +5769,8 @@
       "MaxStackCount": 1,
       "Category": "helms",
       "Name": "Ruin Sentinel Helm",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -5736,7 +5778,8 @@
       "MaxStackCount": 1,
       "Category": "chests",
       "Name": "Ruin Sentinel Armor",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -5744,7 +5787,8 @@
       "MaxStackCount": 1,
       "Category": "gauntlets",
       "Name": "Ruin Sentinel Gauntlets",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -5752,7 +5796,8 @@
       "MaxStackCount": 1,
       "Category": "leggings",
       "Name": "Ruin Sentinel Leggings",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -5840,7 +5885,8 @@
       "MaxStackCount": 1,
       "Category": "chests",
       "Name": "Dingy Maiden's Overcoat",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -5848,7 +5894,8 @@
       "MaxStackCount": 1,
       "Category": "helms",
       "Name": "Grotto Hat",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -5856,7 +5903,8 @@
       "MaxStackCount": 1,
       "Category": "chests",
       "Name": "Grotto Robe",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -5864,7 +5912,8 @@
       "MaxStackCount": 1,
       "Category": "gauntlets",
       "Name": "Grotto Wrap",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -5872,7 +5921,8 @@
       "MaxStackCount": 1,
       "Category": "leggings",
       "Name": "Grotto Trousers",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -5880,7 +5930,8 @@
       "MaxStackCount": 1,
       "Category": "gauntlets",
       "Name": "Soldier's Gauntlets",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -5888,7 +5939,8 @@
       "MaxStackCount": 1,
       "Category": "helms",
       "Name": "Soldier's Hood",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -5896,7 +5948,8 @@
       "MaxStackCount": 1,
       "Category": "helms",
       "Name": "Thief Mask???itemgib",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -5904,7 +5957,8 @@
       "MaxStackCount": 1,
       "Category": "chests",
       "Name": "Elder's Robe",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -5912,7 +5966,8 @@
       "MaxStackCount": 1,
       "Category": "helms",
       "Name": "Saint's Veil",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -5920,7 +5975,8 @@
       "MaxStackCount": 1,
       "Category": "chests",
       "Name": "Saint's Dress",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -5928,7 +5984,8 @@
       "MaxStackCount": 1,
       "Category": "helms",
       "Name": "Footman's Hood",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -5936,7 +5993,8 @@
       "MaxStackCount": 1,
       "Category": "chests",
       "Name": "Footman's Overcoat",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -5944,7 +6002,8 @@
       "MaxStackCount": 1,
       "Category": "gauntlets",
       "Name": "Footman's Bracelets",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -5952,7 +6011,8 @@
       "MaxStackCount": 1,
       "Category": "leggings",
       "Name": "Footman's Trousers",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -5960,7 +6020,8 @@
       "MaxStackCount": 1,
       "Category": "helms",
       "Name": "Scholar's Shed Skin",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -5968,7 +6029,8 @@
       "MaxStackCount": 1,
       "Category": "helms",
       "Name": "Man Serpent's Mask",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -5976,7 +6038,8 @@
       "MaxStackCount": 1,
       "Category": "chests",
       "Name": "Man Serpent's Robe",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -5984,7 +6047,8 @@
       "MaxStackCount": 1,
       "Category": "helms",
       "Name": "Giant's crown",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -5992,7 +6056,8 @@
       "MaxStackCount": 1,
       "Category": "chests",
       "Name": "Giant's Armor",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -6000,7 +6065,8 @@
       "MaxStackCount": 1,
       "Category": "gauntlets",
       "Name": "Giant's Gauntlets",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -6008,7 +6074,8 @@
       "MaxStackCount": 1,
       "Category": "leggings",
       "Name": "Giant's Leggings",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -6016,7 +6083,8 @@
       "MaxStackCount": 1,
       "Category": "helms",
       "Name": "Old Monarch's Crown",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -6024,7 +6092,8 @@
       "MaxStackCount": 1,
       "Category": "chests",
       "Name": "Old Monarch's Robe",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -6032,7 +6101,8 @@
       "MaxStackCount": 1,
       "Category": "helms",
       "Name": "Frigid Valley Mask",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -6040,7 +6110,8 @@
       "MaxStackCount": 1,
       "Category": "helms",
       "Name": "Dingy Hood",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -6048,7 +6119,8 @@
       "MaxStackCount": 1,
       "Category": "helms",
       "Name": "Hexer's Hood",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -6056,7 +6128,8 @@
       "MaxStackCount": 1,
       "Category": "chests",
       "Name": "Hexer's Robes",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -6064,7 +6137,8 @@
       "MaxStackCount": 1,
       "Category": "gauntlets",
       "Name": "Hexer's Gloves",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -6072,7 +6146,8 @@
       "MaxStackCount": 1,
       "Category": "leggings",
       "Name": "Hexer's Boots",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -6080,7 +6155,8 @@
       "MaxStackCount": 1,
       "Category": "helms",
       "Name": "Varangian Helm",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -6088,7 +6164,8 @@
       "MaxStackCount": 1,
       "Category": "chests",
       "Name": "Varangian Armor",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -6096,7 +6173,8 @@
       "MaxStackCount": 1,
       "Category": "gauntlets",
       "Name": "Varangian Cuffs",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -6104,7 +6182,8 @@
       "MaxStackCount": 1,
       "Category": "leggings",
       "Name": "Varangian Leggings",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -6112,7 +6191,8 @@
       "MaxStackCount": 1,
       "Category": "helms",
       "Name": "Dragon's head",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -6120,7 +6200,8 @@
       "MaxStackCount": 1,
       "Category": "chests",
       "Name": "Dragon's chestplace",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -6128,7 +6209,8 @@
       "MaxStackCount": 1,
       "Category": "gauntlets",
       "Name": "Dragon's gauntlets",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x10000000",
@@ -6136,7 +6218,44 @@
       "MaxStackCount": 1,
       "Category": "leggings",
       "Name": "Dragon's leggins",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
+    },
+    {
+      "Type": "0x10000000",
+      "Id": "0x100DBBA0",
+      "MaxStackCount": 1,
+      "Category": "helms",
+      "Name": "Empty Helm Slot",
+      "Durability": null,
+      "Safe": false
+    },
+    {
+      "Type": "0x10000000",
+      "Id": "0x100DBF88",
+      "MaxStackCount": 1,
+      "Category": "chests",
+      "Name": "Empty Chest Slot",
+      "Durability": null,
+      "Safe": false
+    },
+    {
+      "Type": "0x10000000",
+      "Id": "0x100DC370",
+      "MaxStackCount": 1,
+      "Category": "gauntlets",
+      "Name": "Empty Gauntlets Slot",
+      "Durability": null,
+      "Safe": false
+    },
+    {
+      "Type": "0x10000000",
+      "Id": "0x100DC758",
+      "MaxStackCount": 1,
+      "Category": "leggings",
+      "Name": "Empty Leggings Slot",
+      "Durability": null,
+      "Safe": false
     }
   ],
   "ring_items": [
@@ -7070,19 +7189,12 @@
     },
     {
       "Type": "0x20000000",
-      "Id": "0x20004F74",
-      "MaxStackCount": 1,
-      "Category": "rings",
-      "Name": "Ring of the Sun's Firstborn",
-      "Durability": null
-    },
-    {
-      "Type": "0x20000000",
       "Id": "0x20000000",
       "MaxStackCount": 1,
       "Category": "rings",
       "Name": "Accessory",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x20000000",
@@ -7158,19 +7270,12 @@
     },
     {
       "Type": "0x20000000",
-      "Id": "0x20004F88",
-      "MaxStackCount": 1,
-      "Category": "rings",
-      "Name": "Leo Ring",
-      "Durability": null
-    },
-    {
-      "Type": "0x20000000",
       "Id": "0x200DBC68",
       "MaxStackCount": 1,
       "Category": "rings",
       "Name": "Debug Life Ring",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x20000000",
@@ -7178,7 +7283,8 @@
       "MaxStackCount": 1,
       "Category": "rings",
       "Name": "Debug Life Ring+1",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x20000000",
@@ -7186,7 +7292,8 @@
       "MaxStackCount": 1,
       "Category": "rings",
       "Name": "Debug Life Ring+2",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x20000000",
@@ -7194,7 +7301,8 @@
       "MaxStackCount": 1,
       "Category": "rings",
       "Name": "Debug Life Ring+3",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x20000000",
@@ -7202,7 +7310,8 @@
       "MaxStackCount": 1,
       "Category": "rings",
       "Name": "Debug Stamina Ring",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x20000000",
@@ -7210,7 +7319,8 @@
       "MaxStackCount": 1,
       "Category": "rings",
       "Name": "Debug Stamina Ring+1",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x20000000",
@@ -7218,7 +7328,8 @@
       "MaxStackCount": 1,
       "Category": "rings",
       "Name": "Debug Stamina Ring+2",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     },
     {
       "Type": "0x20000000",
@@ -7226,7 +7337,8 @@
       "MaxStackCount": 1,
       "Category": "rings",
       "Name": "Debug Effects Ring",
-      "Durability": null
+      "Durability": null,
+      "Safe": false
     }
   ],
   "magic_items": [
@@ -7410,7 +7522,8 @@
       "Id": "0x4014EF60",
       "MaxStackCount": 1,
       "Category": "sorceries",
-      "Name": "Farron Hail ery"
+      "Name": "Farron Hail",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
@@ -7536,7 +7649,8 @@
       "Id": "0x4024C610",
       "MaxStackCount": 1,
       "Category": "pyromancies",
-      "Name": "Combustion"
+      "Name": "Combustion",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
@@ -7662,7 +7776,8 @@
       "Id": "0x4027AC40",
       "MaxStackCount": 1,
       "Category": "pyromancies",
-      "Name": "Dark Orb"
+      "Name": "Dark Orb",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
@@ -7788,7 +7903,8 @@
       "Id": "0x40359AA8",
       "MaxStackCount": 1,
       "Category": "miracles",
-      "Name": "Morbid Temptation"
+      "Name": "Morbid Temptation",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
@@ -7956,7 +8072,8 @@
       "Id": "0x40393870",
       "MaxStackCount": 1,
       "Category": "miracles",
-      "Name": "Dorris Swarm"
+      "Name": "Dorris Swarm",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
@@ -8077,7 +8194,7 @@
       "Id": "0x40000106",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Budding Green Blossom (Sirris Questline)"
+      "Name": "Budding Green Blossom"
     },
     {
       "Type": "0x40000000",
@@ -8994,7 +9111,8 @@
       "Id": "0x40000869",
       "MaxStackCount": 1,
       "Category": "multiplayer",
-      "Name": "Champions Bones"
+      "Name": "Champions Bones",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
@@ -9071,112 +9189,119 @@
       "Id": "0x4000086E",
       "MaxStackCount": 99,
       "Category": "questitems",
-      "Name": "Blood of the Dark souls"
+      "Name": "Blood of the Dark soul"
     },
     {
       "Type": "0x40000000",
       "Id": "0x4000086F",
       "MaxStackCount": 99,
       "Category": "covenantitems",
-      "Name": "Young Grass Dew"
+      "Name": "Young Grass Dew",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x400000F2",
       "MaxStackCount": 99,
       "Category": "tools",
-      "Name": "Silver Pendant"
+      "Name": "Silver Pendant",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x40000115",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Monastery Charm"
+      "Name": "Monastery Charm",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x4000012D",
       "MaxStackCount": 99,
       "Category": "projectiles",
-      "Name": "Holy Water Urn"
+      "Name": "Holy Water Urn",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x40000178",
       "MaxStackCount": 99,
       "Category": "tools",
-      "Name": "Pendant"
+      "Name": "Pendant",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x400001B9",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Spirit Amethyst"
+      "Name": "Spirit Amethyst",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x400001BA",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Spirit Amethyst"
+      "Name": "Spirit Amethyst",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x400001C2",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Oozing Charm Berry"
+      "Name": "Oozing Charm Berry",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x400001C3",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Oozing Flash Berry"
+      "Name": "Oozing Flash Berry",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x400001C5",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Brightbug"
+      "Name": "Brightbug",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x400002C9",
       "MaxStackCount": 99,
       "Category": "bosssouls",
-      "Name": "Soul of a Wicked Spirit"
+      "Name": "Soul of a Wicked Spirit",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x400002D3",
       "MaxStackCount": 99,
       "Category": "bosssouls",
-      "Name": "Soul of the Great Bat"
-    },
-    {
-      "Type": "0x40000000",
-      "Id": "0x400002E6",
-      "MaxStackCount": 99,
-      "Category": "bosssouls",
-      "Name": "Soul of the Twin Princes"
+      "Name": "Soul of the Great Bat",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x40000858",
       "MaxStackCount": 99,
       "Category": "questitems",
-      "Name": "Gwyndolin's Finger"
+      "Name": "Gwyndolin's Finger",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x40000000",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Goods"
+      "Name": "Goods",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
@@ -9512,231 +9637,264 @@
       "Id": "0x40002328",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Beckon"
+      "Name": "Beckon",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x40002329",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Point forward"
+      "Name": "Point forward",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x4000232A",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Hurrah!"
+      "Name": "Hurrah!",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x4000232B",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Bow"
+      "Name": "Bow",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x4000232C",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Jump for joy"
+      "Name": "Jump for joy",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x4000232D",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Duel bow"
+      "Name": "Duel bow",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x4000232E",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Wave"
+      "Name": "Wave",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x4000232F",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Praise the Sun"
+      "Name": "Praise the Sun",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x40002330",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Point up"
+      "Name": "Point up",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x40002331",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Point down"
+      "Name": "Point down",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x40002334",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Prostration"
+      "Name": "Prostration",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x40002335",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Proper bow"
+      "Name": "Proper bow",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x40002336",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Prayer"
+      "Name": "Prayer",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x40002337",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Welcome"
+      "Name": "Welcome",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x40002338",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Joy"
+      "Name": "Joy",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x40002339",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "My thanks!"
+      "Name": "My thanks!",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x4000233A",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Rejoice"
+      "Name": "Rejoice",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x4000233B",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Rest"
+      "Name": "Rest",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x4000233C",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "By my sword"
+      "Name": "By my sword",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x4000233D",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Dignified bow"
+      "Name": "Dignified bow",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x4000233F",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Curl up"
+      "Name": "Curl up",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x40002340",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Stretch out"
+      "Name": "Stretch out",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x40002341",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Call over"
+      "Name": "Call over",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x40002342",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Collapse"
+      "Name": "Collapse",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x40002343",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Quiet Resolve"
+      "Name": "Quiet Resolve",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x40002344",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Patches Squat"
+      "Name": "Patches Squat",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x40002345",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Applause"
+      "Name": "Applause",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x40002346",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Path of the Dragon"
+      "Name": "Path of the Dragon",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x40002347",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Legion Etiquette"
+      "Name": "Legion Etiquette",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x40002348",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Darkmoon Loyalty"
+      "Name": "Darkmoon Loyalty",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x40002349",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Sleep"
+      "Name": "Sleep",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x4000234A",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Toast"
+      "Name": "Toast",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x4000234B",
       "MaxStackCount": 99,
       "Category": "consumables",
-      "Name": "Silent Ally!"
+      "Name": "Silent Ally!",
+      "Safe": false
     }
   ],
   "ore_items": [
@@ -9927,7 +10085,8 @@
       "Id": "0x400003F2",
       "MaxStackCount": 99,
       "Category": "ores",
-      "Name": "Dragon Scale"
+      "Name": "Dragon Scale",
+      "Safe": false
     }
   ],
   "key_items": [
@@ -10003,13 +10162,6 @@
     },
     {
       "Type": "0x40000000",
-      "Id": "0x400007DF",
-      "MaxStackCount": 1,
-      "Category": "keys",
-      "Name": "Tower Key"
-    },
-    {
-      "Type": "0x40000000",
       "Id": "0x40000836",
       "MaxStackCount": 1,
       "Category": "keys",
@@ -10048,28 +10200,28 @@
       "Id": "0x4000084B",
       "MaxStackCount": 1,
       "Category": "keys",
-      "Name": "Cinders of a Lord"
+      "Name": "Cinders of a Lord 1"
     },
     {
       "Type": "0x40000000",
       "Id": "0x4000084C",
       "MaxStackCount": 1,
       "Category": "keys",
-      "Name": "Cinders of a Lord"
+      "Name": "Cinders of a Lord 2"
     },
     {
       "Type": "0x40000000",
       "Id": "0x4000084D",
       "MaxStackCount": 1,
       "Category": "keys",
-      "Name": "Cinders of a Lord"
+      "Name": "Cinders of a Lord 3"
     },
     {
       "Type": "0x40000000",
       "Id": "0x4000084E",
       "MaxStackCount": 1,
       "Category": "keys",
-      "Name": "Cinders of a Lord"
+      "Name": "Cinders of a Lord 4"
     },
     {
       "Type": "0x40000000",
@@ -10174,21 +10326,24 @@
       "Id": "0x400007D3",
       "MaxStackCount": 1,
       "Category": "keys",
-      "Name": "Bridge Key"
+      "Name": "Bridge Key",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x400007D4",
       "MaxStackCount": 1,
       "Category": "keys",
-      "Name": "Iron Seal of the Wolf"
+      "Name": "Iron Seal of the Wolf",
+      "Safe": false
     },
     {
       "Type": "0x40000000",
       "Id": "0x40000835",
       "MaxStackCount": 1,
       "Category": "keys",
-      "Name": "Holy Remains"
+      "Name": "Holy Remains",
+      "Safe": false
     }
   ],
   "ammunition_items": [
@@ -10388,7 +10543,7 @@
       "Id": "0x2000276A",
       "MaxStackCount": 1,
       "Category": "covenants",
-      "Name": "-Spears of the Church"
+      "Name": "Spears of the Church"
     }
   ]
 }

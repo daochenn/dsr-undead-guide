@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { useOffsetSearch } from '../hooks/useOffsetSearch';
+import { useOffsetSearch, FROM0_PATTERN_ID } from '../hooks/useOffsetSearch';
 import { DS3_OFFSET_PATTERNS } from '../lib/offsetPatterns';
 
 interface OffsetSearchTabProps {
@@ -16,6 +16,7 @@ export const OffsetSearchTab: React.FC<OffsetSearchTabProps> = ({ onClose }) => 
     setCharacterSlot,
     setPatternId,
     setSelectedSnapshotId,
+    formatOffset,
     initScan,
     filterSame,
     filterDifferent,
@@ -75,7 +76,6 @@ export const OffsetSearchTab: React.FC<OffsetSearchTabProps> = ({ onClose }) => 
       </div>
 
       <div className="offset-search-body">
-        {/* Controls row */}
         <div className="offset-search-controls">
           <div className="offset-search-control-group">
             <label>Save file</label>
@@ -94,10 +94,11 @@ export const OffsetSearchTab: React.FC<OffsetSearchTabProps> = ({ onClose }) => 
           <div className="offset-search-control-group">
             <label>Character slot</label>
             <select
-              value={characterSlot}
-              onChange={e => setCharacterSlot(Number(e.target.value))}
+              value={characterSlot === 'all' ? 'all' : characterSlot}
+              onChange={e => setCharacterSlot(e.target.value === 'all' ? 'all' : Number(e.target.value))}
               disabled={isLoading}
             >
+              <option value="all">All Slots</option>
               {Array.from({ length: 10 }, (_, i) => (
                 <option key={i} value={i}>Slot {i}</option>
               ))}
@@ -111,6 +112,7 @@ export const OffsetSearchTab: React.FC<OffsetSearchTabProps> = ({ onClose }) => 
               onChange={e => setPatternId(e.target.value)}
               disabled={isLoading}
             >
+              <option value={FROM0_PATTERN_ID}>From 0 (absolute)</option>
               {DS3_OFFSET_PATTERNS.map(p => (
                 <option key={p.id} value={p.id}>{p.label}</option>
               ))}
@@ -133,12 +135,10 @@ export const OffsetSearchTab: React.FC<OffsetSearchTabProps> = ({ onClose }) => 
           </div>
         </div>
 
-        {/* Status */}
         <div className="offset-search-status">{state.status}</div>
 
         {snapshots.length > 0 && (
           <>
-            {/* Snapshots linked list */}
             <div className="offset-search-snapshots">
               <span className="offset-search-snapshots-label">Snapshots:</span>
               {snapshots.map(snap => (
@@ -152,7 +152,6 @@ export const OffsetSearchTab: React.FC<OffsetSearchTabProps> = ({ onClose }) => 
               ))}
             </div>
 
-            {/* Filter row */}
             <div className="offset-search-filter-row">
               <div className="offset-search-filter-select">
                 <label>Compare with</label>
@@ -190,10 +189,9 @@ export const OffsetSearchTab: React.FC<OffsetSearchTabProps> = ({ onClose }) => 
               </button>
             </div>
 
-            {/* CSV row */}
             <div className="offset-search-csv-row">
               <span className="offset-search-count">
-                Showing {Math.min(totalOffsets, DISPLAY_LIMIT)} / {totalOffsets} offsets
+                Showing {Math.min(totalOffsets, DISPLAY_LIMIT).toLocaleString()} / {totalOffsets.toLocaleString()} offsets
                 {totalOffsets > DISPLAY_LIMIT && ` (first ${DISPLAY_LIMIT} shown)`}
               </span>
               <button onClick={handleExportCsv} disabled={isLoading || totalOffsets === 0}>
@@ -211,11 +209,11 @@ export const OffsetSearchTab: React.FC<OffsetSearchTabProps> = ({ onClose }) => 
               />
             </div>
 
-            {/* Table */}
             <div className="offset-search-table-wrapper">
               <table className="offset-search-table">
                 <thead>
                   <tr>
+                    <th>Slot</th>
                     <th>Offset</th>
                     {snapshots.map(snap => (
                       <th key={snap.id}>{snap.id}</th>
@@ -223,15 +221,14 @@ export const OffsetSearchTab: React.FC<OffsetSearchTabProps> = ({ onClose }) => 
                   </tr>
                 </thead>
                 <tbody>
-                  {displayedOffsets.map(rel => {
-                    const offsetStr = rel < 0
-                      ? `-0x${(-rel).toString(16).toUpperCase()}`
-                      : `0x${rel.toString(16).toUpperCase()}`;
+                  {displayedOffsets.map(({ slot, abs }) => {
+                    const key = `${slot}:${abs}`;
                     return (
-                      <tr key={rel}>
-                        <td className="offset-search-offset-cell">{offsetStr}</td>
+                      <tr key={key}>
+                        <td className="offset-search-offset-cell">{slot}</td>
+                        <td className="offset-search-offset-cell">{formatOffset(slot, abs)}</td>
                         {snapshots.map(snap => {
-                          const v = snap.data[rel];
+                          const v = snap.data[key];
                           return (
                             <td key={snap.id} className="offset-search-value-cell">
                               {v !== undefined ? v.toString(16).toUpperCase().padStart(2, '0') : '—'}

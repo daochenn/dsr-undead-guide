@@ -16,6 +16,7 @@ interface AppLayoutProps {
   onTutorial?: () => void;
   showGameNav?: boolean;
   currentGame?: 'ds1' | 'ds3' | 'eldenring';
+  extraActions?: ReactNode;
 }
 
 export const AppLayout: React.FC<AppLayoutProps> = ({
@@ -31,6 +32,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   onTutorial,
   showGameNav,
   currentGame,
+  extraActions,
 }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -51,6 +53,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         onTutorial={onTutorial}
         showGameNav={showGameNav}
         currentGame={currentGame}
+        extraActions={extraActions}
       />
 
       <div className="app-content">

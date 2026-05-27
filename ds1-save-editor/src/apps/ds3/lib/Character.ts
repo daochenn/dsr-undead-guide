@@ -446,6 +446,17 @@ export class DS3Character {
     this.data[this.getOffset('ASHEN_ESTUS_MAX')] = value & 0xFF;
   }
 
+  // ===== WEAPON MEMORY =====
+  get weaponMemory(): number {
+    if (this.isEmpty) return 0;
+    return this.data[this.getOffset('WEAPON_MEMORY')];
+  }
+
+  set weaponMemory(value: number) {
+    value = Math.max(0, Math.min(10, value));
+    this.data[this.getOffset('WEAPON_MEMORY')] = value & 0xFF;
+  }
+
   // ===== CLASS =====
   /**
    * Get character class (1 byte)

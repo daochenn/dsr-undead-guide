@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { AppLayout } from '../../shared/components/Layout';
 import { FileUpload, CharacterList, TabPanel, SaveWarningModal, type FileUploadRef } from './components';
 import { useDS3SaveEditor } from './hooks';
+import { detectEnvironment } from '../ds1/lib/adapters';
+
+const isWebEnv = detectEnvironment() === 'web';
 
 const logoImg = (import.meta.env.MODE === 'static' || typeof window !== 'undefined' && window.location.protocol === 'file:')
   ? 'ds3logo.png'
@@ -38,6 +41,7 @@ function useTimeAgo(date: Date | null): string {
 export const DS3App: React.FC<DS3AppProps> = ({ onHome }) => {
   const fileUploadRef = useRef<FileUploadRef>(null);
   const [showSaveWarning, setShowSaveWarning] = useState(false);
+  const [saveWarningTriggersSave, setSaveWarningTriggersSave] = useState(false);
   const navigate = useNavigate();
 
   const {
@@ -45,6 +49,7 @@ export const DS3App: React.FC<DS3AppProps> = ({ onHome }) => {
     characters,
     selectedCharacterIndex,
     originalFilename,
+    isSlotActive,
     handleFileLoaded,
     handleCharacterSelect,
     handleCharacterUpdate,
@@ -74,19 +79,55 @@ export const DS3App: React.FC<DS3AppProps> = ({ onHome }) => {
     return () => window.removeEventListener('keydown', handler);
   }, [navigate]);
 
+  const handleOpenWarning = () => {
+    setSaveWarningTriggersSave(false);
+    setShowSaveWarning(true);
+  };
+
+  const runSaveAs = async () => {
+    try {
+      await handleSaveAs();
+    } catch (err: any) {
+      if (err?.name === 'AbortError' || err?.message === 'User cancelled file save') return;
+      console.error('Save As error:', err);
+      handleOpenWarning();
+    }
+  };
+
   const handleSaveAsClick = () => {
     const hasShownWarning = localStorage.getItem('ds3-save-as-warning-shown');
     if (!hasShownWarning) {
+      setSaveWarningTriggersSave(true);
       setShowSaveWarning(true);
     } else {
-      handleSaveAs();
+      runSaveAs();
+    }
+  };
+
+  const handleSaveClick = async () => {
+    try {
+      await handleSave();
+    } catch (err: any) {
+      console.error('Save error:', err);
+      const isRestricted =
+        err?.name === 'NotAllowedError' ||
+        err?.name === 'SecurityError' ||
+        (err?.message ?? '').toLowerCase().includes('system');
+      if (isWebEnv && isRestricted) {
+        handleOpenWarning();
+      } else {
+        alert('Error saving file. Please try again.');
+      }
     }
   };
 
   const handleWarningConfirm = () => {
     localStorage.setItem('ds3-save-as-warning-shown', 'true');
     setShowSaveWarning(false);
-    handleSaveAs();
+    if (saveWarningTriggersSave) {
+      setSaveWarningTriggersSave(false);
+      runSaveAs();
+    }
   };
 
   const selectedCharacter = selectedCharacterIndex !== null
@@ -94,6 +135,13 @@ export const DS3App: React.FC<DS3AppProps> = ({ onHome }) => {
     : null;
 
   const canSave = !!saveEditor?.hasFileHandle();
+
+  const webLimitsButton = isWebEnv ? (
+    <button className="tutorial-button" onClick={handleOpenWarning} title="Browser limitations for DS3 saves">
+      <span className="button-icon">⚠️</span>
+      <span className="button-text">Web Limits</span>
+    </button>
+  ) : undefined;
 
   const sidebar = (
     <>
@@ -112,6 +160,7 @@ export const DS3App: React.FC<DS3AppProps> = ({ onHome }) => {
           characters={characters}
           selectedIndex={selectedCharacterIndex}
           onSelectCharacter={handleCharacterSelect}
+          isSlotActive={isSlotActive}
         />
       )}
     </>
@@ -127,6 +176,7 @@ export const DS3App: React.FC<DS3AppProps> = ({ onHome }) => {
       showTutorialButton={false}
       showGameNav={true}
       currentGame="ds3"
+      extraActions={webLimitsButton}
     >
       <div style={{
         background: 'linear-gradient(135deg, #7a3a00, #5a2a00)',
@@ -168,7 +218,7 @@ export const DS3App: React.FC<DS3AppProps> = ({ onHome }) => {
             </button>
             <button
               className="ds1-action-btn"
-              onClick={handleSave}
+              onClick={handleSaveClick}
               disabled={!canSave}
             >
               Save

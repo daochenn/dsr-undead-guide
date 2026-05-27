@@ -12,6 +12,7 @@ interface HeaderProps {
   onTutorial?: () => void;
   showGameNav?: boolean;
   currentGame?: 'ds1' | 'ds3' | 'eldenring';
+  extraActions?: React.ReactNode;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -25,6 +26,7 @@ export const Header: React.FC<HeaderProps> = ({
   onTutorial,
   showGameNav,
   currentGame,
+  extraActions,
 }) => {
   const [showGameMenu, setShowGameMenu] = useState(false);
 
@@ -52,6 +54,7 @@ export const Header: React.FC<HeaderProps> = ({
           <span className="header-title-text">{title}</span>
         </h1>
         <div className="header-actions">
+          {extraActions}
           {showGameNav && (
             <div className="game-nav-dropdown">
               <button

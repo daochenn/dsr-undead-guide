@@ -10,53 +10,81 @@ export const SaveWarningModal: React.FC<SaveWarningModalProps> = ({
   isOpen,
   onConfirm,
 }) => {
-  const [copySuccess, setCopySuccess] = useState(false);
+  const [copiedItem, setCopiedItem] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
-  const handleCopyPath = async () => {
+  const handleCopy = async (text: string, key: string) => {
     try {
-      await navigator.clipboard.writeText('%APPDATA%\\DarkSoulsIII');
-      setCopySuccess(true);
-      setTimeout(() => setCopySuccess(false), 2000);
-    } catch (error) {
-      console.error('Failed to copy:', error);
+      await navigator.clipboard.writeText(text);
+      setCopiedItem(key);
+      setTimeout(() => setCopiedItem(null), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
     }
   };
 
+  const appDataPath = '%APPDATA%\\DarkSoulsIII';
+
   return (
     <div className="modal-overlay">
-      <div className="modal-content">
+      <div className="modal-content ds3-limits-modal">
         <div className="modal-header">
-          <h2>⚠️ Important Save Location Warning</h2>
+          <h2>⚠️ DS3 Browser Limitations</h2>
+          <p className="modal-subtitle">
+            DS3 saves are in <code>AppData</code> — Chrome can read but not write there directly.
+          </p>
         </div>
         <div className="modal-body">
-          <p className="warning-text">
-            <strong>You cannot save directly to the game save folder!</strong>
-          </p>
-          <p>
-            Due to browser security restrictions, you must:
-          </p>
-          <ol>
-            <li>Save the file to <strong>Downloads</strong> or <strong>Desktop</strong> folder</li>
-            <li>Then manually copy it to your Dark Souls 3 save folder</li>
-          </ol>
-          <div className="save-path-hint">
-            <p>To quickly navigate to your save folder:</p>
-            <div className="path-copy-container">
-              <code>%APPDATA%\DarkSoulsIII</code>
-              <button
-                className={`copy-path-button ${copySuccess ? 'copied' : ''}`}
-                onClick={handleCopyPath}
-                title="Copy path to clipboard"
-              >
-                {copySuccess ? '✓ Copied!' : '📋 Copy'}
-              </button>
+
+          {/* Option 1 */}
+          <div className="limit-option">
+            <div className="limit-option-num">1</div>
+            <div className="limit-option-body">
+              <div className="limit-option-title">
+                <strong>Save As → Copy back</strong>
+                <span className="option-tag">Browser</span>
+              </div>
+              <p>
+                Use <kbd>Save As</kbd> to save the edited file to Desktop or Downloads,
+                then copy it to your DS3 save folder, replacing the original.
+              </p>
+              <div className="path-copy-container">
+                <code>{appDataPath}</code>
+                <button
+                  className={`copy-path-button ${copiedItem === 'appdata' ? 'copied' : ''}`}
+                  onClick={() => handleCopy(appDataPath, 'appdata')}
+                >
+                  {copiedItem === 'appdata' ? '✓' : '📋'}
+                </button>
+              </div>
+              <p className="path-instruction"><kbd>Win+R</kbd> → paste path → Enter</p>
             </div>
-            <p className="path-instruction">
-              Press <kbd>Win + R</kbd>, paste this path, and press Enter
-            </p>
           </div>
+
+          {/* Option 2 */}
+          <div className="limit-option">
+            <div className="limit-option-num">2</div>
+            <div className="limit-option-body">
+              <div className="limit-option-title">
+                <strong>Standalone Desktop App</strong>
+                <span className="option-tag option-tag-green">No Restrictions</span>
+              </div>
+              <p>
+                Desktop save editor with full AppData access — no browser restrictions,
+                Save works directly.
+              </p>
+              <a
+                className="nexus-link"
+                href="https://www.nexusmods.com/darksouls3/mods/2245?tab=files"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                🔗 Download on Nexus Mods
+              </a>
+            </div>
+          </div>
+
         </div>
         <div className="modal-footer">
           <button className="modal-button modal-button-confirm" onClick={onConfirm}>
