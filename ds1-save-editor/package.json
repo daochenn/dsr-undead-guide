@@ -1,6 +1,6 @@
 {
   "name": "ds1-save-editor",
-  "version": "1.7.0",
+  "version": "1.7.2",
   "description": "Dark Souls Remastered Save Editor - Portable desktop app for editing DSR save files",
   "author": "DS1 Save Editor",
   "keywords": [
@@ -75,6 +75,7 @@
     }
   },
   "dependencies": {
+    "@tanstack/react-virtual": "^3.13.24",
     "@tauri-apps/plugin-dialog": "^2.4.2",
     "@tauri-apps/plugin-fs": "^2.4.4",
     "js-md5": "^0.8.3",

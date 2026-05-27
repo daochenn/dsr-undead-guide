@@ -57,6 +57,7 @@ export interface Item {
   MaxUpgrade?: number;
   CanInfuse?: boolean;
   Durability?: number;
+  Safe?: boolean;
 }
 
 export interface ItemsDatabase {
@@ -523,7 +524,7 @@ export class DS3Inventory {
     const gaSlot = new Uint8Array(60);
     gaSlot[0] = gaHighest & 0xFF;
     gaSlot[1] = (gaHighest >> 8) & 0xFF;
-    if (collectionType === ItemCollectionType.Weapon) {
+    if (collectionType === ItemCollectionType.Weapon || collectionType === ItemCollectionType.Ammunition) {
       gaSlot[2] = 0x80; gaSlot[3] = 0x80;
     } else {
       gaSlot[2] = 0x81; gaSlot[3] = 0x90;
@@ -574,8 +575,6 @@ export class DS3Inventory {
     finalBuf.set(step2.slice(delStart + 52), delStart);
 
     data.set(finalBuf);
-    // GA manipulation shifts bytes in the buffer → invalidate cached pattern offset
-    // so stat reads after this use the correct (shifted) position
     this.character.invalidatePatternCache();
     console.log(`[DS3 GA] Entry written for itemId=0x${finalItemId.toString(16)} gaHighest=${gaHighest}`);
     return gaHighest;
@@ -584,9 +583,7 @@ export class DS3Inventory {
   private getInventoryStartOffset(): number {
     const data = this.character.getRawData();
     const gaEnd = this.gaTableEnd(data);
-    const start = gaEnd + DS3Inventory.INV_OFFSET_FROM_GA_END;
-    console.log(`[DS3 Inventory] ga_end=0x${gaEnd.toString(16)} inventory_start=0x${start.toString(16)}`);
-    return start;
+    return gaEnd + DS3Inventory.INV_OFFSET_FROM_GA_END;
   }
 
   /** Byte offset in data[] for a given virtual slot index */
@@ -837,15 +834,18 @@ export class DS3Inventory {
   }
 
   /**
-   * Find next available slot (2 consecutive empty slots) in the regular inventory
+   * Find next available slot (2 consecutive empty slots) in the regular inventory.
+   * Reads bytes directly to avoid one GA scan per slot.
    */
   findNextAvailableSlot(): number {
+    const data = this.character.getRawData();
+    const invStart = this.getInventoryStartOffset();
     for (let i = 0; i < DS3Inventory.REGULAR_SLOTS - 1; i++) {
-      const slot = this.readSlot(i);
-      const nextSlot = this.readSlot(i + 1);
-      if (slot.isEmpty && nextSlot.isEmpty) return i;
+      const off1 = invStart + i * DS3Inventory.ITEM_SIZE;
+      const off2 = off1 + DS3Inventory.ITEM_SIZE;
+      if (off2 + DS3Inventory.ITEM_SIZE <= data.length && data[off1 + 3] === 0x00 && data[off2 + 3] === 0x00) return i;
     }
-    return 0; // Fallback to slot 0
+    return 0;
   }
 
   /**
@@ -853,8 +853,14 @@ export class DS3Inventory {
    */
   findExistingItem(itemInfo: Item): DS3InventoryItem | null {
     const baseId = this.parseHex(itemInfo.Id);
+    const collectionType = this.getCollectionTypeFromItem(itemInfo);
+    let expectedSeparator = 0xB0;
+    if (collectionType === ItemCollectionType.Weapon || collectionType === ItemCollectionType.Ammunition) expectedSeparator = 0x80;
+    else if (collectionType === ItemCollectionType.Armor) expectedSeparator = 0x90;
+    else if (collectionType === ItemCollectionType.Ring || collectionType === ItemCollectionType.Covenant) expectedSeparator = 0xA0;
+
     for (const item of this.getAllItems()) {
-      if (!item.isEmpty && item.baseItemId === baseId) return item;
+      if (!item.isEmpty && item.separator === expectedSeparator && item.baseItemId === baseId) return item;
     }
     return null;
   }
@@ -889,32 +895,23 @@ export class DS3Inventory {
       return this.addKeyItem(itemInfo);
     }
 
-    // Determine insert index
+    // Determine insert index — read bytes directly to avoid one GA scan per slot
     let insertIndex = -1;
-    // @ts-expect-error - Reserved for future use
-    let _previousNonEmptyItem: DS3InventoryItem | null = null;
 
     if (targetSlot !== undefined) {
-      insertIndex = targetSlot;
-      if (insertIndex < 0 || insertIndex >= DS3Inventory.REGULAR_SLOTS) {
+      if (targetSlot < 0 || targetSlot >= DS3Inventory.REGULAR_SLOTS) {
         console.warn(`[DS3 Inventory] Invalid target slot ${targetSlot}`);
         return null;
       }
-      for (let j = insertIndex - 1; j >= 0; j--) {
-        const prevSlot = this.readSlot(j);
-        if (!prevSlot.isEmpty) { _previousNonEmptyItem = prevSlot; break; }
-      }
+      insertIndex = targetSlot;
     } else {
-      // Find 2 consecutive empty slots in the regular inventory
+      const rawData = this.character.getRawData();
+      const invStart = this.getInventoryStartOffset();
       for (let i = 0; i < DS3Inventory.REGULAR_SLOTS - 1; i++) {
-        const slot = this.readSlot(i);
-        const nextSlot = this.readSlot(i + 1);
-        if (slot.isEmpty && nextSlot.isEmpty) {
+        const off1 = invStart + i * DS3Inventory.ITEM_SIZE;
+        const off2 = off1 + DS3Inventory.ITEM_SIZE;
+        if (off2 + DS3Inventory.ITEM_SIZE <= rawData.length && rawData[off1 + 3] === 0x00 && rawData[off2 + 3] === 0x00) {
           insertIndex = i;
-          for (let j = i - 1; j >= 0; j--) {
-            const prevSlot = this.readSlot(j);
-            if (!prevSlot.isEmpty) { _previousNonEmptyItem = prevSlot; break; }
-          }
           break;
         }
       }
@@ -923,9 +920,6 @@ export class DS3Inventory {
         return null;
       }
     }
-
-    // @ts-expect-error - Reserved for future use
-    const _slot = this.readSlot(insertIndex);
     let finalItemId = this.parseHex(itemInfo.Id);
 
     // For weapons, apply upgrade and infusion to lower 16 bits
@@ -940,15 +934,17 @@ export class DS3Inventory {
 
     // Determine separator based on category
     // Covenant badges have 0x2000XXXX IDs (ring type) → use 0xA0, not 0xB0
+    // Ammunition uses 0x80 (weapon type) — same GA table structure as weapons
     let separator = 0xB0; // Default: Consumables/Goods
-    if (collectionType === ItemCollectionType.Weapon) separator = 0x80;
+    if (collectionType === ItemCollectionType.Weapon || collectionType === ItemCollectionType.Ammunition) separator = 0x80;
     else if (collectionType === ItemCollectionType.Armor) separator = 0x90;
     else if (collectionType === ItemCollectionType.Ring || collectionType === ItemCollectionType.Covenant) separator = 0xA0;
 
-    // For weapons/armor, write GA entry first (modifies raw data; inventory offset shifts after)
+    // For weapons/armor/ammunition, write GA entry first (modifies raw data; inventory offset shifts after)
     let gaHighest = 0;
-    if (collectionType === ItemCollectionType.Weapon || collectionType === ItemCollectionType.Armor) {
-      const durability = itemInfo.Durability ?? (collectionType === ItemCollectionType.Weapon ? 75 : 360);
+    if (collectionType === ItemCollectionType.Weapon || collectionType === ItemCollectionType.Armor || collectionType === ItemCollectionType.Ammunition) {
+      const durability = collectionType === ItemCollectionType.Ammunition ? 0
+        : (itemInfo.Durability ?? (collectionType === ItemCollectionType.Weapon ? 75 : 360));
       gaHighest = this.addGAEntry(finalItemId, collectionType, durability);
     }
 
@@ -962,7 +958,7 @@ export class DS3Inventory {
     newItemData[7] = (finalItemId >> 24) & 0xFF;
 
     // Bytes 0-2 + 3: depends on type
-    if (collectionType === ItemCollectionType.Weapon || collectionType === ItemCollectionType.Armor) {
+    if (collectionType === ItemCollectionType.Weapon || collectionType === ItemCollectionType.Armor || collectionType === ItemCollectionType.Ammunition) {
       // Bytes 0-1: gaHighest (GA table index), byte 2: 0x80
       newItemData[0] = gaHighest & 0xFF;
       newItemData[1] = (gaHighest >> 8) & 0xFF;
@@ -1005,7 +1001,7 @@ export class DS3Inventory {
       const randomByte = Math.floor(Math.random() * 256);
       newItemData[13] = (randomByte & 0xF0) | ((newIndex >> 8) & 0x0F);
       // Bytes 14-15: type-specific constants from game templates
-      if (separator === 0x80) {        // Weapon
+      if (separator === 0x80) {        // Weapon / Ammunition
         newItemData[14] = 0x18; newItemData[15] = 0xFB;
       } else if (separator === 0x90) { // Armor
         newItemData[14] = 0x65; newItemData[15] = 0xFE;
@@ -1220,7 +1216,46 @@ export class DS3Inventory {
     console.warn(`[DS3 GA] GA entry for gaHighest=${gaHighest} not found`);
   }
 
-  addAllItems(collectionType: ItemCollectionType): void {
+  // ===== WEAPON MEMORY =====
+
+  get weaponMemory(): number {
+    return this.character.weaponMemory;
+  }
+
+  set weaponMemory(value: number) {
+    this.character.weaponMemory = value;
+  }
+
+  /**
+   * Returns the effective Weapon Level for a single weapon item.
+   * Unique/boss weapons (MaxUpgrade=5) count x2: WL = upgradeLevel * 2.
+   * Regular weapons (MaxUpgrade=10): WL = upgradeLevel.
+   */
+  getWeaponLevel(item: DS3InventoryItem): number {
+    if (item.separator !== 0x80) return 0;
+    const maxUp = item.itemInfo?.MaxUpgrade ?? 10;
+    return item.upgradeLevel * (maxUp === 5 ? 2 : 1);
+  }
+
+  /**
+   * Sets weaponMemory to the highest WL found in the regular inventory.
+   * exact=true (user click): can lower; exact=false (auto): only raises.
+   */
+  calibrateWeaponMemory(exact = false): number {
+    let maxWL = 0;
+    for (const item of this.getAllItems()) {
+      if (item.collectionType === ItemCollectionType.Weapon) {
+        const wl = this.getWeaponLevel(item);
+        if (wl > maxWL) maxWL = wl;
+      }
+    }
+    if (exact || maxWL > this.weaponMemory) {
+      this.weaponMemory = maxWL;
+    }
+    return this.weaponMemory;
+  }
+
+  addAllItems(collectionType: ItemCollectionType, targetWL = 0): void {
     if (!this.itemsDatabase) return;
     const map: Record<string, Item[] | undefined> = {
       [ItemCollectionType.Weapon]:      this.itemsDatabase.weapon_items,
@@ -1233,18 +1268,80 @@ export class DS3Inventory {
       [ItemCollectionType.Ammunition]:  this.itemsDatabase.ammunition_items,
       [ItemCollectionType.Covenant]:    this.itemsDatabase.covenant_items,
     };
-    const items = map[collectionType] || [];
-    for (const item of items) {
-      try {
-        this.addItem(item, Math.min(1, item.MaxStackCount));
-      } catch {
-        // skip if no space
+
+    // Build covenant ID set to exclude covenant badges from ring_items (they share IDs)
+    const covenantIds = new Set(
+      (this.itemsDatabase.covenant_items || []).map(i => this.parseHex(i.Id))
+    );
+
+    const items = (map[collectionType] || []).filter(item => {
+      if (item.Safe === false) return false;
+      const id = this.parseHex(item.Id);
+      // Estus Flask (0x40000096–0x400000AB) and Ashen Estus Flask (0x400000BE–0x400000D3)
+      if (id >= 0x40000096 && id <= 0x400000AB) return false;
+      if (id >= 0x400000BE && id <= 0x400000D3) return false;
+      // Exclude covenant items from ring_items (they share the same ID prefix)
+      if (collectionType === ItemCollectionType.Ring && covenantIds.has(id)) return false;
+      return true;
+    });
+
+    if (collectionType === ItemCollectionType.Weapon) {
+      // Pre-find the first available slot pair and track it to avoid O(slots)
+      // scan inside addItem on every iteration.
+      let nextSlot = this.findNextAvailableSlot();
+      for (const item of items) {
+        try {
+          const maxUp = item.MaxUpgrade ?? 10;
+          // Unique weapons (MaxUpgrade=5) count x2 per upgrade level.
+          const upgradeLevel = maxUp === 5
+            ? Math.min(Math.floor(targetWL / 2), 5)
+            : Math.min(targetWL, maxUp);
+          const slotUsed = this.addItem(item, 1, upgradeLevel, 0, nextSlot);
+          if (slotUsed !== null) nextSlot = slotUsed + 1;
+        } catch {
+          // skip if no space
+        }
+      }
+    } else if (collectionType === ItemCollectionType.Armor) {
+      let nextSlot = this.findNextAvailableSlot();
+      for (const item of items) {
+        try {
+          const slotUsed = this.addItem(item, 1, 0, 0, nextSlot);
+          if (slotUsed !== null) nextSlot = slotUsed + 1;
+        } catch {
+          // skip if no space
+        }
+      }
+    } else if (collectionType === ItemCollectionType.Ammunition) {
+      // Ammunition creates GA entries (like weapons) so track slots to avoid O(n²) scans.
+      let nextSlot = this.findNextAvailableSlot();
+      for (const item of items) {
+        try {
+          const slotUsed = this.addItem(item, item.MaxStackCount, 0, 0, nextSlot);
+          if (slotUsed !== null) nextSlot = slotUsed + 1;
+        } catch {
+          // skip if no space
+        }
+      }
+    } else {
+      for (const item of items) {
+        try {
+          // Add max quantity to inventory
+          this.addItem(item, item.MaxStackCount);
+          // Also fill storage box (bottomless box) to 600 for stackable items
+          if (item.MaxStackCount > 1) {
+            this.setStorageQuantity(item, 600);
+          }
+        } catch {
+          // skip if no space
+        }
       }
     }
   }
 
   clearAllItems(collectionType: ItemCollectionType): void {
     for (const item of this.getItemsByType(collectionType)) {
+      if (item.itemInfo?.Safe === false) continue;
       this.deleteItem(item.slotIndex);
     }
   }

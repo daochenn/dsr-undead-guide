@@ -553,6 +553,7 @@ export class Inventory {
 
   findExistingItem(itemInfo: Item, upgradeLevel: number, infusion: ItemInfusion): InventoryItem | null {
     const baseId = this.parseHex(itemInfo.Id);
+    const typeNumeric = Math.floor(this.parseHex(itemInfo.Type) / 0x10000000);
     const collectionType = this.getCollectionTypeFromItem(itemInfo);
 
     // For Key Items, search in slots 0-63, for others search in slots 64+
@@ -564,6 +565,7 @@ export class Inventory {
       if (item.isEmpty) continue;
 
       if (
+        item.itemType === typeNumeric &&
         item.baseItemId === baseId &&
         item.upgradeLevel === upgradeLevel &&
         item.infusion === infusion
