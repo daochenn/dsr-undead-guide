@@ -354,18 +354,14 @@ export class Inventory {
   private static readonly ITEM_SIZE = 28;
   private static readonly MAX_SLOTS = 2048;
 
-  // Weapon hand slots store a slot index + cached item ID copy at dataOffset.
-  // When upgrade level changes, the cached copy must be updated.
-  // C# InventoryEditor uses INVENTORY_START = 0x370 - 30*28 = 0x28, so its slot indices
-  // are TS slot index + 30. We check both numberings to be safe.
+  // Hand slots: base offset stores the inventory slot index of the equipped weapon,
+  // data offset stores a cached copy of that weapon's item ID (bytes 4-7).
   private static readonly EQUIPMENT_SLOTS = [
     { base: 0x02A8, data: 0x314 }, // LeftHand1
     { base: 0x02AC, data: 0x318 }, // RightHand1
     { base: 0x02B0, data: 0x31C }, // LeftHand2
     { base: 0x02B4, data: 0x320 }, // RightHand2
   ];
-  private static readonly CSHARP_SLOT_OFFSET = 30;
-
   constructor(character: Character) {
     this.character = character;
   }
