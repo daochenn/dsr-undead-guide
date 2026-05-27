@@ -520,17 +520,14 @@ export class Inventory {
 
     const itemData = item.getRawData();
     data.set(itemData, offset);
-
-    if (!item.isEmpty) {
-      this.syncEquipmentSlots(slotIndex);
-    }
   }
 
-  // After changing an item's upgrade level or infusion, the item ID at each equipment
-  // slot's dataOffset must be updated to match. The game validates this copy at runtime.
-  private syncEquipmentSlots(tsSlotIndex: number): void {
+  // Call after editing a weapon that's already equipped in a hand slot.
+  // Updates the cached item ID copy that the game validates at runtime.
+  syncEquipmentSlots(tsSlotIndex: number): void {
     const data = this.character.getRawData();
     const invItemOffset = Inventory.INVENTORY_START + tsSlotIndex * Inventory.ITEM_SIZE;
+    const csSlotIndex = tsSlotIndex + Inventory.CSHARP_SLOT_OFFSET;
 
     for (const slot of Inventory.EQUIPMENT_SLOTS) {
       const stored =
@@ -539,14 +536,35 @@ export class Inventory {
         (data[slot.base + 2] << 16) |
         (data[slot.base + 3] << 24);
 
-      if (stored === -1) continue; // 0xFFFFFFFF = empty
+      if (stored === -1) continue; // 0xFFFFFFFF = empty/fist
 
-      // Check both TS numbering and C# numbering (C# slot = TS slot + 30)
-      if (stored === tsSlotIndex || stored === tsSlotIndex + Inventory.CSHARP_SLOT_OFFSET) {
+      if (stored === csSlotIndex) {
         data[slot.data]     = data[invItemOffset + 4];
         data[slot.data + 1] = data[invItemOffset + 5];
         data[slot.data + 2] = data[invItemOffset + 6];
         data[slot.data + 3] = data[invItemOffset + 7];
+      }
+    }
+  }
+
+  // Call after deleting a weapon that may be equipped in a hand slot.
+  // Resets any matching hand slot to fist (0xFFFFFFFF).
+  clearEquipmentSlots(tsSlotIndex: number): void {
+    const data = this.character.getRawData();
+    const csSlotIndex = tsSlotIndex + Inventory.CSHARP_SLOT_OFFSET;
+
+    for (const slot of Inventory.EQUIPMENT_SLOTS) {
+      const stored =
+        data[slot.base] |
+        (data[slot.base + 1] << 8) |
+        (data[slot.base + 2] << 16) |
+        (data[slot.base + 3] << 24);
+
+      if (stored === csSlotIndex) {
+        data[slot.base] = 0xFF; data[slot.base + 1] = 0xFF;
+        data[slot.base + 2] = 0xFF; data[slot.base + 3] = 0xFF;
+        data[slot.data] = 0xFF; data[slot.data + 1] = 0xFF;
+        data[slot.data + 2] = 0xFF; data[slot.data + 3] = 0xFF;
       }
     }
   }
@@ -642,6 +660,7 @@ export class Inventory {
     const emptyItem = new InventoryItem(new Uint8Array(28).fill(0xff), slotIndex, this.itemsDatabase);
     emptyItem.exists = 0;
     this.writeSlot(slotIndex, emptyItem);
+    this.clearEquipmentSlots(slotIndex);
   }
 
   clearAllItems(collectionType: ItemCollectionType): number {

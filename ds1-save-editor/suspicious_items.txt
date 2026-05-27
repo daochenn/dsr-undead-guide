@@ -1,0 +1,47 @@
+Оставшиеся проблемы в ds3_items.json
+(вырезанный контент и дебаг уже помечены Safe=false)
+================================================================================
+
+=== ДУБЛИКАТЫ ===
+
+--- weapon_items ---
+- Torch          появляется ДВАЖДЫ (в начале и в конце массива)
+
+--- ring_items ---
+- Leo Ring       появляется ДВАЖДЫ (два разных ID, но одинаковое имя)
+
+--- consumable_items ---
+- Young White Branch           появляется ДВАЖДЫ
+- Spirit Amethyst              появляется ДВАЖДЫ (оба уже Safe=false, но нужно решить — оставить один или удалить оба)
+- Soul of the Twin Princes     появляется ДВАЖДЫ
+- Estus Flask                  появляется ДВАЖДЫ (и все версии +1…+10 тоже по два экземпляра)
+- Ashen Estus Flask            появляется ДВАЖДЫ (и все версии +1…+10 тоже по два экземпляра)
+
+--- key_items ---
+- Tower Key                    появляется ДВАЖДЫ
+- Cinders of a Lord            появляется ЧЕТЫРЕ РАЗА без различающих имён
+                               Должны быть: Cinders of a Lord (Yhorm the Giant),
+                                            Cinders of a Lord (Aldrich),
+                                            Cinders of a Lord (Abyss Watchers),
+                                            Cinders of a Lord (Lothric, Younger Prince)
+
+
+=== ОШИБКИ В НАЗВАНИЯХ (реальные предметы, неверное имя) ===
+
+--- weapon_items ---
+- "Crucifix of the Mad King (Halberd)"       → должно быть: Crucifix of the Mad King
+- "Splitleaf Greatsword (It's a Halberd)"    → должно быть: Splitleaf Greatsword
+- "White Tree Bow (White Birch Bow)"         → должно быть: White Birch Bow
+- "Farron Hail ery"                          → уже Safe=false; правильное имя: Farron Hail
+                                               (артефакт данных, " ery" — лишний суффикс)
+
+--- consumable_items ---
+- "Budding Green Blossom (Sirris Questline)" → убрать пометку квестлайна из имени
+                                               (key item, не расходник)
+
+=== КОЛЬЦА — ДУБЛИРУЮЩИЕСЯ ПО СМЫСЛУ ===
+
+Следующие пары — разные варианты одного предмета; нужно решить, оставить оба или оставить
+только актуальный:
+- "Ring of the Sun's First Born"  vs  "Ring of the Sun's Firstborn"
+  (разные ID, фактически одно кольцо; одно — видимо старый вариант имени)

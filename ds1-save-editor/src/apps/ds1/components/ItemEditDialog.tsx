@@ -103,6 +103,7 @@ export const ItemEditDialog: React.FC<ItemEditDialogProps> = ({
       item.durability = durability;
 
       inventory.writeSlot(item.slotIndex, item);
+      inventory.syncEquipmentSlots(item.slotIndex);
       onItemUpdated();
       onClose();
     } catch (error) {
