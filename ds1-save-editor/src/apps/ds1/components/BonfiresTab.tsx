@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Character } from '../lib/Character';
+import { useLang } from '../../../core/context/LanguageContext';
+import { t } from '../lib/i18n';
 
 interface BonfiresTabProps {
   character: Character;
@@ -7,6 +9,7 @@ interface BonfiresTabProps {
 }
 
 export const BonfiresTab: React.FC<BonfiresTabProps> = ({ character, onCharacterUpdate }) => {
+  const { lang } = useLang();
   const [bonfireStatus, setBonfireStatus] = useState<{
     unlocked: boolean;
   } | null>(null);
@@ -50,7 +53,7 @@ export const BonfiresTab: React.FC<BonfiresTabProps> = ({ character, onCharacter
 
   return (
     <div className="bonfires-tab">
-      <h2>Bonfires</h2>
+      <h2>{t('bonfires', lang)}</h2>
 
       {error && (
         <div className="error-message" style={{ color: 'red', marginBottom: '1rem' }}>
@@ -61,10 +64,10 @@ export const BonfiresTab: React.FC<BonfiresTabProps> = ({ character, onCharacter
       {bonfireStatus && (
         <div className="bonfire-info">
           <div className="status-section">
-            <h3>Status</h3>
+            <h3>{t('status', lang)}</h3>
             <div className="status-display">
               <span className={`status-indicator ${bonfireStatus.unlocked ? 'unlocked' : 'locked'}`}>
-                {bonfireStatus.unlocked ? '✓ All Warpable Bonfires Unlocked' : '✗ Not All Bonfires Unlocked'}
+                {bonfireStatus.unlocked ? t('allUnlocked', lang) : t('notAllUnlocked', lang)}
               </span>
             </div>
           </div>
@@ -75,15 +78,15 @@ export const BonfiresTab: React.FC<BonfiresTabProps> = ({ character, onCharacter
               onClick={handleUnlockAll}
               disabled={bonfireStatus.unlocked}
             >
-              {bonfireStatus.unlocked ? 'All Bonfires Already Unlocked' : 'Unlock All Warpable Bonfires'}
+              {bonfireStatus.unlocked ? t('alreadyUnlocked', lang) : t('unlockAll', lang)}
             </button>
           </div>
 
           <div className="info-section">
-            <h4>ℹ️ Information</h4>
+            <h4>{t('info', lang)}</h4>
             <ul>
-              <li>Unlocks all <strong>20 warpable bonfires</strong> in Dark Souls Remastered.</li>
-              <li>You still need to rest at each bonfire to register it in-game.</li>
+              <li>{t('infoText1', lang)}</li>
+              <li>{t('infoText2', lang)}</li>
             </ul>
           </div>
         </div>
