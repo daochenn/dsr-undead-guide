@@ -138,7 +138,7 @@ export const EntityListTab: React.FC<EntityListTabProps> = ({ character, onChara
             >
               <div className="entity-info">
                 <span className="entity-name">
-                  {entity.displayName || (config.nameTransform ? config.nameTransform(entity.name) : entity.name)}
+                  {lang === 'zh' && entity.displayName ? entity.displayName : (config.nameTransform ? config.nameTransform(entity.name) : entity.name)}
                   {entity.warning && (
                     <span className="warning-icon" title={entity.warning}>⚠️</span>
                   )}
