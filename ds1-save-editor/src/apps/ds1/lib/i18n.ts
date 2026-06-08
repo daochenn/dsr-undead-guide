@@ -143,7 +143,7 @@ export const translations: Record<string, Record<Lang, string>> = {
   appearance: { en: 'Appearance', zh: '外观' },
   physique: { en: 'Physique', zh: '体型' },
   hairstyle: { en: 'Hairstyle', zh: '发型' },
-  eyeColor: { en: 'Eye Color', zh: '眼色' },
+  eyeColor: { en: 'Eye Color', zh: '眼睛颜色' },
   hairColor: { en: 'Hair Color', zh: '发色' },
   colorRange: { en: 'Color range:', zh: '颜色范围:' },
   safe: { en: 'Safe (0–1)', zh: '安全 (0–1)' },
