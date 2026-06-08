@@ -210,6 +210,26 @@
   font-size: 0.85rem;
 }
 
+/* ── Language toggle ── */
+.lang-toggle-button {
+  background: rgba(255, 107, 53, 0.1);
+  border: 1px solid rgba(255, 107, 53, 0.3);
+  color: #ff6b35;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 4px;
+  transition: all 0.2s;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.lang-toggle-button:hover {
+  background: rgba(255, 107, 53, 0.2);
+  border-color: rgba(255, 107, 53, 0.5);
+}
+
 /* ── Dropdown menu ── */
 .game-nav-menu {
   position: absolute;

@@ -33,7 +33,7 @@ export const TableTab: React.FC<TableTabProps> = ({ character, onCharacterUpdate
       URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Error downloading slot:', error);
-      alert('Error downloading slot. Please try again.');
+      alert('下载槽位失败，请重试。');
     }
   };
 
@@ -47,7 +47,7 @@ export const TableTab: React.FC<TableTabProps> = ({ character, onCharacterUpdate
     const wasPatternMode = usePatternMode;
     setPattern1Offset(offset);
     if (offset === -1) {
-      alert('Pattern1 not found');
+      alert('未找到Pattern1');
       setUsePatternMode(false);
     } else {
       alert(`Pattern1 found at 0x${offset.toString(16).toUpperCase()}`);
@@ -133,10 +133,10 @@ export const TableTab: React.FC<TableTabProps> = ({ character, onCharacterUpdate
       <div className="table-tab-header">
         <div className="pattern-controls">
           <button onClick={handleFindPattern1} className="action-button">
-            Find Pattern1
+            查找Pattern1
           </button>
           <button onClick={handleDownloadSlot} className="action-button">
-            Download Slot
+            下载槽位
           </button>
 
           {pattern1Offset !== -1 && (
@@ -150,7 +150,7 @@ export const TableTab: React.FC<TableTabProps> = ({ character, onCharacterUpdate
                   checked={usePatternMode}
                   onChange={handleTogglePatternMode}
                 />
-                <span>Pattern Mode (0 = Pattern1)</span>
+                <span>Pattern模式 (0 = Pattern1)</span>
               </label>
             </>
           )}
@@ -158,10 +158,10 @@ export const TableTab: React.FC<TableTabProps> = ({ character, onCharacterUpdate
 
         <div className="navigation-controls">
           <button onClick={handlePrevPage} className="nav-button" disabled={startOffset === 0}>
-            ← Prev
+            ← 上一页
           </button>
           <div className="offset-input-group">
-            <label>Go to offset:</label>
+            <label>跳转到偏移:</label>
             <input
               type="text"
               placeholder={usePatternMode && pattern1Offset !== -1 ? "±0x0000" : "0x0000"}
@@ -174,7 +174,7 @@ export const TableTab: React.FC<TableTabProps> = ({ character, onCharacterUpdate
             />
           </div>
           <button onClick={handleNextPage} className="nav-button" disabled={startOffset >= data.length - BYTES_PER_PAGE}>
-            Next →
+            下一页 →
           </button>
         </div>
       </div>
@@ -183,17 +183,17 @@ export const TableTab: React.FC<TableTabProps> = ({ character, onCharacterUpdate
         <div className="selected-byte-editor">
           <div className="editor-info">
             <div className="offset-display">
-              <strong>Absolute Offset:</strong> 0x{selectedOffset.toString(16).toUpperCase().padStart(5, '0')}
+              <strong>绝对偏移:</strong> 0x{selectedOffset.toString(16).toUpperCase().padStart(5, '0')}
             </div>
             {pattern1Offset !== -1 && (
               <div className="offset-display">
-                <strong>Pattern Relative:</strong> {getRelativeOffset(selectedOffset) >= 0 ? '+' : ''}0x{getRelativeOffset(selectedOffset).toString(16).toUpperCase()}
+                <strong>Pattern相对:</strong> {getRelativeOffset(selectedOffset) >= 0 ? '+' : ''}0x{getRelativeOffset(selectedOffset).toString(16).toUpperCase()}
               </div>
             )}
           </div>
           <div className="editor-controls">
             <div className="form-group">
-              <label>Value (Dec):</label>
+              <label>值 (十进制):</label>
               <NumberInput
                 value={editValue}
                 onChange={setEditValue}

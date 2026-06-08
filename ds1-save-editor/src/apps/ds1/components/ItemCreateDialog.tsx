@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Inventory, ItemCollectionType, Item, ItemInfusion } from '../lib/Inventory';
+import { useLang } from '../../../core/context/LanguageContext';
+import { applyChineseNames } from '../lib/itemNamesZh';
 import { NumberInput } from './NumberInput';
 
 interface ItemCreateDialogProps {
@@ -27,6 +29,7 @@ export const ItemCreateDialog: React.FC<ItemCreateDialogProps> = ({
   const [durability, setDurability] = useState<number>(0);
   const quantityInputRef = useRef<HTMLInputElement>(null);
   const dialogBodyRef = useRef<HTMLDivElement>(null);
+  const { lang } = useLang();
 
   useEffect(() => {
     const db = inventory.getItemsDatabase();
@@ -85,7 +88,16 @@ export const ItemCreateDialog: React.FC<ItemCreateDialogProps> = ({
         break;
     }
 
-    setAvailableItems(items);
+    // Apply Chinese names if language is Chinese
+    if (lang === 'zh') {
+      applyChineseNames(db).then(() => {
+        // Re-filter after applying Chinese names
+        const reFiltered = items.map(item => ({...item}));
+        setAvailableItems(reFiltered);
+      });
+    } else {
+      setAvailableItems(items);
+    }
   }, [collectionType, safeMode]);
 
   useEffect(() => {

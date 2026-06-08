@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Character } from '../lib/Character';
+import { useLang } from '../../../core/context/LanguageContext';
+import { t } from '../lib/i18n';
 import { GeneralTab } from './GeneralTab';
 import { InventoryTab } from './InventoryTab';
 import { BonfiresTab } from './BonfiresTab';
@@ -16,14 +18,25 @@ interface TabPanelProps {
 
 type TabType = 'general' | 'appearance' | 'inventory' | 'bonfires' | 'npcs' | 'bosses' | 'table';
 
+const TAB_KEYS: Record<TabType, string> = {
+  general: 'tab_general',
+  appearance: 'tab_appearance',
+  inventory: 'tab_inventory',
+  bonfires: 'tab_bonfires',
+  npcs: 'tab_npcs',
+  bosses: 'tab_bosses',
+  table: 'tab_table',
+};
+
 export const TabPanel: React.FC<TabPanelProps> = ({ character, onCharacterUpdate, safeMode }) => {
+  const { lang } = useLang();
   const [activeTab, setActiveTab] = useState<TabType>('general');
 
   if (!character) {
     return (
       <div className="tab-panel">
         <div className="no-character">
-          Select a character to edit
+          {t('selectChar', lang)}
         </div>
       </div>
     );
@@ -39,7 +52,7 @@ export const TabPanel: React.FC<TabPanelProps> = ({ character, onCharacterUpdate
               className={`tab ${activeTab === tab ? 'active' : ''}`}
               onClick={() => setActiveTab(tab)}
             >
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              {t(TAB_KEYS[tab], lang)}
             </button>
           ))}
         </div>
