@@ -72,10 +72,10 @@ export const TabPanel: React.FC<TabPanelProps> = ({ character, onCharacterUpdate
           <BonfiresTab character={character} onCharacterUpdate={onCharacterUpdate} />
         )}
         {activeTab === 'npcs' && (
-          <NPCsTab key={character.slotNumber} character={character} onCharacterUpdate={onCharacterUpdate} />
+          <NPCsTab character={character} onCharacterUpdate={onCharacterUpdate} />
         )}
         {activeTab === 'bosses' && (
-          <BossesTab key={character.slotNumber} character={character} onCharacterUpdate={onCharacterUpdate} />
+          <BossesTab character={character} onCharacterUpdate={onCharacterUpdate} />
         )}
         {activeTab === 'table' && (
           <TableTab character={character} onCharacterUpdate={onCharacterUpdate} />

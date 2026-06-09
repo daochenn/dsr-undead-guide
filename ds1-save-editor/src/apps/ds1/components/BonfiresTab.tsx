@@ -8,48 +8,72 @@ interface BonfiresTabProps {
   onCharacterUpdate: () => void;
 }
 
+// 20 warpable bonfire names (matching the bit order in Character.ts)
+const BONFIRE_NAMES: Record<Lang, string[]> = {
+  en: [
+    'Crystal Cave', 'The Duke\'s Archives', 'Tomb of Giants', 'Painted World of Ariamis',
+    'Undead Parish', 'Depths', 'Oolacile Township Dungeon', 'Chasm of the Abyss',
+    'Oolacile', 'Oolacile Sanctuary', 'Sanctuary Garden', 'Darkmoon Tomb',
+    'Chamber of the Princess', 'Altar of the Gravelord', 'Sunlight Altar', 'The Abyss',
+    'Anor Londo', 'Daughter of Chaos', 'Stone Dragon', 'Firelink Shrine'
+  ],
+  zh: [
+    '结晶洞穴', '书库', '巨人墓地', '绘画世界·亚米阿斯',
+    '不死教区', '下水道', '乌拉席露地下墓地', '深渊裂缝',
+    '乌拉席露', '乌拉席露圣所', '圣域', '暗月之墓',
+    '公主的房间', '墓王祭坛', '太阳祭坛', '深渊',
+    '亚诺尔隆德', '混沌的女儿', '石龙', '传火祭祀场'
+  ]
+};
+
+type Lang = 'en' | 'zh';
+
 export const BonfiresTab: React.FC<BonfiresTabProps> = ({ character, onCharacterUpdate }) => {
   const { lang } = useLang();
-  const [bonfireStatus, setBonfireStatus] = useState<{
-    unlocked: boolean;
-  } | null>(null);
+  const [bonfires, setBonfires] = useState<boolean[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  const getStatus = (char: Character) => {
+  const loadStatus = () => {
     try {
-      const isUnlocked = char.areBonfiresUnlocked();
+      const flags = character.getBonfireWarpFlags();
+      setBonfires(flags);
       setError(null);
-      return { unlocked: isUnlocked };
     } catch (err: any) {
       setError(err.message || 'Error checking bonfire status');
-      return null;
     }
   };
 
   useEffect(() => {
-    const status = getStatus(character);
-    if (status) {
-      setBonfireStatus(status);
-    } else {
-      setBonfireStatus(null);
-    }
+    loadStatus();
   }, [character]);
+
+  const handleToggle = (index: number) => {
+    try {
+      const newState = !bonfires[index];
+      character.setBonfireWarpFlag(index, newState);
+      const newBonfires = [...bonfires];
+      newBonfires[index] = newState;
+      setBonfires(newBonfires);
+      onCharacterUpdate();
+    } catch (err: any) {
+      setError(err.message || 'Failed to toggle bonfire');
+    }
+  };
 
   const handleUnlockAll = () => {
     try {
       character.unlockAllBonfires();
-
-      // Update status
-      const status = getStatus(character);
-      if (status) {
-        setBonfireStatus(status);
-      }
-
+      const flags = character.getBonfireWarpFlags();
+      setBonfires(flags);
       onCharacterUpdate();
     } catch (err: any) {
       setError(err.message || 'Failed to unlock bonfires');
     }
   };
+
+  const allUnlocked = bonfires.length > 0 && bonfires.every(b => b);
+  const names = BONFIRE_NAMES[lang] || BONFIRE_NAMES.en;
+  const unlockedCount = bonfires.filter(b => b).length;
 
   return (
     <div className="bonfires-tab">
@@ -61,36 +85,31 @@ export const BonfiresTab: React.FC<BonfiresTabProps> = ({ character, onCharacter
         </div>
       )}
 
-      {bonfireStatus && (
-        <div className="bonfire-info">
-          <div className="status-section">
-            <h3>{t('status', lang)}</h3>
-            <div className="status-display">
-              <span className={`status-indicator ${bonfireStatus.unlocked ? 'unlocked' : 'locked'}`}>
-                {bonfireStatus.unlocked ? t('allUnlocked', lang) : t('notAllUnlocked', lang)}
-              </span>
-            </div>
-          </div>
+      <div className="bonfire-actions">
+        <button
+          className="unlock-button primary-button"
+          onClick={handleUnlockAll}
+          disabled={allUnlocked}
+        >
+          {allUnlocked ? t('alreadyUnlocked', lang) : t('unlockAll', lang)}
+        </button>
+        <span className="bonfire-count">
+          {unlockedCount} / {bonfires.length}
+        </span>
+      </div>
 
-          <div className="actions-section">
-            <button
-              className="unlock-button primary-button"
-              onClick={handleUnlockAll}
-              disabled={bonfireStatus.unlocked}
-            >
-              {bonfireStatus.unlocked ? t('alreadyUnlocked', lang) : t('unlockAll', lang)}
-            </button>
+      <div className="bonfire-grid">
+        {names.map((name, i) => (
+          <div
+            key={i}
+            className={`bonfire-item ${bonfires[i] ? 'unlocked' : 'locked'}`}
+            onClick={() => handleToggle(i)}
+          >
+            <span className="bonfire-icon">{bonfires[i] ? '🔥' : '○'}</span>
+            <span className="bonfire-name">{name}</span>
           </div>
-
-          <div className="info-section">
-            <h4>{t('info', lang)}</h4>
-            <ul>
-              <li>{t('infoText1', lang)}</li>
-              <li>{t('infoText2', lang)}</li>
-            </ul>
-          </div>
-        </div>
-      )}
+        ))}
+      </div>
 
       <style>{`
         .bonfires-tab {
@@ -108,56 +127,11 @@ export const BonfiresTab: React.FC<BonfiresTabProps> = ({ character, onCharacter
           border-bottom: 1px solid rgba(255, 107, 53, 0.25);
         }
 
-        .bonfire-info {
+        .bonfire-actions {
           display: flex;
-          flex-direction: column;
-          gap: 0.75rem;
-        }
-
-        .status-section {
-          background: rgba(255, 255, 255, 0.03);
-          padding: 0.65rem 0.85rem;
-          border-radius: 4px;
-          border: 1px solid #252525;
-        }
-
-        .status-section h3 {
-          font-size: 0.75rem;
-          font-weight: 600;
-          color: #666;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          margin: 0 0 0.5rem;
-        }
-
-        .status-display {
-          margin: 0;
-        }
-
-        .status-indicator {
-          display: inline-block;
-          padding: 0.3rem 0.65rem;
-          border-radius: 3px;
-          font-weight: 500;
-          font-size: 0.82rem;
-        }
-
-        .status-indicator.unlocked {
-          background: rgba(76, 175, 80, 0.1);
-          color: #5a9a5a;
-          border: 1px solid rgba(76, 175, 80, 0.25);
-        }
-
-        .status-indicator.locked {
-          background: rgba(255, 152, 0, 0.08);
-          color: #a07830;
-          border: 1px solid rgba(255, 152, 0, 0.2);
-        }
-
-        .actions-section {
-          display: flex;
-          flex-direction: column;
-          gap: 0.35rem;
+          align-items: center;
+          gap: 1rem;
+          margin-bottom: 1rem;
         }
 
         .primary-button {
@@ -170,7 +144,6 @@ export const BonfiresTab: React.FC<BonfiresTabProps> = ({ character, onCharacter
           border-radius: 4px;
           cursor: pointer;
           transition: background 0.15s, border-color 0.15s;
-          align-self: flex-start;
         }
 
         .primary-button:hover:not(:disabled) {
@@ -183,34 +156,49 @@ export const BonfiresTab: React.FC<BonfiresTabProps> = ({ character, onCharacter
           cursor: not-allowed;
         }
 
-        .info-section {
-          background: rgba(33, 150, 243, 0.05);
-          padding: 0.65rem 0.85rem;
-          border-radius: 4px;
-          border-left: 2px solid rgba(33, 150, 243, 0.3);
-        }
-
-        .info-section h4 {
-          margin: 0 0 0.4rem;
-          font-size: 0.78rem;
-          color: #888;
-          font-weight: 600;
-        }
-
-        .info-section ul {
-          margin: 0;
-          padding-left: 1.25rem;
+        .bonfire-count {
+          font-size: 0.8rem;
           color: #666;
-          font-size: 0.78rem;
-          line-height: 1.6;
         }
 
-        .info-section li {
-          margin: 0.15rem 0;
+        .bonfire-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+          gap: 0.5rem;
         }
 
-        .info-section strong {
-          color: #888;
+        .bonfire-item {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.5rem 0.75rem;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: all 0.15s;
+          border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .bonfire-item.unlocked {
+          background: rgba(255, 107, 53, 0.08);
+          border-color: rgba(255, 107, 53, 0.2);
+        }
+
+        .bonfire-item.locked {
+          background: rgba(255, 255, 255, 0.02);
+          opacity: 0.5;
+        }
+
+        .bonfire-item:hover {
+          border-color: rgba(255, 107, 53, 0.4);
+        }
+
+        .bonfire-icon {
+          font-size: 1rem;
+        }
+
+        .bonfire-name {
+          font-size: 0.8rem;
+          color: #c0c0c0;
         }
 
         .error-message {

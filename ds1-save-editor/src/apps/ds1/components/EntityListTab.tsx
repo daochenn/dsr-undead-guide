@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Character } from '../lib/Character';
 import { useLang } from '../../../core/context/LanguageContext';
 import { t } from '../lib/i18n';
@@ -29,7 +29,7 @@ interface EntityListTabProps {
  */
 export const EntityListTab: React.FC<EntityListTabProps> = ({ character, onCharacterUpdate, config }) => {
   const { lang } = useLang();
-  const [npcEditor] = useState(() => new NpcEditor(character));
+  const npcEditor = useMemo(() => new NpcEditor(character), [character]);
   const [entities, setEntities] = useState<Npc[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
