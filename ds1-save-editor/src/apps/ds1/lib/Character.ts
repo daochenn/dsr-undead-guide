@@ -378,6 +378,71 @@ export class Character {
   }
 
   // Bonfire methods - using relative offsets to Pattern1
+
+  // Get status of all 20 warpable bonfires
+  getBonfireWarpFlags(): boolean[] {
+    const baseOffset = this.findPattern1();
+    if (baseOffset === -1) return new Array(20).fill(false);
+
+    const byte18 = this.data[baseOffset + 0x18];
+    const byte19 = this.data[baseOffset + 0x19];
+    const byte1A = this.data[baseOffset + 0x1A];
+
+    return [
+      // byte 0x18 (4 bonfires)
+      ((byte18 >> 4) & 1) === 1, // Crystal Cave
+      ((byte18 >> 5) & 1) === 1, // The Duke's Archives
+      ((byte18 >> 6) & 1) === 1, // Tomb of Giants
+      ((byte18 >> 7) & 1) === 1, // Painted World of Ariamis
+      // byte 0x19 (8 bonfires)
+      ((byte19 >> 0) & 1) === 1, // Undead Parish
+      ((byte19 >> 1) & 1) === 1, // Depths
+      ((byte19 >> 2) & 1) === 1, // Oolacile Township Dungeon
+      ((byte19 >> 3) & 1) === 1, // Chasm of the Abyss
+      ((byte19 >> 4) & 1) === 1, // Oolacile
+      ((byte19 >> 5) & 1) === 1, // Oolacile Sanctuary
+      ((byte19 >> 6) & 1) === 1, // Sanctuary Garden
+      ((byte19 >> 7) & 1) === 1, // Darkmoon Tomb
+      // byte 0x1A (8 bonfires)
+      ((byte1A >> 0) & 1) === 1, // Chamber of the Princess
+      ((byte1A >> 1) & 1) === 1, // Altar of the Gravelord
+      ((byte1A >> 2) & 1) === 1, // Sunlight Altar
+      ((byte1A >> 3) & 1) === 1, // The Abyss
+      ((byte1A >> 4) & 1) === 1, // Anor Londo
+      ((byte1A >> 5) & 1) === 1, // Daughter of Chaos
+      ((byte1A >> 6) & 1) === 1, // Stone Dragon
+      ((byte1A >> 7) & 1) === 1, // Firelink Shrine
+    ];
+  }
+
+  // Set a single bonfire warp flag
+  setBonfireWarpFlag(index: number, unlocked: boolean): void {
+    const baseOffset = this.findPattern1();
+    if (baseOffset === -1) return;
+
+    // Determine which byte and bit
+    let byteOffset: number;
+    let bit: number;
+
+    if (index < 4) {
+      byteOffset = baseOffset + 0x18;
+      bit = index + 4; // bits 4-7
+    } else if (index < 12) {
+      byteOffset = baseOffset + 0x19;
+      bit = index - 4; // bits 0-7
+    } else {
+      byteOffset = baseOffset + 0x1A;
+      bit = index - 12; // bits 0-7
+    }
+
+    const current = this.data[byteOffset];
+    if (unlocked) {
+      this.data[byteOffset] = current | (1 << bit);
+    } else {
+      this.data[byteOffset] = current & ~(1 << bit);
+    }
+  }
+
   unlockAllBonfires(): void {
     // Находим базовое смещение Pattern1
     const baseOffset = this.findPattern1();
