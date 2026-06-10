@@ -379,60 +379,63 @@ export class Character {
 
   // Bonfire methods - using relative offsets to Pattern1
 
-  // Get status of all 20 warpable bonfires
+  // Get status of all 20 warpable bonfires from +0x6B/0x6C/0x6D
   getBonfireWarpFlags(): boolean[] {
     const baseOffset = this.findPattern1();
     if (baseOffset === -1) return new Array(20).fill(false);
 
-    const byte18 = this.data[baseOffset + 0x18];
-    const byte19 = this.data[baseOffset + 0x19];
-    const byte1A = this.data[baseOffset + 0x1A];
+    const byte6B = this.data[baseOffset + 0x6B];
+    const byte6C = this.data[baseOffset + 0x6C];
+    const byte6D = this.data[baseOffset + 0x6D];
 
     return [
-      // byte 0x18 (4 bonfires)
-      ((byte18 >> 4) & 1) === 1, // Crystal Cave
-      ((byte18 >> 5) & 1) === 1, // The Duke's Archives
-      ((byte18 >> 6) & 1) === 1, // Tomb of Giants
-      ((byte18 >> 7) & 1) === 1, // Painted World of Ariamis
-      // byte 0x19 (8 bonfires)
-      ((byte19 >> 0) & 1) === 1, // Undead Parish
-      ((byte19 >> 1) & 1) === 1, // Depths
-      ((byte19 >> 2) & 1) === 1, // Oolacile Township Dungeon
-      ((byte19 >> 3) & 1) === 1, // Chasm of the Abyss
-      ((byte19 >> 4) & 1) === 1, // Oolacile
-      ((byte19 >> 5) & 1) === 1, // Oolacile Sanctuary
-      ((byte19 >> 6) & 1) === 1, // Sanctuary Garden
-      ((byte19 >> 7) & 1) === 1, // Darkmoon Tomb
-      // byte 0x1A (8 bonfires)
-      ((byte1A >> 0) & 1) === 1, // Chamber of the Princess
-      ((byte1A >> 1) & 1) === 1, // Altar of the Gravelord
-      ((byte1A >> 2) & 1) === 1, // Sunlight Altar
-      ((byte1A >> 3) & 1) === 1, // The Abyss
-      ((byte1A >> 4) & 1) === 1, // Anor Londo
-      ((byte1A >> 5) & 1) === 1, // Daughter of Chaos
-      ((byte1A >> 6) & 1) === 1, // Stone Dragon
-      ((byte1A >> 7) & 1) === 1, // Firelink Shrine
+      // byte 0x6B bits 0-7 (8 bonfires)
+      ((byte6B >> 0) & 1) === 1, // Painted World of Ariamis (confirmed)
+      ((byte6B >> 1) & 1) === 1, // unconfirmed
+      ((byte6B >> 2) & 1) === 1, // unconfirmed
+      ((byte6B >> 3) & 1) === 1, // unconfirmed
+      ((byte6B >> 4) & 1) === 1, // unconfirmed
+      ((byte6B >> 5) & 1) === 1, // unconfirmed
+      ((byte6B >> 6) & 1) === 1, // unconfirmed
+      ((byte6B >> 7) & 1) === 1, // unconfirmed
+      // byte 0x6C bits 0-7 (8 bonfires)
+      ((byte6C >> 0) & 1) === 1, // unconfirmed (already set in original)
+      ((byte6C >> 1) & 1) === 1, // Depths (confirmed)
+      ((byte6C >> 2) & 1) === 1, // Oolacile Township Dungeon (confirmed)
+      ((byte6C >> 3) & 1) === 1, // Chasm of the Abyss (confirmed)
+      ((byte6C >> 4) & 1) === 1, // Oolacile (confirmed)
+      ((byte6C >> 5) & 1) === 1, // Oolacile Sanctuary (confirmed)
+      ((byte6C >> 6) & 1) === 1, // unconfirmed
+      ((byte6C >> 7) & 1) === 1, // unconfirmed
+      // byte 0x6D bits 0-7 (8 bonfires)
+      ((byte6D >> 0) & 1) === 1, // unconfirmed
+      ((byte6D >> 1) & 1) === 1, // unconfirmed
+      ((byte6D >> 2) & 1) === 1, // unconfirmed
+      ((byte6D >> 3) & 1) === 1, // unconfirmed
+      ((byte6D >> 4) & 1) === 1, // unconfirmed
+      ((byte6D >> 5) & 1) === 1, // unconfirmed
+      ((byte6D >> 6) & 1) === 1, // unconfirmed
+      ((byte6D >> 7) & 1) === 1, // unconfirmed
     ];
   }
 
-  // Set a single bonfire warp flag
+  // Set a single bonfire flag
   setBonfireWarpFlag(index: number, unlocked: boolean): void {
     const baseOffset = this.findPattern1();
     if (baseOffset === -1) return;
 
-    // Determine which byte and bit
     let byteOffset: number;
     let bit: number;
 
-    if (index < 4) {
-      byteOffset = baseOffset + 0x18;
-      bit = index + 4; // bits 4-7
-    } else if (index < 12) {
-      byteOffset = baseOffset + 0x19;
-      bit = index - 4; // bits 0-7
+    if (index < 8) {
+      byteOffset = baseOffset + 0x6B;
+      bit = index;
+    } else if (index < 16) {
+      byteOffset = baseOffset + 0x6C;
+      bit = index - 8;
     } else {
-      byteOffset = baseOffset + 0x1A;
-      bit = index - 12; // bits 0-7
+      byteOffset = baseOffset + 0x6D;
+      bit = index - 16;
     }
 
     const current = this.data[byteOffset];

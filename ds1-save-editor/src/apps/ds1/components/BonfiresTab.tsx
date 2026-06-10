@@ -9,20 +9,22 @@ interface BonfiresTabProps {
 }
 
 // 20 warpable bonfire names (matching the bit order in Character.ts)
+// Confirmed: +0x6B bit0=PaintedWorld, +0x6C bit1=Depths, bit2=OolacileTownship, bit3=Chasm, bit4=Oolacile, bit5=OolacileSanctuary
+// Unconfirmed bits are marked with ???
 const BONFIRE_NAMES: Record<Lang, string[]> = {
   en: [
-    'Crystal Cave', 'The Duke\'s Archives', 'Tomb of Giants', 'Painted World of Ariamis',
-    'Undead Parish', 'Depths', 'Oolacile Township Dungeon', 'Chasm of the Abyss',
-    'Oolacile', 'Oolacile Sanctuary', 'Sanctuary Garden', 'Darkmoon Tomb',
-    'Chamber of the Princess', 'Altar of the Gravelord', 'Sunlight Altar', 'The Abyss',
-    'Anor Londo', 'Daughter of Chaos', 'Stone Dragon', 'Firelink Shrine'
+    'Painted World of Ariamis', '???', '???', '???',
+    '???', '???', '???', '???',
+    '???', 'Depths', 'Oolacile Township Dungeon', 'Chasm of the Abyss',
+    'Oolacile', 'Oolacile Sanctuary', '???', '???',
+    '???', '???', '???', '???'
   ],
   zh: [
-    '结晶洞穴', '书库', '巨人墓地', '绘画世界·亚米阿斯',
-    '不死教区', '下水道', '乌拉席露地下墓地', '深渊裂缝',
-    '乌拉席露', '乌拉席露圣所', '圣域', '暗月之墓',
-    '公主的房间', '墓王祭坛', '太阳祭坛', '深渊',
-    '亚诺尔隆德', '混沌的女儿', '石龙', '传火祭祀场'
+    '绘画世界·亚米阿斯', '???', '???', '???',
+    '???', '???', '???', '???',
+    '???', '下水道', '乌拉席露地下墓地', '深渊裂缝',
+    '乌拉席露', '乌拉席露圣所', '???', '???',
+    '???', '???', '???', '???'
   ]
 };
 
