@@ -28,6 +28,7 @@ export const translations: Record<string, Record<Lang, string>> = {
   tab_bonfires: { en: 'Bonfires', zh: '篝火' },
   tab_npcs: { en: 'NPCs', zh: 'NPC' },
   tab_bosses: { en: 'Bosses', zh: 'Boss' },
+  tab_world_events: { en: 'Events', zh: '世界事件' },
   tab_table: { en: 'Table', zh: '十六进制' },
   selectChar: { en: 'Select a character to edit', zh: '选择一个角色进行编辑' },
 

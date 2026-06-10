@@ -446,6 +446,19 @@ export class Character {
     }
   }
 
+  // World event flags
+  getWorldEventFlag(offset: string, bit: number, reverse: boolean): boolean {
+    const baseOffset = this.findPattern1();
+    if (baseOffset === -1) return false;
+
+    const relOff = parseInt(offset, 16);
+    const absOff = baseOffset + relOff;
+    if (absOff < 0 || absOff >= this.data.length) return false;
+
+    const rawBit = (this.data[absOff] >> bit) & 1;
+    return reverse ? !rawBit : !!rawBit;
+  }
+
   unlockAllBonfires(): void {
     // Находим базовое смещение Pattern1
     const baseOffset = this.findPattern1();

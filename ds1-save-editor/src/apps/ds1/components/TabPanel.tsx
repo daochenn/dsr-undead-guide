@@ -7,6 +7,7 @@ import { InventoryTab } from './InventoryTab';
 import { BonfiresTab } from './BonfiresTab';
 import { NPCsTab } from './NPCsTab';
 import { BossesTab } from './BossesTab';
+import { WorldEventsTab } from './WorldEventsTab';
 import { TableTab } from './TableTab';
 import { AppearanceTab } from './AppearanceTab';
 
@@ -16,7 +17,7 @@ interface TabPanelProps {
   safeMode: boolean;
 }
 
-type TabType = 'general' | 'appearance' | 'inventory' | 'bonfires' | 'npcs' | 'bosses' | 'table';
+type TabType = 'general' | 'appearance' | 'inventory' | 'bonfires' | 'npcs' | 'bosses' | 'world_events' | 'table';
 
 const TAB_KEYS: Record<TabType, string> = {
   general: 'tab_general',
@@ -25,6 +26,7 @@ const TAB_KEYS: Record<TabType, string> = {
   bonfires: 'tab_bonfires',
   npcs: 'tab_npcs',
   bosses: 'tab_bosses',
+  world_events: 'tab_world_events',
   table: 'tab_table',
 };
 
@@ -46,7 +48,7 @@ export const TabPanel: React.FC<TabPanelProps> = ({ character, onCharacterUpdate
     <div className="tab-panel">
       <div className="tabs-header">
         <div className="tabs">
-          {(['general', 'appearance', 'inventory', 'bonfires', 'npcs', 'bosses', 'table'] as TabType[]).map(tab => (
+          {(['general', 'appearance', 'inventory', 'bonfires', 'npcs', 'bosses', 'world_events', 'table'] as TabType[]).map(tab => (
             <button
               key={tab}
               className={`tab ${activeTab === tab ? 'active' : ''}`}
@@ -76,6 +78,9 @@ export const TabPanel: React.FC<TabPanelProps> = ({ character, onCharacterUpdate
         )}
         {activeTab === 'bosses' && (
           <BossesTab character={character} onCharacterUpdate={onCharacterUpdate} />
+        )}
+        {activeTab === 'world_events' && (
+          <WorldEventsTab character={character} onCharacterUpdate={onCharacterUpdate} />
         )}
         {activeTab === 'table' && (
           <TableTab character={character} onCharacterUpdate={onCharacterUpdate} />

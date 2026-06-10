@@ -1343,7 +1343,7 @@
       "bits": [
         {
           "offset": "0x5F",
-          "bit": 7,
+          "bit": 6,
           "reverse": true
         },
         {
@@ -1354,66 +1354,6 @@
         {
           "offset": "0xF0",
           "bit": 5,
-          "reverse": true
-        },
-        {
-          "offset": "0xF0",
-          "bit": 6,
-          "reverse": false
-        },
-        {
-          "offset": "0xF0",
-          "bit": 7,
-          "reverse": false
-        },
-        {
-          "offset": "0x4695",
-          "bit": 4,
-          "reverse": true
-        },
-        {
-          "offset": "0x46C6",
-          "bit": 3,
-          "reverse": true
-        },
-        {
-          "offset": "0x48FF",
-          "bit": 0,
-          "reverse": true
-        },
-        {
-          "offset": "0x48FF",
-          "bit": 1,
-          "reverse": true
-        },
-        {
-          "offset": "0x48FF",
-          "bit": 3,
-          "reverse": true
-        },
-        {
-          "offset": "0x4906",
-          "bit": 2,
-          "reverse": true
-        },
-        {
-          "offset": "0x4906",
-          "bit": 4,
-          "reverse": true
-        },
-        {
-          "offset": "0x4906",
-          "bit": 5,
-          "reverse": true
-        },
-        {
-          "offset": "0x4906",
-          "bit": 6,
-          "reverse": true
-        },
-        {
-          "offset": "0x4906",
-          "bit": 7,
           "reverse": true
         },
         {
