@@ -31,7 +31,6 @@ const WORLD_EVENTS_CATEGORIES: EventCategory[] = [
     name_zh: '杂项',
     events: [
       { id: 'rite_of_kindling', name_en: 'Rite of Kindling', name_zh: '获得注火秘仪', offset: '0x3', bit: 1, reverse: false, verified: false },
-      { id: 'access_bottomless_box', name_en: 'Access Bottomless Box', name_zh: '解锁无底木箱', offset: '0x23', bit: 5, reverse: false, verified: true },
       { id: 'elevators', name_en: 'Elevators', name_zh: '电梯已激活', offset: '0x0', bit: 2, reverse: false, verified: false },
       { id: 'repair_equipment', name_en: 'Repair Equipment', name_zh: '可修理装备', offset: '0x1C', bit: 3, reverse: true, verified: false },
       { id: 'reinforce_weapon', name_en: 'Reinforce Weapon', name_zh: '可强化武器', offset: '0x1C', bit: 5, reverse: true, verified: false },

@@ -15,15 +15,6 @@
           "verified": false
         },
         {
-          "id": "access_bottomless_box",
-          "name_en": "Access Bottomless Box",
-          "name_zh": "解锁无底木箱",
-          "offset": "0x23",
-          "bit": 5,
-          "reverse": false,
-          "verified": true
-        },
-        {
           "id": "repair_equipment",
           "name_en": "Repair Equipment",
           "name_zh": "可修理装备",
