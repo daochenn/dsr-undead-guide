@@ -22,6 +22,7 @@ export const translations: Record<string, Record<Lang, string>> = {
   off: { en: 'OFF', zh: '关' },
 
   // 标签页
+  tab_help: { en: 'Help', zh: '帮助' },
   tab_general: { en: 'General', zh: '基础' },
   tab_appearance: { en: 'Appearance', zh: '外观' },
   tab_inventory: { en: 'Inventory', zh: '物品' },
@@ -40,6 +41,16 @@ export const translations: Record<string, Record<Lang, string>> = {
   weapons: { en: 'Weapons', zh: '武器' },
   armor: { en: 'Armor', zh: '防具' },
   ammunition: { en: 'Ammunition', zh: '箭矢' },
+
+  // 属性名称
+  statVIT: { en: 'VIT', zh: '生命力' },
+  statATN: { en: 'ATN', zh: '记忆' },
+  statEND: { en: 'END', zh: '耐力' },
+  statSTR: { en: 'STR', zh: '力量' },
+  statDEX: { en: 'DEX', zh: '敏捷' },
+  statRES: { en: 'RES', zh: '抵抗力' },
+  statINT: { en: 'INT', zh: '智力' },
+  statFTH: { en: 'FTH', zh: '信仰' },
   rings: { en: 'Rings', zh: '戒指' },
   createItem: { en: '+ Create Item', zh: '+ 创建物品' },
   addAll: { en: '+ Add All', zh: '+ 全部添加' },

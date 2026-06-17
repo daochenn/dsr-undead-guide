@@ -218,7 +218,7 @@ export const InventoryTab: React.FC<InventoryTabProps> = ({ character, onCharact
   };
 
   const handleDeleteItem = (slotIndex: number) => {
-    if (confirm('Are you sure you want to delete this item?')) {
+    if (confirm(t('deleteConfirm', lang))) {
       inventory.deleteItem(slotIndex);
       refreshItems();
       onCharacterUpdate();
@@ -276,15 +276,15 @@ export const InventoryTab: React.FC<InventoryTabProps> = ({ character, onCharact
   const getInfusionName = (infusion: ItemInfusion): string => {
     switch (infusion) {
       case ItemInfusion.Standard: return '';
-      case ItemInfusion.Crystal: return 'Crystal';
-      case ItemInfusion.Lightning: return 'Lightning';
-      case ItemInfusion.Raw: return 'Raw';
-      case ItemInfusion.Magic: return 'Magic';
-      case ItemInfusion.Enchanted: return 'Enchanted';
-      case ItemInfusion.Divine: return 'Divine';
-      case ItemInfusion.Occult: return 'Occult';
-      case ItemInfusion.Fire: return 'Fire';
-      case ItemInfusion.Chaos: return 'Chaos';
+      case ItemInfusion.Crystal: return t('crystal', lang);
+      case ItemInfusion.Lightning: return t('lightning', lang);
+      case ItemInfusion.Raw: return t('raw', lang);
+      case ItemInfusion.Magic: return t('magic_inf', lang);
+      case ItemInfusion.Enchanted: return t('enchanted', lang);
+      case ItemInfusion.Divine: return t('divine', lang);
+      case ItemInfusion.Occult: return t('occult', lang);
+      case ItemInfusion.Fire: return t('fire', lang);
+      case ItemInfusion.Chaos: return t('chaos', lang);
       default: return '';
     }
   };
@@ -440,8 +440,8 @@ export const InventoryTab: React.FC<InventoryTabProps> = ({ character, onCharact
                     </div>
                   </div>
                   <div className="item-actions">
-                    <button className="edit-button" onClick={() => handleEditItem(item)}>Edit</button>
-                    <button className="delete-button" onClick={() => handleDeleteItem(item.slotIndex)}>Delete</button>
+                    <button className="edit-button" onClick={() => handleEditItem(item)}>{t('edit', lang)}</button>
+                    <button className="delete-button" onClick={() => handleDeleteItem(item.slotIndex)}>{t('delete', lang)}</button>
                   </div>
                 </div>
                 </div>
