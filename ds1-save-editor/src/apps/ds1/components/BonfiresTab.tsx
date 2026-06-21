@@ -79,6 +79,7 @@ export const BonfiresTab: React.FC<BonfiresTabProps> = ({ character, onCharacter
   };
 
   const names = BONFIRE_NAMES[lang] || BONFIRE_NAMES.en;
+  const WARPABLE_COUNT = BIT_INDICES.length; // 20
   const unlockedCount = BIT_INDICES.filter(i => bonfires[i]).length;
   const allUnlocked = bonfires.length > 0 && BIT_INDICES.every(i => bonfires[i]);
 
@@ -101,7 +102,7 @@ export const BonfiresTab: React.FC<BonfiresTabProps> = ({ character, onCharacter
           {allUnlocked ? t('alreadyUnlocked', lang) : t('unlockAll', lang)}
         </button>
         <span className="bonfire-count">
-          {unlockedCount} / {bonfires.length}
+          {unlockedCount} / {WARPABLE_COUNT}
         </span>
       </div>
 
