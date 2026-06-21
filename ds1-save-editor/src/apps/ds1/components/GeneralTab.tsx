@@ -12,6 +12,17 @@ interface GeneralTabProps {
 
 const STAT_ORDER = ['VIT', 'ATN', 'END', 'STR', 'DEX', 'RES', 'INT', 'FTH'];
 
+const STAT_I18N_KEYS: Record<string, string> = {
+  VIT: 'statVIT',
+  ATN: 'statATN',
+  END: 'statEND',
+  STR: 'statSTR',
+  DEX: 'statDEX',
+  RES: 'statRES',
+  INT: 'statINT',
+  FTH: 'statFTH',
+};
+
 const CLASS_KEYS: Record<number, string> = {
   0: 'classWarrior',
   1: 'classKnight',
@@ -204,7 +215,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ character, onCharacterUp
             </div>
             {STAT_ORDER.map((statName) => (
               <div key={statName} className="stat-row">
-                <label>{statName}</label>
+                <label>{t(STAT_I18N_KEYS[statName], lang)}</label>
                 <NumberInput
                   value={character.getStat(statName)}
                   onChange={(value) => handleStatChange(statName, value)}
