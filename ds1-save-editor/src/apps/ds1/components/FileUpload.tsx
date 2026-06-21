@@ -1,5 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { getFileSystemAdapter, FileHandle } from '../lib/adapters';
+import { useLang } from '../../../core/context/LanguageContext';
+import { t } from '../lib/i18n';
 
 interface FileUploadProps {
   onFileLoaded: (file: File, fileHandle: FileHandle | null) => void;
@@ -7,6 +9,7 @@ interface FileUploadProps {
 }
 
 export const FileUpload: React.FC<FileUploadProps> = ({ onFileLoaded, onAutoLoadAttempt }) => {
+  const { lang } = useLang();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const autoLoadAttemptedRef = useRef(false);
 
@@ -93,7 +96,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onFileLoaded, onAutoLoad
 
       <div className="button-with-help">
         <button className="upload-button" onClick={handleButtonClick}>
-          Load Save File
+          {t('loadSave', lang)}
         </button>
         <span className="help-icon" title="Full path: C:\Users\<YourUsername>\Documents\NBGI\DARK SOULS REMASTERED\<user_id>\DRAKS0005.sl2">
           ?

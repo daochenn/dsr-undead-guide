@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useLang } from '../../../core/context/LanguageContext';
+import { t } from '../../../apps/ds1/lib/i18n';
 import './Header.css';
 
 interface HeaderProps {
@@ -28,6 +30,7 @@ export const Header: React.FC<HeaderProps> = ({
   currentGame,
   extraActions,
 }) => {
+  const { lang, toggleLang } = useLang();
   const [showGameMenu, setShowGameMenu] = useState(false);
 
   return (
@@ -46,7 +49,7 @@ export const Header: React.FC<HeaderProps> = ({
               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
               <polyline points="9 22 9 12 15 12 15 22"></polyline>
             </svg>
-            Home
+            {t('home', lang)}
           </button>
         )}
         <h1 className="header-title">
@@ -70,7 +73,7 @@ export const Header: React.FC<HeaderProps> = ({
                     <path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"></path>
                   </svg>
                 </span>
-                <span className="button-text">Games</span>
+                <span className="button-text">{t('games', lang)}</span>
                 <svg className="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
@@ -82,23 +85,23 @@ export const Header: React.FC<HeaderProps> = ({
                     className={`game-nav-item ${currentGame === 'ds1' ? 'active' : ''}`}
                     onClick={() => setShowGameMenu(false)}
                   >
-                    Dark Souls Remastered
+                    {t('darkSouls1', lang)}
                   </a>
                   <a
                     href="/ds3"
                     className={`game-nav-item ${currentGame === 'ds3' ? 'disabled' : ''}`}
                     onClick={() => setShowGameMenu(false)}
                   >
-                    Dark Souls 3
-                    <span className="coming-soon-badge">Coming Soon</span>
+                    {t('darkSouls3', lang)}
+                    <span className="coming-soon-badge">{t('comingSoon', lang)}</span>
                   </a>
                   <a
                     href="/eldenring"
                     className={`game-nav-item ${currentGame === 'eldenring' ? 'disabled' : ''}`}
                     onClick={() => setShowGameMenu(false)}
                   >
-                    Elden Ring
-                    <span className="coming-soon-badge">Coming Soon</span>
+                    {t('eldenRing', lang)}
+                    <span className="coming-soon-badge">{t('comingSoon', lang)}</span>
                   </a>
                 </div>
               )}
@@ -112,9 +115,16 @@ export const Header: React.FC<HeaderProps> = ({
               }
             }}>
               <span className="button-icon">📖</span>
-              <span className="button-text">Tutorial</span>
+              <span className="button-text">{t('tutorial', lang)}</span>
             </a>
           )}
+          <button
+            className="lang-toggle-button"
+            onClick={toggleLang}
+            title={lang === 'en' ? 'Switch to Chinese' : '切换到英文'}
+          >
+            {lang === 'en' ? '中' : 'EN'}
+          </button>
         </div>
       </div>
     </header>

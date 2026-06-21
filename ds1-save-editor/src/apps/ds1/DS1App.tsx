@@ -5,6 +5,8 @@ import { FileUpload, CharacterList, TabPanel, TermsPage, AboutPage } from './com
 import { useDS1SaveEditor } from './hooks';
 import { MetaTags } from '../../core/MetaTags';
 import { extractFilename } from './lib/filePathUtils';
+import { useLang } from '../../core/context/LanguageContext';
+import { t } from './lib/i18n';
 
 const logoImg = (import.meta.env.MODE === 'static' || typeof window !== 'undefined' && window.location.protocol === 'file:')
   ? 'logo.png'
@@ -39,6 +41,7 @@ function useTimeAgo(date: Date | null): string {
 
 export const DS1App: React.FC<DS1AppProps> = ({ onHome }) => {
   const navigate = useNavigate();
+  const { lang } = useLang();
   const {
     saveEditor,
     characters,
@@ -197,24 +200,24 @@ export const DS1App: React.FC<DS1AppProps> = ({ onHome }) => {
             </div>
             <div className="ds1-subheader-actions">
               <button className="ds1-action-btn" onClick={handleReload}>
-                ⟳ Reload
+                ⟳ {t('reload', lang)}
               </button>
               <button
                 className="ds1-safemode-btn"
                 onClick={() => setSafeMode(v => !v)}
-                title="Auto-adjust Level, HP, Stamina based on stats. Prevents Weapon Level editing."
+                title={t('safeModeTitle', lang)}
               >
                 <span className={`ds1-safemode-dot ${safeMode ? 'on' : 'off'}`}>●</span>
-                Safe Mode
+                {t('safeMode', lang)}
                 <span className={`ds1-safemode-badge ${safeMode ? 'on' : 'off'}`}>
-                  {safeMode ? 'ON' : 'OFF'}
+                  {safeMode ? t('on', lang) : t('off', lang)}
                 </span>
               </button>
               <button className="ds1-action-btn" onClick={handleSave}>
-                Save
+                {t('save', lang)}
               </button>
               <button className="ds1-action-btn" onClick={handleSaveAs}>
-                Save As
+                {t('saveAs', lang)}
               </button>
             </div>
           </div>
