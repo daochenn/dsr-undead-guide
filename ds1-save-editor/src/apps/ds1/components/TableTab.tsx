@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Character } from '../lib/Character';
+import { useLang } from '../../../core/context/LanguageContext';
+import { t } from '../lib/i18n';
 import { NumberInput } from './NumberInput';
 
 interface TableTabProps {
@@ -8,6 +10,7 @@ interface TableTabProps {
 }
 
 export const TableTab: React.FC<TableTabProps> = ({ character, onCharacterUpdate }) => {
+  const { lang } = useLang();
   const [pattern1Offset, setPattern1Offset] = useState<number>(-1);
   const [usePatternMode, setUsePatternMode] = useState<boolean>(false);
   const [startOffset, setStartOffset] = useState<number>(0);
@@ -33,7 +36,7 @@ export const TableTab: React.FC<TableTabProps> = ({ character, onCharacterUpdate
       URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Error downloading slot:', error);
-      alert('下载槽位失败，请重试。');
+      alert(t('downloadError', lang));
     }
   };
 
@@ -47,7 +50,7 @@ export const TableTab: React.FC<TableTabProps> = ({ character, onCharacterUpdate
     const wasPatternMode = usePatternMode;
     setPattern1Offset(offset);
     if (offset === -1) {
-      alert('未找到Pattern1');
+      alert(t('patternNotFound', lang));
       setUsePatternMode(false);
     } else {
       alert(`Pattern1 found at 0x${offset.toString(16).toUpperCase()}`);
@@ -133,10 +136,10 @@ export const TableTab: React.FC<TableTabProps> = ({ character, onCharacterUpdate
       <div className="table-tab-header">
         <div className="pattern-controls">
           <button onClick={handleFindPattern1} className="action-button">
-            查找Pattern1
+            {t('findPattern', lang)}
           </button>
           <button onClick={handleDownloadSlot} className="action-button">
-            下载槽位
+            {t('downloadSlot', lang)}
           </button>
 
           {pattern1Offset !== -1 && (
@@ -150,7 +153,7 @@ export const TableTab: React.FC<TableTabProps> = ({ character, onCharacterUpdate
                   checked={usePatternMode}
                   onChange={handleTogglePatternMode}
                 />
-                <span>Pattern模式 (0 = Pattern1)</span>
+                <span>{t('patternMode', lang)}</span>
               </label>
             </>
           )}
@@ -158,10 +161,10 @@ export const TableTab: React.FC<TableTabProps> = ({ character, onCharacterUpdate
 
         <div className="navigation-controls">
           <button onClick={handlePrevPage} className="nav-button" disabled={startOffset === 0}>
-            ← 上一页
+            {t('prevPage', lang)}
           </button>
           <div className="offset-input-group">
-            <label>跳转到偏移:</label>
+            <label>{t('goToOffset', lang)}</label>
             <input
               type="text"
               placeholder={usePatternMode && pattern1Offset !== -1 ? "±0x0000" : "0x0000"}
@@ -174,7 +177,7 @@ export const TableTab: React.FC<TableTabProps> = ({ character, onCharacterUpdate
             />
           </div>
           <button onClick={handleNextPage} className="nav-button" disabled={startOffset >= data.length - BYTES_PER_PAGE}>
-            下一页 →
+            {t('nextPage', lang)}
           </button>
         </div>
       </div>
@@ -183,17 +186,17 @@ export const TableTab: React.FC<TableTabProps> = ({ character, onCharacterUpdate
         <div className="selected-byte-editor">
           <div className="editor-info">
             <div className="offset-display">
-              <strong>绝对偏移:</strong> 0x{selectedOffset.toString(16).toUpperCase().padStart(5, '0')}
+              <strong>{t('absOffset', lang)}</strong> 0x{selectedOffset.toString(16).toUpperCase().padStart(5, '0')}
             </div>
             {pattern1Offset !== -1 && (
               <div className="offset-display">
-                <strong>Pattern相对:</strong> {getRelativeOffset(selectedOffset) >= 0 ? '+' : ''}0x{getRelativeOffset(selectedOffset).toString(16).toUpperCase()}
+                <strong>{t('patternRel', lang)}</strong> {getRelativeOffset(selectedOffset) >= 0 ? '+' : ''}0x{getRelativeOffset(selectedOffset).toString(16).toUpperCase()}
               </div>
             )}
           </div>
           <div className="editor-controls">
             <div className="form-group">
-              <label>值 (十进制):</label>
+              <label>{t('valueDec', lang)}</label>
               <NumberInput
                 value={editValue}
                 onChange={setEditValue}
@@ -215,7 +218,7 @@ export const TableTab: React.FC<TableTabProps> = ({ character, onCharacterUpdate
               />
             </div>
             <button onClick={handleValueChange} className="action-button">
-              Apply
+              {t('apply', lang)}
             </button>
           </div>
         </div>

@@ -8,6 +8,7 @@ export const translations: Record<string, Record<Lang, string>> = {
   reload: { en: 'Reload', zh: '重新加载' },
   cancel: { en: 'Cancel', zh: '取消' },
   confirm: { en: 'Confirm', zh: '确认' },
+  apply: { en: 'Apply', zh: '应用' },
   delete: { en: 'Delete', zh: '删除' },
   edit: { en: 'Edit', zh: '编辑' },
   create: { en: 'Create', zh: '创建' },
