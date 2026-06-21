@@ -389,33 +389,34 @@ export class Character {
     const byte6D = this.data[baseOffset + 0x6D];
 
     return [
-      // byte 0x6B bits 0-7 (8 bonfires)
-      ((byte6B >> 0) & 1) === 1, // Painted World of Ariamis (confirmed)
-      ((byte6B >> 1) & 1) === 1, // unconfirmed
-      ((byte6B >> 2) & 1) === 1, // unconfirmed
-      ((byte6B >> 3) & 1) === 1, // unconfirmed
-      ((byte6B >> 4) & 1) === 1, // unconfirmed
-      ((byte6B >> 5) & 1) === 1, // unconfirmed
-      ((byte6B >> 6) & 1) === 1, // unconfirmed
-      ((byte6B >> 7) & 1) === 1, // unconfirmed
+      // byte 0x6B bits 0-3 unused
+      ((byte6B >> 0) & 1) === 1, // unused
+      ((byte6B >> 1) & 1) === 1, // unused
+      ((byte6B >> 2) & 1) === 1, // unused
+      ((byte6B >> 3) & 1) === 1, // unused
+      // byte 0x6B bits 4-7 (4 bonfires)
+      ((byte6B >> 4) & 1) === 1, // Crystal Cave
+      ((byte6B >> 5) & 1) === 1, // The Duke's Archives
+      ((byte6B >> 6) & 1) === 1, // Tomb of Giants
+      ((byte6B >> 7) & 1) === 1, // Painted World of Ariamis
       // byte 0x6C bits 0-7 (8 bonfires)
-      ((byte6C >> 0) & 1) === 1, // unconfirmed (already set in original)
-      ((byte6C >> 1) & 1) === 1, // Depths (confirmed)
-      ((byte6C >> 2) & 1) === 1, // Oolacile Township Dungeon (confirmed)
-      ((byte6C >> 3) & 1) === 1, // Chasm of the Abyss (confirmed)
-      ((byte6C >> 4) & 1) === 1, // Oolacile (confirmed)
-      ((byte6C >> 5) & 1) === 1, // Oolacile Sanctuary (confirmed)
-      ((byte6C >> 6) & 1) === 1, // unconfirmed
-      ((byte6C >> 7) & 1) === 1, // unconfirmed
+      ((byte6C >> 0) & 1) === 1, // Undead Parish
+      ((byte6C >> 1) & 1) === 1, // Depths
+      ((byte6C >> 2) & 1) === 1, // Oolacile Township Dungeon
+      ((byte6C >> 3) & 1) === 1, // Chasm of the Abyss
+      ((byte6C >> 4) & 1) === 1, // Oolacile
+      ((byte6C >> 5) & 1) === 1, // Oolacile Sanctuary
+      ((byte6C >> 6) & 1) === 1, // Sanctuary Garden
+      ((byte6C >> 7) & 1) === 1, // Darkmoon Tomb
       // byte 0x6D bits 0-7 (8 bonfires)
-      ((byte6D >> 0) & 1) === 1, // unconfirmed
-      ((byte6D >> 1) & 1) === 1, // unconfirmed
-      ((byte6D >> 2) & 1) === 1, // unconfirmed
-      ((byte6D >> 3) & 1) === 1, // unconfirmed
-      ((byte6D >> 4) & 1) === 1, // unconfirmed
-      ((byte6D >> 5) & 1) === 1, // unconfirmed
-      ((byte6D >> 6) & 1) === 1, // unconfirmed
-      ((byte6D >> 7) & 1) === 1, // unconfirmed
+      ((byte6D >> 0) & 1) === 1, // Chamber of the Princess
+      ((byte6D >> 1) & 1) === 1, // Altar of the Gravelord
+      ((byte6D >> 2) & 1) === 1, // Sunlight Altar
+      ((byte6D >> 3) & 1) === 1, // The Abyss
+      ((byte6D >> 4) & 1) === 1, // Anor Londo
+      ((byte6D >> 5) & 1) === 1, // Daughter of Chaos
+      ((byte6D >> 6) & 1) === 1, // Stone Dragon
+      ((byte6D >> 7) & 1) === 1, // Firelink Shrine
     ];
   }
 
@@ -446,6 +447,19 @@ export class Character {
     }
   }
 
+  // World event flags
+  getWorldEventFlag(offset: string, bit: number, reverse: boolean): boolean {
+    const baseOffset = this.findPattern1();
+    if (baseOffset === -1) return false;
+
+    const relOff = parseInt(offset, 16);
+    const absOff = baseOffset + relOff;
+    if (absOff < 0 || absOff >= this.data.length) return false;
+
+    const rawBit = (this.data[absOff] >> bit) & 1;
+    return reverse ? !rawBit : !!rawBit;
+  }
+
   unlockAllBonfires(): void {
     // Находим базовое смещение Pattern1
     const baseOffset = this.findPattern1();
@@ -464,10 +478,11 @@ export class Character {
       throw new Error('Смещения костров выходят за границы файла. Возможно, файл сохранения поврежден.');
     }
 
-    // Записываем шаблон разблокировки (битовые флаги)
-    // 0xF0 = 11110000 - разблокирует 4 костра
-    // 0xFF = 11111111 - разблокирует 8 костров
-    // 0x22 = 00100010 - специфичный флаг варпа
+    // Unlock all 20 warpable bonfires (indices 4-23)
+    // 0xF0 = 11110000 - bits 4-7 of 6B (Crystal Cave, Duke's Archives, Tomb of Giants, Painted World)
+    // 0xFF = 11111111 - all 8 bits of 6C (Undead Parish through Darkmoon Tomb)
+    // 0xFF = 11111111 - all 8 bits of 6D (Chamber of the Princess through Firelink Shrine)
+    // 0x22 = 00100010 - warp availability flag
     this.data[bonfireOffset1] = 0xF0;
     this.data[bonfireOffset2] = 0xFF;
     this.data[bonfireOffset3] = 0xFF;

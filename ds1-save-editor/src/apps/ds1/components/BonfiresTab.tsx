@@ -8,25 +8,29 @@ interface BonfiresTabProps {
   onCharacterUpdate: () => void;
 }
 
-// 20 warpable bonfire names (matching the bit order in Character.ts)
-// Confirmed: +0x6B bit0=PaintedWorld, +0x6C bit1=Depths, bit2=OolacileTownship, bit3=Chasm, bit4=Oolacile, bit5=OolacileSanctuary
-// Unconfirmed bits are marked with ???
+// 20 warpable bonfire names (indices 4-23, indices 0-3 are unused)
+// Bit layout: +0x6B bits 0-3 unused, bit4=CrystalCave, bit5=Duke'sArchives, bit6=TombOfGiants, bit7=PaintedWorld
+//             +0x6C bit0=UndeadParish, bit1=Depths, bit2=OolacileTownship, bit3=Chasm, bit4=Oolacile, bit5=OolacileSanctuary, bit6=SanctuaryGarden, bit7=DarkmoonTomb
+//             +0x6D bit0=ChamberOfThePrincess, bit1=AltarOfTheGravelord, bit2=SunlightAltar, bit3=TheAbyss, bit4=AnorLondo, bit5=DaughterOfChaos, bit6=StoneDragon, bit7=FirelinkShrine
 const BONFIRE_NAMES: Record<Lang, string[]> = {
   en: [
-    'Painted World of Ariamis', '???', '???', '???',
-    '???', '???', '???', '???',
-    '???', 'Depths', 'Oolacile Township Dungeon', 'Chasm of the Abyss',
-    'Oolacile', 'Oolacile Sanctuary', '???', '???',
-    '???', '???', '???', '???'
+    'Crystal Cave', 'The Duke\'s Archives', 'Tomb of Giants', 'Painted World of Ariamis',
+    'Undead Parish', 'Depths', 'Oolacile Township Dungeon', 'Chasm of the Abyss',
+    'Oolacile', 'Oolacile Sanctuary', 'Sanctuary Garden', 'Darkmoon Tomb',
+    'Chamber of the Princess', 'Altar of the Gravelord', 'Sunlight Altar', 'The Abyss',
+    'Anor Londo', 'Daughter of Chaos', 'Stone Dragon', 'Firelink Shrine'
   ],
   zh: [
-    '绘画世界·亚米阿斯', '???', '???', '???',
-    '???', '???', '???', '???',
-    '???', '下水道', '乌拉席露地下墓地', '深渊裂缝',
-    '乌拉席露', '乌拉席露圣所', '???', '???',
-    '???', '???', '???', '???'
+    '结晶洞穴', '公爵书库', '巨人墓地', '绘画世界·亚米阿斯',
+    '城外不死教区', '底层', '乌拉席露市镇：地牢', '深渊洞穴',
+    '乌拉席露', '灵庙内庭', '灵庙庭院', '暗月灵庙',
+    '公主的房间', '墓王祭坛', '太阳祭坛', '深渊',
+    '亚诺尔隆德', '混沌的女儿', '石身古龙', '传火祭祀场'
   ]
 };
+
+// Map from display index (0-19) to bit index (4-23)
+const BIT_INDICES = [4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
 
 type Lang = 'en' | 'zh';
 
@@ -49,12 +53,13 @@ export const BonfiresTab: React.FC<BonfiresTabProps> = ({ character, onCharacter
     loadStatus();
   }, [character]);
 
-  const handleToggle = (index: number) => {
+  const handleToggle = (displayIndex: number) => {
     try {
-      const newState = !bonfires[index];
-      character.setBonfireWarpFlag(index, newState);
+      const bitIndex = BIT_INDICES[displayIndex];
+      const newState = !bonfires[bitIndex];
+      character.setBonfireWarpFlag(bitIndex, newState);
       const newBonfires = [...bonfires];
-      newBonfires[index] = newState;
+      newBonfires[bitIndex] = newState;
       setBonfires(newBonfires);
       onCharacterUpdate();
     } catch (err: any) {
@@ -73,9 +78,9 @@ export const BonfiresTab: React.FC<BonfiresTabProps> = ({ character, onCharacter
     }
   };
 
-  const allUnlocked = bonfires.length > 0 && bonfires.every(b => b);
   const names = BONFIRE_NAMES[lang] || BONFIRE_NAMES.en;
-  const unlockedCount = bonfires.filter(b => b).length;
+  const unlockedCount = BIT_INDICES.filter(i => bonfires[i]).length;
+  const allUnlocked = bonfires.length > 0 && BIT_INDICES.every(i => bonfires[i]);
 
   return (
     <div className="bonfires-tab">
@@ -101,16 +106,20 @@ export const BonfiresTab: React.FC<BonfiresTabProps> = ({ character, onCharacter
       </div>
 
       <div className="bonfire-grid">
-        {names.map((name, i) => (
-          <div
-            key={i}
-            className={`bonfire-item ${bonfires[i] ? 'unlocked' : 'locked'}`}
-            onClick={() => handleToggle(i)}
-          >
-            <span className="bonfire-icon">{bonfires[i] ? '🔥' : '○'}</span>
-            <span className="bonfire-name">{name}</span>
-          </div>
-        ))}
+        {names.map((name, i) => {
+          const bitIndex = BIT_INDICES[i];
+          const isUnlocked = bonfires[bitIndex];
+          return (
+            <div
+              key={i}
+              className={`bonfire-item ${isUnlocked ? 'unlocked' : 'locked'}`}
+              onClick={() => handleToggle(i)}
+            >
+              <span className="bonfire-icon">{isUnlocked ? '🔥' : '○'}</span>
+              <span className="bonfire-name">{name}</span>
+            </div>
+          );
+        })}
       </div>
 
       <style>{`
