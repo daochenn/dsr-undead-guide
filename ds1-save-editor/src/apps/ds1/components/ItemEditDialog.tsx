@@ -234,10 +234,10 @@ export const ItemEditDialog: React.FC<ItemEditDialogProps> = ({
                 // Show quantity field if:
                 // 1. No variant selected (Keep Current) and current item is not empty
                 // 2. Variant selected and it's not empty
-                const showQuantity = selectedEstusFlask 
+                const showQuantity = selectedEstusFlask
                   ? !selectedEstusFlask.Name?.includes('(empty)')
                   : !isEstusFlaskEmpty;
-                
+
                 return showQuantity ? (
                   <div className="form-group">
                     <label>Quantity (max: 20)</label>

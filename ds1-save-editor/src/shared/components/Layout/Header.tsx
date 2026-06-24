@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useLang } from '../../../core/context/LanguageContext';
+import React, { useState, useEffect, useRef } from 'react';
+import { useLang, LANGS, LANG_NAMES, LANG_FULL_NAMES } from '../../../core/context/LanguageContext';
 import { t } from '../../../apps/ds1/lib/i18n';
 import './Header.css';
 
@@ -30,8 +30,20 @@ export const Header: React.FC<HeaderProps> = ({
   currentGame,
   extraActions,
 }) => {
-  const { lang, toggleLang } = useLang();
+  const { lang, setLang } = useLang();
   const [showGameMenu, setShowGameMenu] = useState(false);
+  const [showLangMenu, setShowLangMenu] = useState(false);
+  const langRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) {
+        setShowLangMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <header className="app-header">
@@ -58,6 +70,30 @@ export const Header: React.FC<HeaderProps> = ({
         </h1>
         <div className="header-actions">
           {extraActions}
+          <div className="game-nav-dropdown" ref={langRef}>
+            <button
+              className="lang-nav-button"
+              onClick={() => setShowLangMenu(!showLangMenu)}
+            >
+              <span className="lang-label">{LANG_NAMES[lang]}</span>
+              <svg className="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            {showLangMenu && (
+              <div className="game-nav-menu lang-nav-menu">
+                {LANGS.map(l => (
+                  <button
+                    key={l}
+                    className={`game-nav-item ${lang === l ? 'active' : ''}`}
+                    onClick={() => { setLang(l); setShowLangMenu(false); }}
+                  >
+                    {LANG_FULL_NAMES[l]}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
           {showGameNav && (
             <div className="game-nav-dropdown">
               <button
@@ -118,13 +154,6 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="button-text">{t('tutorial', lang)}</span>
             </a>
           )}
-          <button
-            className="lang-toggle-button"
-            onClick={toggleLang}
-            title={lang === 'en' ? 'Switch to Chinese' : '切换到英文'}
-          >
-            {lang === 'en' ? '中' : 'EN'}
-          </button>
         </div>
       </div>
     </header>
