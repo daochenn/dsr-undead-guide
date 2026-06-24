@@ -31,18 +31,22 @@ const BONFIRE_NAMES: Record<Lang, string[]> = {
 
 // Map from display index (0-20) to bit index (3, 4-23)
 const BIT_INDICES = [3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
+// Warp bits in +0x6B (bits 0-2) that are set together with the +0xAE flag
+const WARP_BIT_INDICES = [0, 1, 2];
 
 type Lang = 'en' | 'zh';
 
 export const BonfiresTab: React.FC<BonfiresTabProps> = ({ character, onCharacterUpdate }) => {
   const { lang } = useLang();
   const [bonfires, setBonfires] = useState<boolean[]>([]);
+  const [warpFlag, setWarpFlag] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   const loadStatus = () => {
     try {
       const flags = character.getBonfireWarpFlags();
       setBonfires(flags);
+      setWarpFlag(character.getWarpFlag());
       setError(null);
     } catch (err: any) {
       setError(err.message || 'Error checking bonfire status');
@@ -67,11 +71,29 @@ export const BonfiresTab: React.FC<BonfiresTabProps> = ({ character, onCharacter
     }
   };
 
+  const handleToggleWarping = () => {
+    try {
+      const newState = !warpFlag;
+      WARP_BIT_INDICES.forEach(bitIndex => {
+        character.setBonfireWarpFlag(bitIndex, newState);
+      });
+      character.setWarpFlag(newState);
+      const newBonfires = [...bonfires];
+      WARP_BIT_INDICES.forEach(i => { newBonfires[i] = newState; });
+      setBonfires(newBonfires);
+      setWarpFlag(newState);
+      onCharacterUpdate();
+    } catch (err: any) {
+      setError(err.message || 'Failed to toggle warping');
+    }
+  };
+
   const handleUnlockAll = () => {
     try {
       character.unlockAllBonfires();
       const flags = character.getBonfireWarpFlags();
       setBonfires(flags);
+      setWarpFlag(character.getWarpFlag());
       onCharacterUpdate();
     } catch (err: any) {
       setError(err.message || 'Failed to unlock bonfires');
@@ -106,6 +128,13 @@ export const BonfiresTab: React.FC<BonfiresTabProps> = ({ character, onCharacter
       </div>
 
       <div className="bonfire-grid">
+        <div
+          className={`bonfire-item warp-item ${warpFlag ? 'unlocked' : 'locked'}`}
+          onClick={handleToggleWarping}
+        >
+          <span className={`bonfire-dot ${warpFlag ? 'dot-warp' : 'dot-off'}`} />
+          <span className="bonfire-name">{t('warping', lang)}</span>
+        </div>
         {names.map((name, i) => {
           const bitIndex = BIT_INDICES[i];
           const isUnlocked = bonfires[bitIndex];
@@ -115,7 +144,7 @@ export const BonfiresTab: React.FC<BonfiresTabProps> = ({ character, onCharacter
               className={`bonfire-item ${isUnlocked ? 'unlocked' : 'locked'}`}
               onClick={() => handleToggle(i)}
             >
-              <span className="bonfire-icon">{isUnlocked ? '🔥' : '○'}</span>
+              <span className={`bonfire-dot ${isUnlocked ? 'dot-on' : 'dot-off'}`} />
               <span className="bonfire-name">{name}</span>
             </div>
           );
@@ -194,6 +223,7 @@ export const BonfiresTab: React.FC<BonfiresTabProps> = ({ character, onCharacter
           border-color: rgba(255, 107, 53, 0.2);
         }
 
+
         .bonfire-item.locked {
           background: rgba(255, 255, 255, 0.02);
           opacity: 0.5;
@@ -203,8 +233,25 @@ export const BonfiresTab: React.FC<BonfiresTabProps> = ({ character, onCharacter
           border-color: rgba(255, 107, 53, 0.4);
         }
 
-        .bonfire-icon {
-          font-size: 1rem;
+        .bonfire-dot {
+          display: inline-block;
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          flex-shrink: 0;
+        }
+
+        .dot-on {
+          background: #ff6b35;
+        }
+
+        .dot-warp {
+          background: #f0c040;
+        }
+
+        .dot-off {
+          background: transparent;
+          border: 1.5px solid #555;
         }
 
         .bonfire-name {

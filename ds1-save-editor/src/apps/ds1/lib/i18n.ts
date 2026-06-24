@@ -118,6 +118,7 @@ export const translations: Record<string, Record<Lang, string>> = {
   mergeExport: { en: '📦 Merge, Duplicate or Export Save', zh: '📦 合并、复制或导出存档' },
 
   // 篝火
+  warping: { en: 'Warping', zh: '传送' },
   bonfires: { en: 'Bonfires', zh: '篝火' },
   status: { en: 'Status', zh: '状态' },
   allUnlocked: { en: '✓ All Warpable Bonfires Unlocked', zh: '✓ 所有可传送篝火已解锁' },
