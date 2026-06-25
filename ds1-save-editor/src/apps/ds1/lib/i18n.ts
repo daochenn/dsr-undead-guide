@@ -8,7 +8,9 @@ export const translations: Record<string, Record<Lang, string>> = {
   reload: { en: 'Reload', zh: '重新加载' },
   cancel: { en: 'Cancel', zh: '取消' },
   confirm: { en: 'Confirm', zh: '确认' },
-  apply: { en: 'Apply', zh: '应用' },
+
+  // apply: { en: 'Apply', zh: '应用' },
+
   delete: { en: 'Delete', zh: '删除' },
   edit: { en: 'Edit', zh: '编辑' },
   create: { en: 'Create', zh: '创建' },
@@ -30,7 +32,9 @@ export const translations: Record<string, Record<Lang, string>> = {
   tab_bonfires: { en: 'Bonfires', zh: '篝火' },
   tab_npcs: { en: 'NPCs', zh: 'NPC' },
   tab_bosses: { en: 'Bosses', zh: 'Boss' },
+
   tab_world_events: { en: 'Events', zh: '世界事件' },
+
   tab_table: { en: 'Table', zh: '十六进制' },
   selectChar: { en: 'Select a character to edit', zh: '选择一个角色进行编辑' },
 
@@ -120,6 +124,9 @@ export const translations: Record<string, Record<Lang, string>> = {
   mergeExport: { en: '📦 Merge, Duplicate or Export Save', zh: '📦 合并、复制或导出存档' },
 
   // 篝火
+
+  warping: { en: 'Warping', zh: '传送' },
+
   bonfires: { en: 'Bonfires', zh: '篝火' },
   status: { en: 'Status', zh: '状态' },
   allUnlocked: { en: '✓ All Warpable Bonfires Unlocked', zh: '✓ 所有可传送篝火已解锁' },
@@ -156,7 +163,9 @@ export const translations: Record<string, Record<Lang, string>> = {
   appearance: { en: 'Appearance', zh: '外观' },
   physique: { en: 'Physique', zh: '体型' },
   hairstyle: { en: 'Hairstyle', zh: '发型' },
+
   eyeColor: { en: 'Eye Color', zh: '眼睛颜色' },
+
   hairColor: { en: 'Hair Color', zh: '发色' },
   colorRange: { en: 'Color range:', zh: '颜色范围:' },
   safe: { en: 'Safe (0–1)', zh: '安全 (0–1)' },

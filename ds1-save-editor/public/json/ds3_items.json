@@ -9131,7 +9131,7 @@
     {
       "Type": "0x40000000",
       "Id": "0x4000013B",
-      "MaxStackCount": 99,
+      "MaxStackCount": 1,
       "Category": "projectiles",
       "Name": "Church Guardian Shiv"
     },
@@ -9145,14 +9145,14 @@
     {
       "Type": "0x40000000",
       "Id": "0x4000028A",
-      "MaxStackCount": 99,
+      "MaxStackCount": 1,
       "Category": "multiplayer",
       "Name": "Ritual Spear Fragment"
     },
     {
       "Type": "0x40000000",
       "Id": "0x4000028B",
-      "MaxStackCount": 99,
+      "MaxStackCount": 1,
       "Category": "multiplayer",
       "Name": "Divine Spear Fragment"
     },
@@ -9180,14 +9180,14 @@
     {
       "Type": "0x40000000",
       "Id": "0x4000086D",
-      "MaxStackCount": 99,
+      "MaxStackCount": 1,
       "Category": "ashes",
       "Name": "Old Woman's Ashes"
     },
     {
       "Type": "0x40000000",
       "Id": "0x4000086E",
-      "MaxStackCount": 99,
+      "MaxStackCount": 1,
       "Category": "questitems",
       "Name": "Blood of the Dark soul"
     },
@@ -9313,14 +9313,14 @@
     {
       "Type": "0x40000000",
       "Id": "0x40000075",
-      "MaxStackCount": 99,
+      "MaxStackCount": 1,
       "Category": "consumables",
       "Name": "Darksign"
     },
     {
       "Type": "0x40000000",
       "Id": "0x40000077",
-      "MaxStackCount": 99,
+      "MaxStackCount": 1,
       "Category": "consumables",
       "Name": "Way of White Circlet"
     },
@@ -10055,28 +10055,28 @@
     {
       "Type": "0x40000000",
       "Id": "0x40000837",
-      "MaxStackCount": 99,
+      "MaxStackCount": 1,
       "Category": "ores",
       "Name": "Farron Coal"
     },
     {
       "Type": "0x40000000",
       "Id": "0x40000838",
-      "MaxStackCount": 99,
+      "MaxStackCount": 1,
       "Category": "ores",
       "Name": "Sage's Coal"
     },
     {
       "Type": "0x40000000",
       "Id": "0x40000839",
-      "MaxStackCount": 99,
+      "MaxStackCount": 1,
       "Category": "ores",
       "Name": "Giant's Coal"
     },
     {
       "Type": "0x40000000",
       "Id": "0x4000083A",
-      "MaxStackCount": 99,
+      "MaxStackCount": 1,
       "Category": "ores",
       "Name": "Profaned Coal"
     },

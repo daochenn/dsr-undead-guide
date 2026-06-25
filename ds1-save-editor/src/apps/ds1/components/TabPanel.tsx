@@ -32,6 +32,16 @@ const TAB_KEYS: Record<TabType, string> = {
   table: 'tab_table',
 };
 
+const TAB_KEYS: Record<TabType, string> = {
+  general: 'tab_general',
+  appearance: 'tab_appearance',
+  inventory: 'tab_inventory',
+  bonfires: 'tab_bonfires',
+  npcs: 'tab_npcs',
+  bosses: 'tab_bosses',
+  table: 'tab_table',
+};
+
 export const TabPanel: React.FC<TabPanelProps> = ({ character, onCharacterUpdate, safeMode }) => {
   const { lang } = useLang();
   const [activeTab, setActiveTab] = useState<TabType>('general');

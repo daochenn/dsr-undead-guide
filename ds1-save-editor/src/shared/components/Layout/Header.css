@@ -210,24 +210,40 @@
   font-size: 0.85rem;
 }
 
-/* ── Language toggle ── */
-.lang-toggle-button {
-  background: rgba(255, 107, 53, 0.1);
-  border: 1px solid rgba(255, 107, 53, 0.3);
+/* ── Language dropdown ── */
+.lang-nav-button {
+  background: none;
+  border: none;
   color: #ff6b35;
-  padding: 0.25rem 0.5rem;
+  padding: 0;
   cursor: pointer;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border-radius: 4px;
-  transition: all 0.2s;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
   line-height: 1;
+}
+
+.lang-nav-button:hover { color: #ff8c5a; }
+
+.lang-label {
   white-space: nowrap;
 }
 
-.lang-toggle-button:hover {
-  background: rgba(255, 107, 53, 0.2);
-  border-color: rgba(255, 107, 53, 0.5);
+.lang-nav-menu {
+  min-width: 110px;
+}
+
+.lang-nav-menu .game-nav-item {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+
 }
 
 /* ── Dropdown menu ── */

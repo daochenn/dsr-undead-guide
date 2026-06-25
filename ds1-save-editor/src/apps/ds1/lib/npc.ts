@@ -108,6 +108,7 @@ export class NpcEditor {
   }
 
   public setNpcAlive(name: string, alive: boolean): void {
+
       const npcData = this.loadItemsDatabase();
 
       const npc = npcData.npcs.find((n) => n.name === name);
