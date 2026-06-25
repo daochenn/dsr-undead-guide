@@ -23,7 +23,6 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && node scripts/generate-seo-pages.js",
-    "build:dev": "tsc && vite build --mode development",
     "build:static": "tsc && vite build --mode static",
     "electron": "npm run build:static && electron .",
     "electron:dev": "electron .",
