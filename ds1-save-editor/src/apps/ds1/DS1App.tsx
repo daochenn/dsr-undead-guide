@@ -6,7 +6,7 @@ import { useDS1SaveEditor } from './hooks';
 import { MetaTags } from '../../core/MetaTags';
 import { extractFilename } from './lib/filePathUtils';
 import { useLang } from '../../core/context/LanguageContext';
-import { t } from './lib/i18n';
+import { t, Lang } from './lib/i18n';
 
 const logoImg = (import.meta.env.MODE === 'static' || typeof window !== 'undefined' && window.location.protocol === 'file:')
   ? 'logo.png'
@@ -16,18 +16,20 @@ interface DS1AppProps {
   onHome?: () => void;
 }
 
-function useTimeAgo(date: Date | null): string {
+function useTimeAgo(date: Date | null, lang: Lang): string {
   const [label, setLabel] = useState('');
 
   const compute = useCallback(() => {
     if (!date) return '';
     const secs = Math.floor((Date.now() - date.getTime()) / 1000);
-    if (secs < 60) return 'loaded just now';
+    if (secs < 60) return t('loadedJustNow', lang);
     const mins = Math.floor(secs / 60);
-    if (mins < 60) return `loaded ${mins} min ago`;
+    if (mins < 60) return t('loadedMinAgo', lang).replace('{n}', String(mins));
     const hours = Math.floor(mins / 60);
-    return `loaded ${hours} hour${hours > 1 ? 's' : ''} ago`;
-  }, [date]);
+    return hours > 1
+      ? t('loadedHoursAgo', lang).replace('{n}', String(hours))
+      : t('loadedHourAgo', lang).replace('{n}', String(hours));
+  }, [date, lang]);
 
   useEffect(() => {
     if (!date) { setLabel(''); return; }
@@ -62,7 +64,7 @@ export const DS1App: React.FC<DS1AppProps> = ({ onHome }) => {
   const [safeMode, setSafeMode] = useState(true);
   const [loadedAt, setLoadedAt] = useState<Date | null>(null);
 
-  const timeAgo = useTimeAgo(loadedAt);
+  const timeAgo = useTimeAgo(loadedAt, lang);
 
   useEffect(() => {
     if (saveEditor) setLoadedAt(new Date());

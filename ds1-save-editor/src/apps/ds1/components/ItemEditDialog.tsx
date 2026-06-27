@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Inventory, ItemInfusion, InventoryItem, Item } from '../lib/Inventory';
 import { NumberInput } from './NumberInput';
+import { t } from '../lib/i18n';
+import { useLang } from '../../../core/context/LanguageContext';
 
 interface ItemEditDialogProps {
   inventory: Inventory;
@@ -17,6 +19,7 @@ export const ItemEditDialog: React.FC<ItemEditDialogProps> = ({
   onItemUpdated,
   safeMode,
 }) => {
+  const { lang } = useLang();
   const itemInfo = item.itemInfo;
   // For Estus Flask: if empty, quantity must be 0; if not empty, use current quantity or default to 20
   const initialQuantity = itemInfo?.Name?.includes('Estus Flask') 
@@ -191,7 +194,7 @@ export const ItemEditDialog: React.FC<ItemEditDialogProps> = ({
     <div className="dialog-overlay" onClick={onClose}>
       <div className="dialog-content" onClick={(e) => e.stopPropagation()}>
         <div className="dialog-header">
-          <h2>Edit Item</h2>
+          <h2>{t('editItemTitle', lang)}</h2>
           <button className="close-button" onClick={onClose}>
             ×
           </button>
@@ -199,14 +202,14 @@ export const ItemEditDialog: React.FC<ItemEditDialogProps> = ({
 
         <div className="dialog-body" ref={dialogBodyRef}>
           <div className="form-group">
-            <label>Item Name</label>
+            <label>{t('itemName', lang)}</label>
             <div className="item-name-display">{item.itemName}</div>
           </div>
 
           {isEstusFlask ? (
             <>
               <div className="form-group">
-                <label>Estus Flask Variant</label>
+                <label>{t('estusFlask', lang)}</label>
                 <select
                   value={selectedEstusFlask?.Id || itemInfo?.Id || ''}
                   onChange={(e) => {
@@ -222,7 +225,7 @@ export const ItemEditDialog: React.FC<ItemEditDialogProps> = ({
                     }
                   }}
                 >
-                  <option value="">Keep Current</option>
+                  <option value="">{t('keepCurrent', lang)}</option>
                   {estusFlaskVariants.map(variant => (
                     <option key={variant.Id} value={variant.Id}>
                       {variant.Name}
@@ -240,7 +243,7 @@ export const ItemEditDialog: React.FC<ItemEditDialogProps> = ({
 
                 return showQuantity ? (
                   <div className="form-group">
-                    <label>Quantity (max: 20)</label>
+                    <label>{t('quantity', lang)} (max: 20)</label>
                     <NumberInput
                       value={quantity}
                       onChange={setQuantity}
@@ -255,7 +258,7 @@ export const ItemEditDialog: React.FC<ItemEditDialogProps> = ({
             <>
               {canStack && (
                 <div className="form-group">
-                  <label>Quantity (max: {itemInfo.MaxStackCount})</label>
+                  <label>{t('quantity', lang)} (max: {itemInfo.MaxStackCount})</label>
                   <NumberInput
                     value={quantity}
                     onChange={setQuantity}
@@ -267,25 +270,25 @@ export const ItemEditDialog: React.FC<ItemEditDialogProps> = ({
 
               {canInfuse && (
                 <div className="form-group">
-                  <label>Infusion</label>
+                  <label>{t('infusion', lang).replace(':', '')}</label>
                   <select value={infusion} onChange={(e) => setInfusion(parseInt(e.target.value) as ItemInfusion)}>
-                    <option value={ItemInfusion.Standard}>Standard</option>
-                    <option value={ItemInfusion.Crystal}>Crystal</option>
-                    <option value={ItemInfusion.Lightning}>Lightning</option>
-                    <option value={ItemInfusion.Raw}>Raw</option>
-                    <option value={ItemInfusion.Magic}>Magic</option>
-                    <option value={ItemInfusion.Enchanted}>Enchanted</option>
-                    <option value={ItemInfusion.Divine}>Divine</option>
-                    <option value={ItemInfusion.Occult}>Occult</option>
-                    <option value={ItemInfusion.Fire}>Fire</option>
-                    <option value={ItemInfusion.Chaos}>Chaos</option>
+                    <option value={ItemInfusion.Standard}>{t('standard', lang)}</option>
+                    <option value={ItemInfusion.Crystal}>{t('crystal', lang)}</option>
+                    <option value={ItemInfusion.Lightning}>{t('lightning', lang)}</option>
+                    <option value={ItemInfusion.Raw}>{t('raw', lang)}</option>
+                    <option value={ItemInfusion.Magic}>{t('magic_inf', lang)}</option>
+                    <option value={ItemInfusion.Enchanted}>{t('enchanted', lang)}</option>
+                    <option value={ItemInfusion.Divine}>{t('divine', lang)}</option>
+                    <option value={ItemInfusion.Occult}>{t('occult', lang)}</option>
+                    <option value={ItemInfusion.Fire}>{t('fire', lang)}</option>
+                    <option value={ItemInfusion.Chaos}>{t('chaos', lang)}</option>
                   </select>
                 </div>
               )}
 
               {canUpgrade && (
                 <div className="form-group">
-                  <label>Upgrade Level (max: +{maxUpgrade})</label>
+                  <label>{t('upgradeLevel', lang)} (max: +{maxUpgrade})</label>
                   <NumberInput
                     value={upgradeLevel}
                     onChange={setUpgradeLevel}
@@ -299,7 +302,7 @@ export const ItemEditDialog: React.FC<ItemEditDialogProps> = ({
 
           {hasDurability && (
             <div className="form-group">
-              <label>Durability</label>
+              <label>{t('durability', lang)}</label>
               <NumberInput
                 value={durability}
                 onChange={setDurability}
