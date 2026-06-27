@@ -397,6 +397,10 @@ export const translations: Record<string, Record<Lang, string>> = {
   loadingLast: { en: 'Loading last save file...', zh: '正在加载上次的存档...' },
   safeMode: { en: 'Safe Mode', zh: '安全模式' },
   safeModeTitle: { en: 'Auto-adjust Level, HP, Stamina based on stats. Prevents Weapon Level editing.', zh: '根据属性自动调整等级、生命、精力。防止武器等级编辑。' },
+  loadedJustNow: { en: 'loaded just now', zh: '刚刚加载' },
+  loadedMinAgo: { en: 'loaded {n} min ago', zh: '{n}分钟前加载' },
+  loadedHourAgo: { en: 'loaded {n} hour ago', zh: '{n}小时前加载' },
+  loadedHoursAgo: { en: 'loaded {n} hours ago', zh: '{n}小时前加载' },
 
   // 面部参数
   faceWidth: { en: 'Face Width (0=Wide, 255=Narrow)', zh: '脸宽 (0=宽, 255=窄)' },
