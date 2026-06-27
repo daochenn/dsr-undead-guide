@@ -113,9 +113,12 @@ export const EntityListTab: React.FC<EntityListTabProps> = ({ character, onChara
     <div className={`entity-list-tab entity-list-tab--${config.entityType}`}>
       <h2>{config.title}</h2>
 
-      <div className="disclaimer">
-        ⚠️ There may be bugs. If you encounter any issues, please report them via <a href="https://discord.com/invite/FZuCXNcUWA" target="_blank" rel="noopener noreferrer">Discord</a>.
-      </div>
+      <div
+        className="disclaimer"
+        dangerouslySetInnerHTML={{
+          __html: t('disclaimer', lang).replace('Discord', '<a href="https://discord.com/invite/FZuCXNcUWA" target="_blank" rel="noopener noreferrer">Discord</a>')
+        }}
+      />
 
       {loading && (
         <div className="loading-message">
