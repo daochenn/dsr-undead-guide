@@ -148,6 +148,7 @@ export const translations: Record<string, Record<Lang, string>> = {
 
   // 文件操作
   loadSave: { en: 'Load Save File', zh: '加载存档文件' },
+  loadLastSave: { en: 'Load Last Save File', zh: '加载上次的存档' },
   failedOpen: { en: 'Failed to open file. Please try again.', zh: '打开文件失败，请重试。' },
 
   // 双文件上传
@@ -411,6 +412,8 @@ export const translations: Record<string, Record<Lang, string>> = {
   loadedMinAgo: { en: 'loaded {n} min ago', zh: '{n}分钟前加载' },
   loadedHourAgo: { en: 'loaded {n} hour ago', zh: '{n}小时前加载' },
   loadedHoursAgo: { en: 'loaded {n} hours ago', zh: '{n}小时前加载' },
+  autoDetectChanges: { en: 'Auto-detect', zh: '自动检测' },
+  autoDetectChangesTitle: { en: 'Auto-reload when save file changes externally', zh: '存档文件外部变化时自动重新加载' },
 
   // 面部参数
   faceWidth: { en: 'Face Width (0=Wide, 255=Narrow)', zh: '脸宽 (0=宽, 255=窄)' },

@@ -50,12 +50,14 @@ export const DS1App: React.FC<DS1AppProps> = ({ onHome }) => {
     selectedCharacterIndex,
     originalFilename,
     platform,
+    autoDetect,
     handleFileLoaded,
     handleCharacterSelect,
     handleCharacterUpdate,
     handleSave,
     handleSaveAs,
     handleReload,
+    setAutoDetect,
   } = useDS1SaveEditor();
 
   const [showTerms, setShowTerms] = useState(false);
@@ -203,6 +205,17 @@ export const DS1App: React.FC<DS1AppProps> = ({ onHome }) => {
             <div className="ds1-subheader-actions">
               <button className="ds1-action-btn" onClick={handleReload}>
                 ⟳ {t('reload', lang)}
+              </button>
+              <button
+                className="ds1-safemode-btn"
+                onClick={() => setAutoDetect(!autoDetect)}
+                title={t('autoDetectChangesTitle', lang)}
+              >
+                <span className={`ds1-safemode-dot ${autoDetect ? 'on' : 'off'}`}>●</span>
+                {t('autoDetectChanges', lang)}
+                <span className={`ds1-safemode-badge ${autoDetect ? 'on' : 'off'}`}>
+                  {autoDetect ? t('on', lang) : t('off', lang)}
+                </span>
               </button>
               <button
                 className="ds1-safemode-btn"
