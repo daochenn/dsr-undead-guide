@@ -1,65 +1,175 @@
-# Dark Souls Remastered Save Editor
+# DSR Undead Guide
 
-A portable desktop application and web-based save file editor for Dark Souls Remastered.
+A save file parser and player guidance tool for Dark Souls Remastered. Parse save data to analyze character status, track game progress, and provide intelligent guidance for players on their journey through Lordran.
 
-**⚠️ Work in Progress** - Active development, new features coming!
-
-**Discord:** https://discord.gg/FZuCXNcUWA
+**Discord:** https://discord.gg/sWyvvBzr5
 
 ---
 
-**Tags:** Dark Souls Remastered Save Editor, DSR Save Editor, Dark Souls Save Editor Online, DS1 Save Editor, Dark Souls Character Editor, Portable Save Editor, Dark Souls Stats Editor, DRAKS0005, Humanity Editor, Souls Editor
+## ✨ Key Features
 
-## Features
+### 📊 Save File Parsing
+- Parse Dark Souls Remastered save files (.sl2) to extract character data
+- Analyze character stats, souls, humanity, and level
+- Track game progress (bosses defeated, bonfires unlocked, world events)
+- Inventory analysis and item tracking
 
-- **Find in folder** - Automatically searches for save files in selected folder (NBGI, etc.)
-- **Auto-load** - Automatically loads your last edited save on startup
-- Load and edit Dark Souls save files (.sl2)
-- Edit character stats (VIT, ATN, END, STR, DEX, RES, INT, FTH)
-- Modify character name, level, and humanity
-- Auto-level correction based on stats (optional)
-- **Direct file editing** - Save button overwrites original file (no downloads!)
-- **File System Access API** - Modern file handling with system dialogs
-- **Smart file picker** - Opens in Documents folder by default
-- Compact two-column layout for efficient editing
-- Dark theme UI
-- Fully client-side - no server required
+### 🗺️ Player Guidance
+- **Progress Tracking** - See where you are in the game's main story
+- **Area Recommendations** - Suggest optimal next areas based on your level and progress
+- **Boss Preparation** - Analyze your build and suggest strategies for upcoming bosses
+- **Item Location** - Find items you're missing based on your game state
 
-## 🚀 Quick Start for Users
+### 🎮 Multi-Platform Support
+- **Web Version** - Use directly in browser, no installation required
+- **Electron Desktop** - Native app for Windows/Linux/macOS
+
+### 🌍 Internationalization
+- English and Chinese UI
+
+---
+
+## 🚀 Quick Start
 
 ### Option 1: Download Desktop App (Recommended)
 
-Download the latest release for your platform:
-- **Windows**: `DS1-Save-Editor-Setup.exe` (installer) or `DS1-Save-Editor-Portable.exe` (portable)
+Download for your platform:
+- **Windows**: `DS1-Save-Editor-Setup.exe` or `DS1-Save-Editor-Portable.exe`
 - **Linux**: `DS1-Save-Editor.AppImage` or `ds1-save-editor.deb`
 - **macOS**: `DS1-Save-Editor.dmg`
 
-No installation required for portable versions - just download and run!
+Portable versions require no installation - just download and run!
 
 ### Option 2: Web Version
 
-Visit the hosted version at [your-deployed-url] or run locally:
+Visit the online version or run locally:
 
 ```bash
 npm install
 npm run dev
 ```
 
-## 🛠 Development Setup
+Then open http://localhost:5173
+
+---
+
+## 📖 User Guide
+
+### First Time Use
+
+#### Method A: Auto-Detect (Recommended)
+1. Click **"Load Save File"** button
+2. Select a folder containing saves (e.g., `NBGI`, `DARK SOULS REMASTERED`)
+3. App automatically searches for `.sl2` files
+4. Select the save file you want to edit
+
+#### Method B: Manual Selection
+1. Click **"Load Save File"** button
+2. Navigate to save location:
+   ```
+   C:\Users\<YourUsername>\Documents\NBGI\DARK SOULS REMASTERED\<user_id>\
+   ```
+3. Select `DRAKS0005.sl2` file
+
+### Subsequent Use
+
+After page refresh, you'll see two buttons:
+
+```
+┌─────────────────────┐
+│  Load Save File  │  ← Load a new file
+│         ?         │
+├─────────────────────┤
+│ Load Last Save  │  ← Quick load last file
+└─────────────────────┘
+```
+
+Click **"Load Last Save"**, then grant file access permission when prompted.
+
+### Auto-Detect File Changes
+
+If you're editing while playing the game, enable "Auto-detect":
+
+1. After loading a save, click **"Auto-detect"** button in toolbar (enabled by default)
+2. When the game saves, editor automatically detects changes and reloads
+3. Seamlessly switch between game and editor
+
+---
+
+## 🎯 Features Overview
+
+### General Tab
+Edit core character attributes:
+- **Stats** - VIT, ATN, END, STR, DEX, RES, INT, FTH
+- **Level** - Soul Level, Souls, Humanity
+- **Name** - Character name
+- **Class** - Current class
+
+### Inventory Tab
+Manage character inventory:
+- Weapons, Armor, Rings
+- Consumables, Materials, Key Items
+- Spells, Ammunition
+- Create, edit, delete items
+- Weapon Level calibration
+
+### Appearance Tab
+Modify character appearance:
+- Physique, Hairstyle, Hair Color
+- Eye Color
+- Face Parameters (32 fine-tuned adjustments)
+- Import/Export .dsrchr appearance presets
+
+### Bonfires Tab
+Unlock bonfires and warp points:
+- View bonfire status
+- One-click unlock all warpable bonfires
+
+### NPCs/Bosses Tab
+Manage NPC and Boss states:
+- Search NPCs/Bosses
+- Revive or kill NPCs
+- Mark bosses as defeated
+
+### World Events Tab
+View and modify world event states
+
+### Table Tab
+Advanced user features:
+- View raw hex data
+- Search patterns
+- Export slot data
+
+---
+
+## 🔧 Browser Compatibility
+
+| Browser | File System Access API | Auto-Load | Auto-Detect Changes |
+|---------|----------------------|-----------|---------------------|
+| Chrome 86+ | ✅ Supported | ✅ Supported | ✅ Supported |
+| Edge 86+ | ✅ Supported | ✅ Supported | ✅ Supported |
+| Safari 15.2+ | ✅ Supported | ✅ Supported | ✅ Supported |
+| Firefox | ❌ Not Supported | ⚠️ Manual Select | ❌ Not Supported |
+
+**Notes**:
+- Chrome/Edge/Safari support File System Access API for auto-load and file change detection
+- Firefox doesn't support this API, requires manual file selection on each refresh
+- App auto-detects browser support and gracefully degrades
+
+---
+
+## 🛠 Development Guide
 
 ### Prerequisites
-
-- Node.js 16+ (for development)
+- Node.js 16+
 - npm or yarn
 
 ### Installation
-
 ```bash
 npm install
 ```
 
 ### Development Commands
-
 ```bash
 # Web development with hot reload
 npm run dev              # → http://localhost:5173
@@ -74,102 +184,56 @@ npm run build:static     # → dist/ with relative paths
 npm run electron         # Build + run Electron app
 npm run electron:dev     # Run Electron without rebuilding
 
-# Create executable files
-npm run dist             # Build for current platform
-npm run dist:win         # Windows (.exe)
-npm run dist:linux       # Linux (.AppImage, .deb)
-npm run dist:mac         # macOS (.dmg)
+# Distribution
+npm run dist             # Package for current platform
+npm run dist:win         # Windows
+npm run dist:linux       # Linux
+npm run dist:mac         # macOS
 
 # Preview production build
 npm run preview
 ```
 
 ### Build Outputs
-
-- **Web build** (`npm run build`): `dist/` folder with absolute paths (`/assets/...`)
+- **Web build** (`npm run build`): `dist/` folder with absolute paths
 - **Electron build** (`npm run dist`): `release/` folder with executables
-- **Static build** (`npm run build:static`): `dist/` folder with relative paths (`./assets/...`)
+- **Static build** (`npm run build:static`): `dist/` folder with relative paths
 
-## How to Use
+---
 
-### First Time - Easy Way (Find in Folder)
-1. Click "Find save in folder" button (has ? icon with help)
-2. Select folder: NBGI, DARK SOULS REMASTERED, or any folder containing saves
-3. App automatically searches recursively for .sl2 files
-4. Done! File loads and is remembered
-
-### First Time - Manual Way
-1. Click "Load Save File" button (has ? icon with help)
-2. Navigate to: `NBGI\DARK SOULS REMASTERED\<user_id>\DRAKS0005.sl2`
-3. Select the file
-4. File loads and is remembered for next time
-
-### Next Time
-1. Open the app - Your last save auto-loads!
-2. (May see permission dialog first time)
-3. Start editing immediately
-
-### Editing
-1. Choose a character from the list on the left (10 slots shown)
-2. Edit character stats and info:
-   - **Left column**: All 8 stats (VIT, ATN, END, STR, DEX, RES, INT, FTH)
-   - **Right column**: Name, Level, Humanity
-   - **Auto-correct Level**: Enabled by default, calculates level based on stats
-3. Click **Save** to update the original file directly
-4. Click **Save As** to save to a new location
-
-**Important:** Always backup your save file before editing!
-
-### Browser Compatibility
-
-**File System Access API** (direct file editing):
-- ✅ Chrome/Edge 86+
-- ✅ Safari 15.2+
-- ❌ Firefox (auto-falls back to download)
-
-The app automatically detects support and falls back to traditional download if needed.
-
-## Save File Location
-
-Dark Souls Remastered save files are typically located at:
-- Windows: `%USERPROFILE%\Documents\NBGI\DARK SOULS REMASTERED\<user_id>\`
-
-## 📦 Project Structure
+## 📁 Project Structure
 
 ```
 ds1-save-editor/
-├── electron/          # Electron main process
-│   └── main.js       # App entry point
-├── src/              # React application
-│   ├── lib/          # Save file library (can be used independently)
-│   │   ├── SaveFileEditor.ts  # Load/save .sl2 files
-│   │   ├── Character.ts       # Character data manipulation
-│   │   ├── constants.ts       # Game constants and stat tables
-│   │   └── crypto.ts          # AES encryption/decryption
-│   ├── App.tsx       # Main UI component
-│   └── main.tsx      # React entry point
-├── dist/             # Built files (generated)
-├── release/          # Electron executables (generated)
-├── package.json      # Dependencies and scripts
-├── vite.config.ts    # Vite configuration
-└── tsconfig.json     # TypeScript configuration
+├── src/
+│   ├── apps/
+│   │   ├── ds1/              # DS1 Editor (main features)
+│   │   │   ├── components/   # UI components
+│   │   │   ├── hooks/        # Custom React hooks
+│   │   │   ├── lib/          # Core logic
+│   │   │   └── DS1App.tsx    # Main component
+│   │   └── ds3/              # DS3 Editor (beta)
+│   ├── core/
+│   │   ├── context/          # React Context
+│   │   ├── config.ts         # Game configuration
+│   │   └── Router.tsx        # Route definitions
+│   ├── shared/               # Shared components and types
+│   └── main.tsx              # Entry point
+├── electron/                 # Electron main process
+├── src-tauri/                # Tauri configuration
+├── public/                   # Static assets
+├── dist/                     # Build output (generated)
+└── release/                  # Electron packaging output (generated)
 ```
 
-## Library
+---
 
-The save file parsing and editing logic is located in the `src/lib` folder and can be used independently:
-
-- `SaveFileEditor.ts` - Main class for loading and saving .sl2 files
-- `Character.ts` - Character data manipulation
-- `constants.ts` - Game constants and stat tables
-- `crypto.ts` - AES encryption/decryption functions
-
-## Technical Details
+## 🔐 Technical Details
 
 ### Save File Format
 - Encrypted using AES-CBC encryption
-- Each character slot stored separately with unique IV (Initialization Vector)
-- 11 total slots: 10 for characters, 1 for settings (hidden in UI)
+- Each character slot stored separately with unique IV
+- 11 total slots: 10 characters + 1 settings (hidden in UI)
 - Character names stored as UTF-16 Little Endian
 
 ### Auto-Level Correction
@@ -179,17 +243,37 @@ Level = Base Level + (Current Stats - Starting Stats)
 ```
 Each class has predefined base stats and starting level.
 
-### File System Access API
-- Uses modern `showOpenFilePicker()` and `showSaveFilePicker()` APIs
+### File System Access
+- Uses File System Access API (`showOpenFilePicker()` / `showSaveFilePicker()`)
 - Requires HTTPS in production (works on localhost HTTP)
-- Gracefully falls back to traditional file input/download
+- Gracefully falls back to traditional file input/download for unsupported browsers
 
-## Support & Contact
+---
 
-**Discord:** https://discord.gg/FZuCXNcUWA
+## 🤝 Community & Support
 
-For bugs, feature requests, questions, or general support - join our Discord server!
+**Discord:** https://discord.gg/sWyvvBzr5
 
-## License
+**QQ&email**:1937959102@qq.com
 
-This project is for educational purposes only. Dark Souls is property of FromSoftware and Bandai Namco.
+- Bug reports
+- Feature requests
+- Questions & support
+- Contributions
+
+------
+
+## ❤️Acknowledgements
+
+**Piroshkiv** - For the original [DSRSave](https://github.com/Piroshkiv/DSRSave) project, for the generous permission to fork and modify, and for the invaluable help and support during my first project.
+
+**Dark Souls Community** - Thank you to everyone who has helped me
+
+---
+
+## 📄 License
+
+This project is for educational purposes only. Dark Souls is a trademark of FromSoftware and Bandai Namco.
+
+
+
