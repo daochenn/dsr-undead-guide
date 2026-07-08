@@ -3,6 +3,7 @@ import { Inventory, ItemInfusion, InventoryItem, Item } from '../lib/Inventory';
 import { NumberInput } from './NumberInput';
 import { t } from '../lib/i18n';
 import { useLang } from '../../../core/context/LanguageContext';
+import { applyChineseNames } from '../lib/itemNamesZh';
 
 interface ItemEditDialogProps {
   inventory: Inventory;
@@ -129,6 +130,16 @@ export const ItemEditDialog: React.FC<ItemEditDialogProps> = ({
 
   const estusFlaskVariants = isEstusFlask ? getEstusFlaskVariants() : [];
 
+  // Apply Chinese names when language is Chinese
+  useEffect(() => {
+    if (lang === 'zh') {
+      const db = inventory.getItemsDatabase();
+      if (db) {
+        applyChineseNames(db);
+      }
+    }
+  }, [lang, inventory]);
+
   // Prevent body scroll when dialog is open
   useEffect(() => {
     const originalOverflow = document.body.style.overflow;
@@ -228,7 +239,7 @@ export const ItemEditDialog: React.FC<ItemEditDialogProps> = ({
                   <option value="">{t('keepCurrent', lang)}</option>
                   {estusFlaskVariants.map(variant => (
                     <option key={variant.Id} value={variant.Id}>
-                      {variant.Name}
+                      {variant.displayName || variant.Name}
                     </option>
                   ))}
                 </select>
