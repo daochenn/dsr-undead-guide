@@ -85,11 +85,13 @@ export const translations: Record<string, Record<Lang, string>> = {
   quantity: { en: 'Quantity', zh: '数量' },
   upgradeLevel: { en: 'Upgrade Level', zh: '强化等级' },
   durability: { en: 'Durability', zh: '耐久度' },
+  errorCreatingItem: { en: 'Error creating item:', zh: '创建物品失败:' },
 
   // 编辑物品对话框
   editItemTitle: { en: 'Edit Item', zh: '编辑物品' },
   itemName: { en: 'Item Name', zh: '物品名称' },
   estusFlask: { en: 'Estus Flask Variant', zh: '原素瓶变体' },
+  estusFlaskEmpty: { en: 'empty flask, must be 0', zh: '空瓶，必须为0' },
   keepCurrent: { en: 'Keep Current', zh: '保持当前' },
   slotIndex: { en: 'Slot Index:', zh: '槽位索引:' },
 
