@@ -37,6 +37,13 @@ export enum AreaId {
   ReturnToAsylum = 'return_to_asylum',
 }
 
+// 结局路线
+export enum EndingPath {
+  Unknown = 'unknown',           // 无法判断
+  Frampt = 'frampt',             // 芙拉姆特线（传火）
+  Kaathe = 'kaathe',             // 卡斯线（灭火）
+}
+
 // 进度阶段
 export enum GamePhase {
   // 第一阶段：起始
@@ -70,6 +77,9 @@ export enum GamePhase {
 export interface PlayerProgress {
   // 当前阶段
   phase: GamePhase;
+
+  // 结局路线（传火/灭火）
+  endingPath: EndingPath;
 
   // Boss击杀状态
   bossesDefeated: {
@@ -150,11 +160,15 @@ export class ProgressAnalyzer {
     // 判断阶段
     const phase = this.determinePhase(bossesDefeated, bells, keyItems, ownedItemIds);
 
+    // 判断结局路线（传火/灭火）
+    const endingPath = this.determineEndingPath(keyItems.lordvessel, bossesDefeated.fourKings);
+
     // 判断已访问区域
     const visitedAreas = this.determineVisitedAreas(bossesDefeated, bonfiresUnlocked, keyItems);
 
     return {
       phase,
+      endingPath,
       bossesDefeated,
       bells,
       bonfiresUnlocked,
@@ -347,6 +361,30 @@ export class ProgressAnalyzer {
     if (bosses.asylumDemon) return GamePhase.UndeadBurg;
 
     return GamePhase.Start;
+  }
+
+  // 判断结局路线（传火/灭火）
+  // 逻辑：
+  // - 芙拉姆特线（传火）：先放置王器 → 再击杀四王
+  // - 卡斯线（灭火）：先击杀四王 → 再放置王器
+  private determineEndingPath(
+    hasLordvessel: boolean,
+    fourKingsDefeated: boolean
+  ): EndingPath {
+    // 如果四王已击杀但王器还在背包 → 卡斯线（先打四王，还没放置）
+    if (fourKingsDefeated && hasLordvessel) {
+      return EndingPath.Kaathe;
+    }
+
+    // 如果四王未击杀但王器不在背包 → 芙拉姆特线（已放置，还没打四王）
+    if (!fourKingsDefeated && !hasLordvessel) {
+      return EndingPath.Frampt;
+    }
+
+    // 其他情况：无法判断
+    // - 王器在背包 + 四王未击杀：还没放置，可能是任意路线
+    // - 王器不在背包 + 四王已击杀：两条线都可能
+    return EndingPath.Unknown;
   }
 
   // 判断已访问区域

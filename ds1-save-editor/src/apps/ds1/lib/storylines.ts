@@ -1,4 +1,4 @@
-import { AreaId, GamePhase, PlayerProgress } from './progressAnalyzer';
+import { AreaId, GamePhase, EndingPath, PlayerProgress } from './progressAnalyzer';
 
 // 故事线项目
 export interface StorylineItem {
@@ -264,14 +264,6 @@ export const STORYLINES: Storyline[] = [
         location_zh: '不死镇',
       },
       {
-        npcName_en: 'Griggs of Vinheim',
-        npcName_zh: '古利古斯',
-        dialogue_en: "Before using magic, you need to prepare. First, equip a catalyst, memorize the spell, then you can use it. Remember this well. The Archives in Anor Londo have the gods' library. I think that's where my master wanted to go.",
-        dialogue_zh: '使用魔法之前，要做一些准备工作。首先，要装备好媒介，并记忆魔法，然后才可以使用魔法。要好好记住啊。亚诺尔隆德有神的书库，我想那里是老师想去的地方。',
-        location_en: 'Undead Burg',
-        location_zh: '不死镇',
-      },
-      {
         npcName_en: 'Andre of Astora',
         npcName_zh: '安德烈',
         dialogue_en: "Are you having trouble getting into the Undead Church? Take this key. Weapons and armor are sturdy, but if you use them without maintenance, they will definitely break. When weapon or armor durability drops, repair them regularly. You can bring them to a blacksmith like me, or if you have the tools, you can repair them yourself.",
@@ -441,26 +433,10 @@ export const STORYLINES: Storyline[] = [
         location_zh: '下水道',
       },
       {
-        npcName_en: 'Quelana of Izalith',
-        npcName_zh: '克拉娜',
-        dialogue_en: "I'll take you as my disciple. But to learn my pyromancy, you must give me appropriate compensation. Pyromancy is the art of fire. The art of igniting and controlling flame. But there's one thing you must remember: you must revere flame. If you forget this reverence, you will be consumed by fire and lose everything. My mother Izalith was one of the original kings. She discovered souls near the First Flame and became a queen. The Chaos Flame consumed my mother and sisters, making them a cradle for deformed life. I want to ask you, please free my mother and sisters from the Chaos Flame.",
-        dialogue_zh: '我就收你当我的徒弟。但是想学我的咒术，你必须要给我相对的报酬。咒术是用火的技艺。点燃火焰再加以操控的技艺。但有件事你一定要记住：你必须敬畏火焰。如果你忘了这份敬畏之心，将被火吞噬而失去一切。我的母亲伊札里斯是最初诸王之一。她在初始之火周边发现了灵魂，并因此当上了王。混沌火焰把我的母亲以及妹妹们吞噬，把她们做为孕育畸形生命的温床。我想拜托你，帮我把母亲和妹妹们从混沌火焰中解放吧。',
-        location_en: 'Blighttown',
-        location_zh: '病村',
-      },
-      {
         npcName_en: 'Chaos Witch Quelaag',
         npcName_zh: '克拉格',
         dialogue_en: "Beyond here is the forbidden land of covenant - the land of Chaos life. We have accepted the seal. Go back. Otherwise you will be consumed by fire and become a cradle for Chaos life.",
         dialogue_zh: '再往前走就是约定的禁地——混沌生命之地，我们接受了封印。回去吧。否则你将被火吞噬，化为混沌生命的温床。',
-        location_en: "Quelaag's Domain",
-        location_zh: '混沌废都伊札里斯入口',
-      },
-      {
-        npcName_en: 'Eingyi',
-        npcName_zh: '伊札里斯的仆人',
-        dialogue_en: "Below these ruins is the legendary city of Izalith, a relic of the Chaos Flame guarded by lava giants. The young lady escaped here with Quelaag from those ruins. Have you heard of 'Quelana the Wanderer'? They say somewhere in that poison swamp, there's a non-human witch. Some say she's the sister of the young lady and Quelaag.",
-        dialogue_zh: '在这座遗迹的下方，有着传说的废都——伊札里斯，那是座受到岩浆巨人守护，混沌火焰的遗迹。大小姐便是和克拉格大小姐一起，从那座遗迹逃到此处。你这小子有听过"流浪的克拉娜"吗？据说在那座毒沼泽的某处，有一个不是人的魔女。也有人说那魔女是大小姐和克拉格大小姐的姊妹。',
         location_en: "Quelaag's Domain",
         location_zh: '混沌废都伊札里斯入口',
       },
@@ -738,14 +714,6 @@ export const STORYLINES: Storyline[] = [
         location_zh: '墓地',
       },
       {
-        npcName_en: 'Vamos',
-        npcName_zh: '巴摩斯',
-        dialogue_en: "If you have that amazing ember I saw in New Londo, that's a different story. But it's long since sunk into the water. But if you have the legendary Witch's flame, that's different. But no one has ever reached the ruins of Izalith.",
-        dialogue_zh: '如果有我在小隆德看过的那个棒透了的余烬，就另当别论了。但那里早已沉没于水中。但是如果有传说中的魔女火焰，那就另当别论了。可是从来没有人到过废都伊札里斯。',
-        location_en: 'Catacombs',
-        location_zh: '墓地',
-      },
-      {
         npcName_en: 'Vince of Thorolund',
         npcName_zh: '文斯',
         dialogue_en: "Going to a place like the Catacombs is not a pleasant thing.",
@@ -996,8 +964,11 @@ export const STORYLINES: Storyline[] = [
 export function getStorylineForPhase(
   phase: GamePhase,
   bossesDefeated?: PlayerProgress['bossesDefeated'],
-  ownedItemIds?: string[]
+  ownedItemIds?: string[],
+  endingPath?: EndingPath
 ): Storyline | null {
+  let storyline: Storyline | null = null;
+
   // 如果是SeekingLordSouls阶段，需要根据未击败的薪王BOSS来选择故事线
   if (phase === GamePhase.SeekingLordSouls && bossesDefeated) {
     // 按推荐顺序选择未击败的薪王BOSS
@@ -1011,71 +982,89 @@ export function getStorylineForPhase(
     // 找到第一个未击败的薪王BOSS
     for (const boss of lordSoulsBosses) {
       if (!bossesDefeated[boss.id as keyof typeof bossesDefeated]) {
-        const storyline = STORYLINES.find(s => s.id === boss.storylineId);
-        if (storyline) return storyline;
+        storyline = STORYLINES.find(s => s.id === boss.storylineId) || null;
+        if (storyline) break;
       }
     }
   }
 
   // 特殊处理：Blighttown阶段
   // 如果没有生锈铁环，推荐先回不死院；如果有，推荐去病村
-  if (phase === GamePhase.Blighttown && ownedItemIds) {
+  if (!storyline && phase === GamePhase.Blighttown && ownedItemIds) {
     const hasRustedIronRing = ownedItemIds.includes('125'); // 生锈铁环ID
     if (!hasRustedIronRing) {
       // 没有生锈铁环，推荐回不死院
-      return STORYLINES.find(s => s.id === 'return_to_asylum') || null;
+      storyline = STORYLINES.find(s => s.id === 'return_to_asylum') || null;
     } else {
       // 有生锈铁环，推荐去病村
-      return STORYLINES.find(s => s.id === 'bell_of_awakening_2') || null;
+      storyline = STORYLINES.find(s => s.id === 'bell_of_awakening_2') || null;
     }
   }
 
   // 特殊处理：SeekingLordSouls阶段
   // 如果要打四王但没有深渊戒指，推荐先去黑森林庭院打希夫
-  if (phase === GamePhase.SeekingLordSouls && ownedItemIds && bossesDefeated) {
+  if (!storyline && phase === GamePhase.SeekingLordSouls && ownedItemIds && bossesDefeated) {
     const hasCovenantRing = ownedItemIds.includes('138'); // 亚尔特留斯的契约戒指ID
     const fourKingsDefeated = bossesDefeated.fourKings;
 
     // 如果四王还没打且没有戒指，推荐去黑森林庭院
     if (!fourKingsDefeated && !hasCovenantRing) {
-      return STORYLINES.find(s => s.id === 'darkroot_garden') || null;
+      storyline = STORYLINES.find(s => s.id === 'darkroot_garden') || null;
     }
   }
 
   // 直接查找匹配当前阶段的故事线
-  const storyline = STORYLINES.find(s => s.prerequisities.includes(phase));
-  if (storyline) return storyline;
-
-  // 如果没有找到，按优先级向后查找
-  const priorityOrder: GamePhase[] = [
-    GamePhase.Start,
-    GamePhase.ReturnToAsylum,
-    GamePhase.UndeadBurg,
-    GamePhase.UndeadParish,
-    GamePhase.AfterBell1,
-    GamePhase.Depths,
-    GamePhase.Blighttown,
-    GamePhase.AfterBell2,
-    GamePhase.SensFortress,
-    GamePhase.AnorLondo,
-    GamePhase.AfterOrnsteinSmough,
-    GamePhase.ObtainedLordvessel,
-    GamePhase.SeekingLordSouls,
-    GamePhase.AllLordSouls,
-    GamePhase.ReadyForKiln,
-    GamePhase.GameComplete,
-  ];
-
-  // 找到当前阶段的索引
-  const currentIndex = priorityOrder.indexOf(phase);
-
-  // 从当前阶段的下一个开始，向后查找匹配的故事线
-  for (let i = currentIndex + 1; i < priorityOrder.length; i++) {
-    const nextStoryline = STORYLINES.find(s => s.prerequisities.includes(priorityOrder[i]));
-    if (nextStoryline) return nextStoryline;
+  if (!storyline) {
+    storyline = STORYLINES.find(s => s.prerequisities.includes(phase)) || null;
   }
 
-  return null;
+  // 如果没有找到，按优先级向后查找
+  if (!storyline) {
+    const priorityOrder: GamePhase[] = [
+      GamePhase.Start,
+      GamePhase.ReturnToAsylum,
+      GamePhase.UndeadBurg,
+      GamePhase.UndeadParish,
+      GamePhase.AfterBell1,
+      GamePhase.Depths,
+      GamePhase.Blighttown,
+      GamePhase.AfterBell2,
+      GamePhase.SensFortress,
+      GamePhase.AnorLondo,
+      GamePhase.AfterOrnsteinSmough,
+      GamePhase.ObtainedLordvessel,
+      GamePhase.SeekingLordSouls,
+      GamePhase.AllLordSouls,
+      GamePhase.ReadyForKiln,
+      GamePhase.GameComplete,
+    ];
+
+    // 找到当前阶段的索引
+    const currentIndex = priorityOrder.indexOf(phase);
+
+    // 从当前阶段的下一个开始，向后查找匹配的故事线
+    for (let i = currentIndex + 1; i < priorityOrder.length; i++) {
+      storyline = STORYLINES.find(s => s.prerequisities.includes(priorityOrder[i])) || null;
+      if (storyline) break;
+    }
+  }
+
+  // 过滤NPC对话：根据路线选择显示芙拉姆特或卡斯的对话
+  if (storyline && endingPath && storyline.npcDialogues) {
+    storyline.npcDialogues = storyline.npcDialogues.filter(dialogue => {
+      // 如果是芙拉姆特的对话，只在传火线显示
+      if (dialogue.npcName_en === 'Frampt') {
+        return endingPath === EndingPath.Frampt;
+      }
+      // 如果是卡斯的对话，只在灭火线显示
+      if (dialogue.npcName_en === 'Kaathe') {
+        return endingPath === EndingPath.Kaathe;
+      }
+      return true;
+    });
+  }
+
+  return storyline;
 }
 
 // 根据区域获取相关故事线

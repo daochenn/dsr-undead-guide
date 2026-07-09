@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Character } from '../lib/Character';
 import { useLang } from '../../../core/context/LanguageContext';
-import { ProgressAnalyzer, GamePhase, PlayerProgress } from '../lib/progressAnalyzer';
+import { ProgressAnalyzer, GamePhase, EndingPath, PlayerProgress } from '../lib/progressAnalyzer';
 import { STORYLINES, Storyline, getStorylineForPhase } from '../lib/storylines';
 
 interface HelpTabProps {
@@ -123,7 +123,7 @@ export const HelpTab: React.FC<HelpTabProps> = ({ character }) => {
     if (!progress) return null;
 
     // 根据阶段查找推荐故事线，传递bossesDefeated和ownedItemIds用于更精确的判断
-    const storyline = getStorylineForPhase(progress.phase, progress.bossesDefeated, progress.ownedItemIds);
+    const storyline = getStorylineForPhase(progress.phase, progress.bossesDefeated, progress.ownedItemIds, progress.endingPath);
     if (storyline) return storyline;
 
     // 如果没有找到，遍历所有故事线查找匹配的阶段
@@ -257,6 +257,19 @@ export const HelpTab: React.FC<HelpTabProps> = ({ character }) => {
               {lang === 'zh' ? phaseName.zh : phaseName.en}
             </span>
           </div>
+
+          {/* 结局路线显示 */}
+          {progress.endingPath !== EndingPath.Unknown && (
+            <div className="ending-path">
+              {lang === 'zh' ? '路线：' : 'Path: '}
+              <span className={`ending-path-name ${progress.endingPath}`}>
+                {progress.endingPath === EndingPath.Frampt
+                  ? (lang === 'zh' ? '传火路线（芙拉姆特）' : 'Link the Fire (Frampt)')
+                  : (lang === 'zh' ? '灭火路线（卡斯）' : 'Dark Ending (Kaathe)')
+                }
+              </span>
+            </div>
+          )}
 
           {defeatedBosses.length > 0 && (
             <div className="defeated-bosses">
@@ -568,6 +581,24 @@ export const HelpTab: React.FC<HelpTabProps> = ({ character }) => {
         .phase-name {
           color: #ff6b35;
           font-weight: 500;
+        }
+
+        .ending-path {
+          margin-bottom: 0.5rem;
+          font-size: 0.75rem;
+          color: #888;
+        }
+
+        .ending-path-name {
+          font-weight: 500;
+        }
+
+        .ending-path-name.frampt {
+          color: #ffa500;
+        }
+
+        .ending-path-name.kaathe {
+          color: #9370db;
         }
 
         .defeated-bosses, .undefeated-bosses {
