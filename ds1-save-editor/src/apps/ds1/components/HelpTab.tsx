@@ -122,8 +122,8 @@ export const HelpTab: React.FC<HelpTabProps> = ({ character }) => {
   const getRecommendedStoryline = (): Storyline | null => {
     if (!progress) return null;
 
-    // 根据阶段查找推荐故事线，传递bossesDefeated用于更精确的判断
-    const storyline = getStorylineForPhase(progress.phase, progress.bossesDefeated);
+    // 根据阶段查找推荐故事线，传递bossesDefeated和ownedItemIds用于更精确的判断
+    const storyline = getStorylineForPhase(progress.phase, progress.bossesDefeated, progress.ownedItemIds);
     if (storyline) return storyline;
 
     // 如果没有找到，遍历所有故事线查找匹配的阶段
@@ -152,19 +152,14 @@ export const HelpTab: React.FC<HelpTabProps> = ({ character }) => {
     return defeated;
   };
 
-  // 过滤玩家拥有的物品
+  // 过滤玩家拥有的物品 - 只显示玩家已拥有的道具
   const getAvailableItems = (storyline: Storyline) => {
-    if (!progress) return storyline.items;
+    if (!progress) return [];
 
-    // 过滤掉玩家没有的物品
+    // 只显示玩家已拥有的道具
     return storyline.items.filter(item => {
-      // 如果没有requiredItemIds，始终显示
-      if (!item.requiredItemIds || item.requiredItemIds.length === 0) {
-        return true;
-      }
-
-      // 检查玩家是否拥有所需的物品
-      return item.requiredItemIds.every(id => progress.ownedItemIds.includes(id));
+      // 检查玩家是否拥有该道具（通过道具ID）
+      return progress.ownedItemIds.includes(item.id);
     });
   };
 

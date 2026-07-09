@@ -144,8 +144,8 @@ export class ProgressAnalyzer {
     const ownedItemIds = this.getOwnedItemIds();
     const keyItems = await this.getKeyItems(ownedItemIds);
 
-    // 判断钟状态
-    const bells = this.getBellsStatus();
+    // 判断钟状态（基于Boss击杀状态）
+    const bells = this.getBellsStatus(bossesDefeated);
 
     // 判断阶段
     const phase = this.determinePhase(bossesDefeated, bells, keyItems, ownedItemIds);
@@ -246,28 +246,12 @@ export class ProgressAnalyzer {
   }
 
   // 获取钟状态
-  // 偏移量来自world_events.json中的bells类别
-  private getBellsStatus(): PlayerProgress['bells'] {
-    const baseOffset = this.character.findPattern1();
-    if (baseOffset === -1) {
-      return { bell1Rung: false, bell2Rung: false };
-    }
-
-    const rawData = this.character.getRawData();
-
-    // 第一口钟：offset 0x180, bit 0, reverse: false
-    const bell1Offset = baseOffset + 0x180;
-    const bell1Rung = bell1Offset < rawData.length
-      ? ((rawData[bell1Offset] >> 0) & 1) === 1
-      : false;
-
-    // 第二口钟：offset 0x1D1, bit 0, reverse: false
-    const bell2Offset = baseOffset + 0x1D1;
-    const bell2Rung = bell2Offset < rawData.length
-      ? ((rawData[bell2Offset] >> 0) & 1) === 1
-      : false;
-
-    return { bell1Rung, bell2Rung };
+  // 简化判断：击败钟楼石像鬼 = 第一口钟敲响，击败混沌魔女克拉格 = 第二口钟敲响
+  private getBellsStatus(bosses: PlayerProgress['bossesDefeated']): PlayerProgress['bells'] {
+    return {
+      bell1Rung: bosses.bellGargoyles,  // 击败钟楼石像鬼 = 第一口钟
+      bell2Rung: bosses.queelaag,       // 击败混沌魔女克拉格 = 第二口钟
+    };
   }
 
   // 获取关键物品
@@ -278,15 +262,15 @@ export class ProgressAnalyzer {
       // 王器
       lordvessel: '2510',
       // 亚尔特留斯的契约戒指
-      ringOfArtorias: '1112',
+      ringOfArtorias: '138',
       // 生锈铁环
-      rustedIronRing: '212',
+      rustedIronRing: '125',
       // 亚尔特留斯徽章
-      crestOfArtorias: '115',
+      crestOfArtorias: '2002',
       // 封印钥匙
-      sealKey: '280',
+      sealKey: '2013',
       // 破碎的坠落之环
-      brokenPendant: '222',
+      brokenPendant: '2520',
       // 薪王灵魂
       seathSoul: '2503',
       nitoSoul: '2500',

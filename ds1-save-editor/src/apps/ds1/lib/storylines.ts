@@ -312,57 +312,96 @@ export const STORYLINES: Storyline[] = [
     reason_zh: '你已到达不死人教区。钟楼就在上方等待着你。',
   },
 
-  // ==================== 第三阶段：黑森林庭院探索 ====================
+  // ==================== 黑森林庭院（打四王前获取深渊戒指）====================
   {
     id: 'darkroot_garden',
     name_en: 'The Darkroot Garden',
     name_zh: '黑森林庭院',
-    theme_en: 'Ancient Forest and Secrets',
-    theme_zh: '古老森林与秘密',
+    theme_en: 'Forest of the Wolf Knight',
+    theme_zh: '狼骑士的森林',
     items: [
       {
-        id: '1011',
-        name_en: 'Crest of Artorias',
-        name_zh: '亚尔特留斯徽章',
-        description_en: 'Crest bearing the symbol of Knight Artorias.\n\nThis crest opens the sealed gate in Darkroot Garden, leading to the forest of the Great Grey Wolf Sif.',
-        description_zh: '刻有骑士亚尔特留斯徽记的纹章。\n\n此纹章可打开黑森林庭院的封印之门，通往大狼希夫守护的森林。',
-        hint_en: 'This crest opens the gate to the deeper forest. You need it to reach Sif and other secrets.',
-        hint_zh: '这个纹章可以打开通往森林深处的大门。你需要它才能到达希夫和其他秘密。',
+        id: '138',
+        name_en: 'Covenant of Artorias',
+        name_zh: '亚尔特留斯的契约戒指',
+        description_en: 'Ring of the Knight Artorias.\n\nThis ring was given to Artorias, who challenged the Abyss. It grants protection against the dark of the Abyss, and is essential for venturing into that realm.',
+        description_zh: '骑士亚尔特留斯的戒指。\n\n这枚戒指赐予了挑战深渊的亚尔特留斯。它能保护佩戴者免受深渊黑暗的侵害，是进入那个领域的必备之物。',
+        hint_en: 'This ring is essential for surviving the Abyss. You must defeat Great Grey Wolf Sif to obtain it before challenging the Four Kings.',
+        hint_zh: '这枚戒指是在深渊中生存的必备之物。在挑战四王之前，必须击败大狼希夫来获得它。',
         requiredItemIds: [],
       },
     ],
     npcDialogues: [
       {
+        npcName_en: 'Alvina',
+        npcName_zh: '雅薇娜',
+        dialogue_en: "I am Alvina, of the Darkroot Wood. ... Sif, the great grey wolf, guards the grave of Knight Artorias. He will not let you pass easily. But you need the Covenant of Artorias ring to enter the Abyss. Defeat Sif, and the ring is yours.",
+        dialogue_zh: '我是雅薇娜，来自黑森林庭院。......大狼希夫守护着骑士亚尔特留斯的坟墓。他不会轻易让你通过。但你需要亚尔特留斯的契约戒指才能进入深渊。击败希夫，戒指就是你的了。',
+        location_en: 'Darkroot Garden',
+        location_zh: '黑森林庭院',
+      },
+      {
         npcName_en: 'Andre of Astora',
         npcName_zh: '亚斯特拉的安德烈',
-        dialogue_en: "Ah, hello! I am Andre of Astora. I'm a blacksmith. ... If you're heading into the forest, be careful. The path is guarded by stone knights and other creatures. And beyond the sealed gate, a great wolf awaits.",
-        dialogue_zh: '啊，你好！我是亚斯特拉的安德烈，铁匠。......如果你要进入森林，小心点。路径被石骑士和其他生物守卫着。在封印之门后面，一只巨狼在等待。',
+        dialogue_en: "Over there is the grave of Knight Artorias, who 'walked the Abyss'. I heard that people who went to the forest... none of them came back.",
+        dialogue_zh: '那边有"漫步深渊"的骑士，亚尔特留斯的坟墓。告诉我传闻的那些到森林去的人，一个都没回来……',
         location_en: 'Undead Parish',
         location_zh: '不死人教区',
       },
-      {
-        npcName_en: 'Alvina',
-        npcName_zh: '雅薇娜',
-        dialogue_en: "I advise you to give up. The legacy of Artorias is just a fairy tale. If you truly respected him, you wouldn't desecrate the hero's grave for such things. When you wear this ring, I can summon you. When I sense an invader, I'll summon you, and after that it's up to you how to fight. Just drive the invader away. I might summon others too, so you can cooperate with them. Driving back invaders earns rewards, and you can keep all the items you take. Our forest is like family, betrayal is absolutely not allowed. Remember that. Don't become a Hollow.",
-        dialogue_zh: '我劝你放弃吧。什么亚尔特留斯的传承，根本是空穴来风，那只是童话故事罢了。真的对他有敬意，就不会为了那种东西来糟蹋英雄的墓了。你戴上这只戒指时，我就可以召唤你。感觉有入侵者时，会召唤你出来，之后要如何战斗就随你了，能把入侵者赶走就好。还可能会召唤其他人，所以你也可以和他们一起合作。击退入侵者会有报酬，夺到的物品也都可以全部归自己所有。我们整个团就是一家人，绝不允许有人背叛。这点你一定要记住。不要变成游魂了啊。',
-        location_en: 'Darkroot Garden',
-        location_zh: '黑森林庭院',
-      },
-      {
-        npcName_en: 'Shiva of the East',
-        npcName_zh: '芝',
-        dialogue_en: "We fight and hunt according to each person's preference, and the prey is first come first served. But I believe the White Cat has already told you, no matter what, betrayal is absolutely not tolerated. No patience, no big fish. Have you heard of the Chaos Blade? It's a famous sword forged by an ancient Undead smith, with a mottled dragon pattern.",
-        dialogue_zh: '我们就是依照各人喜好来应战、狩猎，猎物也是先抢先赢。不过相信白猫也已经和你提过了，不管怎样都绝不容许背叛的行为。没有耐性可是钓不到大鱼喔。你有没有听过混沌之刃这把武器？那是把由远古不死人刀匠锻造而成，具有斑龙纹的名剑。',
-        location_en: 'Darkroot Garden',
-        location_zh: '黑森林庭院',
-      },
     ],
     nextArea: AreaId.DarkrootGarden,
-    prerequisities: [GamePhase.AfterBell1],
-    recommendation_en: 'Explore the Darkroot Garden beyond the Undead Parish. Defeat the Moonlight Butterfly and obtain the Crest of Artorias to open the path to deeper secrets.',
-    recommendation_zh: '探索不死人教区后方的黑森林庭院。击败月光蝶，获取亚尔特留斯徽章，开启通往更深处秘密的道路。',
-    reason_en: 'The Darkroot Garden holds valuable treasures and the path to the Covenant of Artorias ring, which is essential for entering the Abyss later.',
-    reason_zh: '黑森林庭院藏着珍贵的宝物和通往亚尔特留斯契约戒指的道路，这是进入深渊的必备之物。',
+    prerequisities: [GamePhase.SeekingLordSouls],
+    recommendation_en: 'To enter the Abyss and challenge the Four Kings, you need the Covenant of Artorias ring. This ring is guarded by Great Grey Wolf Sif in the Darkroot Garden. Travel to the forest, defeat Sif, and obtain the ring. Only then can you survive the darkness of the Abyss.',
+    recommendation_zh: '要进入深渊挑战四王，你需要亚尔特留斯的契约戒指。这枚戒指由黑森林庭院的大狼希夫守护。前往森林，击败希夫，获得戒指。只有这样，你才能在深渊的黑暗中存活。',
+    reason_en: 'The Abyss is a realm of absolute darkness. Without the Covenant of Artorias ring, you will be consumed by the dark the moment you enter. Sif guards this ring at the grave of Knight Artorias.',
+    reason_zh: '深渊是绝对黑暗的领域。没有亚尔特留斯的契约戒指，你一进入就会被黑暗吞噬。希夫在亚尔特留斯的墓前守护着这枚戒指。',
+  },
+
+  // ==================== 重返北方不死院 ====================
+  {
+    id: 'return_to_asylum',
+    name_en: 'Return to the Asylum',
+    name_zh: '重返北方不死院',
+    theme_en: 'Preparation and Discovery',
+    theme_zh: '准备与发现',
+    items: [
+      {
+        id: '125',
+        name_en: 'Rusted Iron Ring',
+        name_zh: '生锈铁环',
+        description_en: 'Special ring granted to those who departed the Undead Asylum.\n\nThe rusted ring, which was found in the asylum where Undead are imprisoned, provides the ability to move more freely in areas with severe restrictions on movement.',
+        description_zh: '特别赐予离开不死院之人的戒指。\n\n这枚生锈的戒指是在囚禁不死人的牢狱中找到的，能够让人在行动受到严重限制的区域更自由地移动。',
+        hint_en: 'This ring allows you to walk freely in swamps and water. Essential for Blighttown and other areas.',
+        hint_zh: '这枚戒指让你能在沼泽和水中自由行走。对病村和其他区域至关重要。',
+        requiredItemIds: [], // 始终显示
+      },
+      {
+        id: '384',
+        name_en: 'Peculiar Doll',
+        name_zh: '诡异人偶',
+        description_en: 'Silver pendant engraved with the crest of Knight Artorias.\n\nOne of the ancient treasures of Anor Londo, given specially to him who challenged the Abyss.\n\nUse it to briefly evade the darkness of the Abyss. Particularly effective against dark magic.',
+        description_zh: '雕有骑士亚尔特留斯徽章的银项链。\n\n亚诺尔隆德的远古宝物之一，特别赠予挑战深渊的他。\n\n使用后能闪避深渊黑暗，对闪避法术特别有效。',
+        hint_en: 'This pendant was given to Artorias. It may be connected to the ancient city of Oolacile...',
+        hint_zh: '这条项链是赐予亚尔特留斯的。它可能与古老的乌拉席露城有关...',
+        requiredItemIds: [],
+      },
+    ],
+    npcDialogues: [
+      {
+        npcName_en: 'Domhnall of Zena',
+        npcName_zh: '德纳尔',
+        dialogue_en: "Ah, hello! I am Domhnall of Zena. I deal in rare and unusual items. ... If you're heading into the depths, you might want a Rusted Iron Ring. It helps you move freely in swamps. You can find one back at the Undead Asylum.",
+        dialogue_zh: '啊，你好！我是德纳尔。我经营稀有和不寻常的物品。......如果你要深入下水道，你可能需要一枚生锈铁环。它能让你在沼泽中自由移动。你可以在北方不死院找到一枚。',
+        location_en: 'Depths',
+        location_zh: '下水道',
+      },
+    ],
+    nextArea: AreaId.ReturnToAsylum,
+    prerequisities: [GamePhase.Blighttown],
+    recommendation_en: 'In Firelink Shrine, listen for the cawing of a bird and look up to spot the giant crow that brought you here. Climb toward the crow - take the elevator and jump onto the rooftops to find the "Undead Asylum F2 West Key". Continue upward to the crow\'s nest. Crouch and wait near it; the crow will carry you back to the Undead Asylum. There you can obtain the Rusted Iron Ring, essential for moving freely in Blighttown\'s poison swamps.',
+    recommendation_zh: '在传火祭祀场，留意鸟的嘎嘎叫声，抬头可以看见最初将你带到这里的那只巨鸟。朝巨鸟方向的高处探索，搭乘电梯并跳到屋顶上，可以找到「不死院二楼西侧钥匙」。继续往上走到鸟巢，靠近后蹲下等待，巨鸟会将你带回不死院。在那里可以获取生锈铁环，这枚戒指能让你在病村的毒沼中自由移动。',
+    reason_en: 'Blighttown is filled with poison swamps. The Rusted Iron Ring allows free movement in such terrain. It is highly recommended to obtain it first.',
+    reason_zh: '病村充满了毒沼。生锈铁环让你能在这种地形中自由移动。强烈建议先获取它。',
   },
 
   // ==================== 第四阶段：敲响第二口钟 ====================
@@ -427,58 +466,11 @@ export const STORYLINES: Storyline[] = [
       },
     ],
     nextArea: AreaId.Blighttown,
-    prerequisities: [GamePhase.AfterBell1],
+    prerequisities: [GamePhase.Blighttown],
     recommendation_en: 'Descend into the Depths and find your way to Blighttown. The second bell awaits below. Talk to Laurentius for advice.',
     recommendation_zh: '深入下水道，找到通往病村的路。第二口钟就在下方等待着你。与劳伦迪斯交谈获取建议。',
     reason_en: 'The first bell has been rung. Now you must find the second bell in the depths below.',
     reason_zh: '第一口钟已经敲响。现在你必须在下方的深处找到第二口钟。',
-  },
-
-  // ==================== 重返北方不死院 ====================
-  {
-    id: 'return_to_asylum',
-    name_en: 'Return to the Asylum',
-    name_zh: '重返北方不死院',
-    theme_en: 'Preparation and Discovery',
-    theme_zh: '准备与发现',
-    items: [
-      {
-        id: '212',
-        name_en: 'Rusted Iron Ring',
-        name_zh: '生锈铁环',
-        description_en: 'Special ring granted to those who departed the Undead Asylum.\n\nThe rusted ring, which was found in the asylum where Undead are imprisoned, provides the ability to move more freely in areas with severe restrictions on movement.',
-        description_zh: '特别赐予离开不死院之人的戒指。\n\n这枚生锈的戒指是在囚禁不死人的牢狱中找到的，能够让人在行动受到严重限制的区域更自由地移动。',
-        hint_en: 'This ring allows you to walk freely in swamps and water. Essential for Blighttown and other areas.',
-        hint_zh: '这枚戒指让你能在沼泽和水中自由行走。对病村和其他区域至关重要。',
-        requiredItemIds: [], // 始终显示
-      },
-      {
-        id: '220',
-        name_en: 'Peculiar Doll',
-        name_zh: '诡异人偶',
-        description_en: 'Silver pendant engraved with the crest of Knight Artorias.\n\nOne of the ancient treasures of Anor Londo, given specially to him who challenged the Abyss.\n\nUse it to briefly evade the darkness of the Abyss. Particularly effective against dark magic.',
-        description_zh: '雕有骑士亚尔特留斯徽章的银项链。\n\n亚诺尔隆德的远古宝物之一，特别赠予挑战深渊的他。\n\n使用后能闪避深渊黑暗，对闪避法术特别有效。',
-        hint_en: 'This pendant was given to Artorias. It may be connected to the ancient city of Oolacile...',
-        hint_zh: '这条项链是赐予亚尔特留斯的。它可能与古老的乌拉席露城有关...',
-        requiredItemIds: [],
-      },
-    ],
-    npcDialogues: [
-      {
-        npcName_en: 'Domhnall of Zena',
-        npcName_zh: '德纳尔',
-        dialogue_en: "Ah, hello! I am Domhnall of Zena. I deal in rare and unusual items. ... If you're heading into the depths, you might want a Rusted Iron Ring. It helps you move freely in swamps. You can find one back at the Undead Asylum.",
-        dialogue_zh: '啊，你好！我是德纳尔。我经营稀有和不寻常的物品。......如果你要深入下水道，你可能需要一枚生锈铁环。它能让你在沼泽中自由移动。你可以在北方不死院找到一枚。',
-        location_en: 'Depths',
-        location_zh: '下水道',
-      },
-    ],
-    nextArea: AreaId.ReturnToAsylum,
-    prerequisities: [GamePhase.AfterBell2],
-    recommendation_en: 'Before entering the toxic Blighttown, return to the Undead Asylum. The Rusted Iron Ring will make your journey much easier. Talk to Domhnall for advice.',
-    recommendation_zh: '在进入有毒的病村之前，先返回北方不死院。生锈铁环会让你的旅程轻松很多。与德纳尔交谈获取建议。',
-    reason_en: 'Blighttown is filled with poison swamps. The Rusted Iron Ring allows free movement in such terrain. It is highly recommended to obtain it first.',
-    reason_zh: '病村充满了毒沼。生锈铁环让你能在这种地形中自由移动。强烈建议先获取它。',
   },
 
   // ==================== 第四阶段：赛恩古城 ====================
@@ -794,7 +786,7 @@ export const STORYLINES: Storyline[] = [
         description_zh: '堕入黑暗的小隆德四王的灵魂。此乃在火的时代，最初找到的部分王的灵魂。\n\n过去，这四人乃是小隆德一地的伟大领袖，因此得以谒见葛温王，被授与王公地位，分得葛温王的伟大灵魂。\n\n虽然这只是部分灵魂，但仍足以用来装满王器。',
         hint_en: 'The Four Kings rule the Abyss below New Londo. You must have the Covenant of Artorias ring to survive there.',
         hint_zh: '四王统治着小隆德下方的深渊。你必须拥有亚尔特留斯的契约戒指才能在那里生存。',
-        requiredItemIds: ['1112'], // 亚尔特留斯的契约戒指
+        requiredItemIds: ['138'], // 亚尔特留斯的契约戒指
       },
     ],
     npcDialogues: [
@@ -877,44 +869,6 @@ export const STORYLINES: Storyline[] = [
     reason_zh: '你已经获得了王器。你必须收集四位伟大薪王的灵魂。混沌温床是其中之一。',
   },
 
-  // ==================== 可选Boss：大狼希夫 ====================
-  {
-    id: 'great_grey_wolf_sif',
-    name_en: 'The Great Grey Wolf Sif',
-    name_zh: '大狼希夫',
-    theme_en: 'Loyalty and Sacrifice',
-    theme_zh: '忠诚与牺牲',
-    items: [
-      {
-        id: '1112',
-        name_en: 'Covenant of Artorias',
-        name_zh: '亚尔特留斯的契约戒指',
-        description_en: "Ring of the Knight Artorias.\n\nThis ring was given to Artorias, who challenged the Abyss. It grants protection against the dark of the Abyss, and is essential for venturing into that realm.",
-        description_zh: '骑士亚尔特留斯的戒指。\n\n这枚戒指赐予了挑战深渊的亚尔特留斯。它能保护佩戴者免受深渊黑暗的侵害，是进入那个领域的必备之物。',
-        hint_en: 'This ring is essential for surviving the Abyss. Defeat Great Grey Wolf Sif to obtain it.',
-        hint_zh: '这枚戒指是在深渊中生存的必备之物。击败大狼希夫来获得它。',
-        requiredItemIds: [],
-      },
-    ],
-    npcDialogues: [
-      {
-        npcName_en: 'Alvina',
-        npcName_zh: '雅薇娜',
-        dialogue_en: "I am Alvina, of the Darkroot Wood. ... Sif, the great grey wolf, guards the grave of Knight Artorias. He will not let you pass easily. But you need the Covenant of Artorias ring to enter the Abyss. Defeat Sif, and the ring is yours.",
-        dialogue_zh: '我是雅薇娜，来自黑森林庭院。......大狼希夫守护着骑士亚尔特留斯的坟墓。他不会轻易让你通过。但你需要亚尔特留斯的契约戒指才能进入深渊。击败希夫，戒指就是你的了。',
-        location_en: 'Darkroot Garden',
-        location_zh: '黑森林庭院',
-      },
-    ],
-    nextArea: AreaId.DarkrootGarden,
-    prerequisities: [GamePhase.ObtainedLordvessel],
-    alternativeBosses: ['sif'],
-    recommendation_en: 'Seek out Great Grey Wolf Sif in Darkroot Garden. He guards the Covenant of Artorias ring, which is essential for entering the Abyss. Talk to Alvina for guidance.',
-    recommendation_zh: '前往黑森林庭院寻找大狼希夫。他守护着亚尔特留斯的契约戒指，这是进入深渊的必备之物。与雅薇娜交谈获取指引。',
-    reason_en: 'You need the Covenant of Artorias ring to enter the Abyss and fight the Four Kings. Sif guards this ring.',
-    reason_zh: '你需要亚尔特留斯的契约戒指才能进入深渊并与四王战斗。希夫守护着这枚戒指。',
-  },
-
   // ==================== DLC区域 ====================
   {
     id: 'oolacile',
@@ -924,7 +878,7 @@ export const STORYLINES: Storyline[] = [
     theme_zh: '古老知识与黑暗',
     items: [
       {
-        id: '222',
+        id: '2520',
         name_en: 'Broken Pendant',
         name_zh: '破碎的坠落之环',
         description_en: 'Half of a broken pendant.\n\nThe other half can be found in the present. When both halves are reunited, the voice of the ancient capital of Oolacile can be heard.',
@@ -1039,7 +993,11 @@ export const STORYLINES: Storyline[] = [
 ];
 
 // 根据阶段获取推荐故事线
-export function getStorylineForPhase(phase: GamePhase, bossesDefeated?: PlayerProgress['bossesDefeated']): Storyline | null {
+export function getStorylineForPhase(
+  phase: GamePhase,
+  bossesDefeated?: PlayerProgress['bossesDefeated'],
+  ownedItemIds?: string[]
+): Storyline | null {
   // 如果是SeekingLordSouls阶段，需要根据未击败的薪王BOSS来选择故事线
   if (phase === GamePhase.SeekingLordSouls && bossesDefeated) {
     // 按推荐顺序选择未击败的薪王BOSS
@@ -1056,6 +1014,31 @@ export function getStorylineForPhase(phase: GamePhase, bossesDefeated?: PlayerPr
         const storyline = STORYLINES.find(s => s.id === boss.storylineId);
         if (storyline) return storyline;
       }
+    }
+  }
+
+  // 特殊处理：Blighttown阶段
+  // 如果没有生锈铁环，推荐先回不死院；如果有，推荐去病村
+  if (phase === GamePhase.Blighttown && ownedItemIds) {
+    const hasRustedIronRing = ownedItemIds.includes('125'); // 生锈铁环ID
+    if (!hasRustedIronRing) {
+      // 没有生锈铁环，推荐回不死院
+      return STORYLINES.find(s => s.id === 'return_to_asylum') || null;
+    } else {
+      // 有生锈铁环，推荐去病村
+      return STORYLINES.find(s => s.id === 'bell_of_awakening_2') || null;
+    }
+  }
+
+  // 特殊处理：SeekingLordSouls阶段
+  // 如果要打四王但没有深渊戒指，推荐先去黑森林庭院打希夫
+  if (phase === GamePhase.SeekingLordSouls && ownedItemIds && bossesDefeated) {
+    const hasCovenantRing = ownedItemIds.includes('138'); // 亚尔特留斯的契约戒指ID
+    const fourKingsDefeated = bossesDefeated.fourKings;
+
+    // 如果四王还没打且没有戒指，推荐去黑森林庭院
+    if (!fourKingsDefeated && !hasCovenantRing) {
+      return STORYLINES.find(s => s.id === 'darkroot_garden') || null;
     }
   }
 
