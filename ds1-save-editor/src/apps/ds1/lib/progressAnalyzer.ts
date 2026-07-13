@@ -160,8 +160,8 @@ export class ProgressAnalyzer {
     // 判断阶段
     const phase = this.determinePhase(bossesDefeated, bells, keyItems, ownedItemIds);
 
-    // 判断结局路线（传火/灭火）
-    const endingPath = this.determineEndingPath(keyItems.lordvessel, bossesDefeated.fourKings);
+    // 判断结局路线（传火/灭火）- 只有在获得王器后才判断
+    const endingPath = this.determineEndingPath(phase, keyItems.lordvessel, bossesDefeated.fourKings);
 
     // 判断已访问区域
     const visitedAreas = this.determineVisitedAreas(bossesDefeated, bonfiresUnlocked, keyItems);
@@ -181,9 +181,6 @@ export class ProgressAnalyzer {
   // 获取玩家拥有的物品ID列表
   private getOwnedItemIds(): string[] {
     try {
-      // 同步加载物品数据库（如果尚未加载）
-      // 注意：Inventory.loadItemsDatabase()是异步的，但我们需要同步获取物品
-      // 所以我们直接读取物品栏数据
       const items: string[] = [];
       const data = this.character.getRawData();
       const INVENTORY_START = 0x370;
@@ -200,13 +197,9 @@ export class ProgressAnalyzer {
                        (data[offset + 6] << 16) |
                        (data[offset + 7] << 24);
 
-        // 检查物品是否存在（字节16-19）
-        const exists = data[offset + 16] |
-                      (data[offset + 17] << 8) |
-                      (data[offset + 18] << 16) |
-                      (data[offset + 19] << 24);
-
-        if (exists !== 0 && itemId !== 0) {
+        // 对于关键物品，可能exists字段为0但物品仍然存在
+        // 所以只要itemId不为0就认为物品存在
+        if (itemId !== 0) {
           items.push(itemId.toString());
         }
       }
@@ -363,28 +356,87 @@ export class ProgressAnalyzer {
     return GamePhase.Start;
   }
 
+  // 缓存结局路线到localStorage（按角色槽位）
+  private cacheEndingPath(endingPath: EndingPath): void {
+    try {
+      const key = `ds1-ending-path-slot-${this.character.slotNumber}`;
+      localStorage.setItem(key, endingPath);
+    } catch (e) {
+      console.error('Failed to cache ending path:', e);
+    }
+  }
+
+  // 从localStorage读取缓存的结局路线（按角色槽位）
+  private getCachedEndingPath(): EndingPath | null {
+    try {
+      const key = `ds1-ending-path-slot-${this.character.slotNumber}`;
+      const cached = localStorage.getItem(key);
+      if (cached && Object.values(EndingPath).includes(cached as EndingPath)) {
+        return cached as EndingPath;
+      }
+    } catch (e) {
+      console.error('Failed to get cached ending path:', e);
+    }
+    return null;
+  }
+
+  // 清除结局路线缓存（当前角色）
+  public clearEndingPathCache(): void {
+    try {
+      const key = `ds1-ending-path-slot-${this.character.slotNumber}`;
+      localStorage.removeItem(key);
+    } catch (e) {
+      console.error('Failed to clear ending path cache:', e);
+    }
+  }
+
   // 判断结局路线（传火/灭火）
   // 逻辑：
   // - 芙拉姆特线（传火）：先放置王器 → 再击杀四王
   // - 卡斯线（灭火）：先击杀四王 → 再放置王器
+  // 只有在获得王器后（击败翁斯坦与斯摩）才判断路线
+  // 优先使用缓存值，无法判断时默认传火线
   private determineEndingPath(
+    phase: GamePhase,
     hasLordvessel: boolean,
     fourKingsDefeated: boolean
   ): EndingPath {
+    // 只有在获得王器后的阶段才判断路线
+    const canDeterminePath = phase === GamePhase.AfterOrnsteinSmough ||
+                             phase === GamePhase.ObtainedLordvessel ||
+                             phase === GamePhase.SeekingLordSouls ||
+                             phase === GamePhase.AllLordSouls ||
+                             phase === GamePhase.ReadyForKiln ||
+                             phase === GamePhase.GameComplete;
+
+    if (!canDeterminePath) {
+      return EndingPath.Unknown;
+    }
+
     // 如果四王已击杀但王器还在背包 → 卡斯线（先打四王，还没放置）
+    // 这是确定的判断，缓存这个结果
     if (fourKingsDefeated && hasLordvessel) {
+      this.cacheEndingPath(EndingPath.Kaathe);
       return EndingPath.Kaathe;
     }
 
     // 如果四王未击杀但王器不在背包 → 芙拉姆特线（已放置，还没打四王）
+    // 这是确定的判断，缓存这个结果
     if (!fourKingsDefeated && !hasLordvessel) {
+      this.cacheEndingPath(EndingPath.Frampt);
       return EndingPath.Frampt;
     }
 
     // 其他情况：无法判断
-    // - 王器在背包 + 四王未击杀：还没放置，可能是任意路线
-    // - 王器不在背包 + 四王已击杀：两条线都可能
-    return EndingPath.Unknown;
+    // 检查缓存，如果有缓存就用缓存
+    const cachedPath = this.getCachedEndingPath();
+    if (cachedPath && cachedPath !== EndingPath.Unknown) {
+      return cachedPath;
+    }
+
+    // 没有缓存，且无法判断时，默认传火线
+    // 不缓存这个默认值，下次重新判断
+    return EndingPath.Frampt;
   }
 
   // 判断已访问区域

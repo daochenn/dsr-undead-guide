@@ -258,8 +258,8 @@ export const HelpTab: React.FC<HelpTabProps> = ({ character }) => {
             </span>
           </div>
 
-          {/* 结局路线显示 */}
-          {progress.endingPath !== EndingPath.Unknown && (
+          {/* 结局路线显示 - 只有在击败翁斯坦与斯摩后才显示 */}
+          {progress.bossesDefeated.ornsteinAndSmough && progress.endingPath !== EndingPath.Unknown && (
             <div className="ending-path">
               {lang === 'zh' ? '路线：' : 'Path: '}
               <span className={`ending-path-name ${progress.endingPath}`}>
