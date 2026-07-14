@@ -98,6 +98,7 @@ export interface PlayerProgress {
     seath: boolean;
     fourKings: boolean;
     BedOfChaos: boolean;
+    demonFiresage: boolean; // 恶魔火焰司祭
     gwyn: boolean;
     // DLC
     sanctuaryGuardian: boolean;
@@ -244,6 +245,7 @@ export class ProgressAnalyzer {
       seath: !isBossAlive('Seath the Scaleless (boss)'),
       fourKings: !isBossAlive('Four Kings (boss)'),
       BedOfChaos: !isBossAlive('Bed of Chaos (boss)'),
+      demonFiresage: !isBossAlive('Demon Firesage (boss)'),
       gwyn: !isBossAlive('Gwyn, Lord of Cinder (boss)'),
       sanctuaryGuardian: !isBossAlive('Sanctuary Guardian (boss)'),
       artorias: !isBossAlive('Artorias the Abysswalker (boss)'),
@@ -500,6 +502,7 @@ export class ProgressAnalyzer {
       seath: false,
       fourKings: false,
       BedOfChaos: false,
+      demonFiresage: false,
       gwyn: false,
       sanctuaryGuardian: false,
       artorias: false,

@@ -57,7 +57,7 @@ export const STORYLINES: Storyline[] = [
         description_en: "Undead's treasured dark green glass bottle. It accumulates Estus at bonfires, and drinking it restores HP.\n\nIt seems to be closely linked to the Fire Keeper, and the following passage exists in the dark legend:\n\nThe green bottle originates from the Fire Keeper's soul. They guarded the bonfire in life, and continue to guard its warmth even after death.",
         description_zh: '不死人珍重的暗绿色玻璃瓶，可借着营火累积原素，喝下去便能恢复血量。\n\n似乎与营火守护者──系火女有着密切的关联，在黑暗传承中，也有以下一段文字：\n\n那绿色瓶子源自系火女的灵魂，她们在活着的时候守护营火，即便在死后，也持续守护着其温度。',
         hint_en: 'This bottle is your lifeline. It restores HP when you rest at bonfires.',
-        hint_zh: '这个瓶子是你的生命线。在营火休息时可以恢复生命值。',
+        hint_zh: '这个瓶子是你的生命线。使用它可以恢复生命值。',
       },
     ],
     npcDialogues: [
@@ -116,7 +116,7 @@ export const STORYLINES: Storyline[] = [
     npcDialogues: [
       {
         npcName_en: 'Crestfallen Warrior',
-        npcName_zh: '灰心战士',
+        npcName_zh: '灰心哥',
         dialogue_en: "Well, what do we have here? You're undead, aren't you? ... I don't know what you're doing here, but you don't look like a Hollow. Anyway, I'll lend you a hand. ... The bell of awakening is in this world. There are two of them, one above and one below. The one above is in Undead Parish, and the one below is in the Depths. That's all I know for sure.",
         dialogue_zh: '嗯，你是什么人？你是不死人吧......我不知道你在这里做什么，但你看起来不像游魂。总之，我会帮你一把。......苏醒之钟在这个世界。有两口，一口在上，一口在下。上面的在不死人教区，下面的在下水道。这就是我所知道的。',
         location_en: 'Firelink Shrine',
@@ -124,7 +124,7 @@ export const STORYLINES: Storyline[] = [
       },
       {
         npcName_en: 'Crestfallen Warrior',
-        npcName_zh: '灰心战士',
+        npcName_zh: '灰心哥',
         dialogue_en: "Although one of the bells is indeed up in the Undead Parish, the lift isn't working right now. So you'll have to go along the cliff and enter Undead Burg from the waterway. The other bell is just down below from that Undead Burg. ... But going down from there leads to Blighttown, a place full of sick people. If I were you, I'd want to stay as far away from that place as possible.",
         dialogue_zh: '虽说其中一口钟确实放在此地上方的不死教堂，但现在升降梯已经不动了。所以说，你只能沿着旁边的山崖往上爬，从水路进入不死镇。另一口钟，就从那座不死镇往下走就可以了。......但话说回来，不死镇下去可是座聚集了许多病患的病村。如果是我的话，可是会希望离那地方远远的呢。',
         location_en: 'Firelink Shrine',
@@ -132,7 +132,7 @@ export const STORYLINES: Storyline[] = [
       },
       {
         npcName_en: 'Crestfallen Warrior',
-        npcName_zh: '灰心战士',
+        npcName_zh: '灰心哥',
         dialogue_en: "You've already been to the New Londo Ruins below? Just go down the stairs from here, take the lift, and you'll be there right away. If you haven't been there yet, you should go check it out. It's an ancient Undead ruin, and there might be some clues about the mission. Like, for example, the welcome of the dead... Heh heh heh...",
         dialogue_zh: '你已经去过这下面的小隆德遗迹了吗？只要从这边的楼梯往下走，再搭乘升降梯，就可以立刻抵达了。如果还没去过的话，最好去一下看看。那是座古老的不死人遗迹，说不定藏着什么关于使命的提示呢。举例来说，像是亡灵的欢迎之类的......哼哼哼哼',
         location_en: 'Firelink Shrine',
@@ -140,7 +140,7 @@ export const STORYLINES: Storyline[] = [
       },
       {
         npcName_en: 'Crestfallen Warrior',
-        npcName_zh: '灰心战士',
+        npcName_zh: '灰心哥',
         dialogue_en: "By the way, why don't you reinforce your weapons? If you don't know about Blacksmith Andrei, you should go to the old church in the forest below Undead Parish. You should go find him sooner or later. ... But then again, if you like using blunt weapons, then go ahead!",
         dialogue_zh: '说到这边，你为什么不冶炼武器呢？如果你不知道安德烈老爹的话，不妨从不死教堂往下走，到森林的古老教堂走一趟。最好还是早点去找他。......但话说回来，如果你就是喜欢用钝钝的武器，那就随你高兴啦！',
         location_en: 'Firelink Shrine',
@@ -148,7 +148,7 @@ export const STORYLINES: Storyline[] = [
       },
       {
         npcName_en: 'Crestfallen Warrior',
-        npcName_zh: '灰心战士',
+        npcName_zh: '灰心哥',
         dialogue_en: "By the way, you've met her, haven't you? ... The Fire Keeper. Her duty seems to be staying there forever, preventing the Undead bonfire from going out. ... It's quite sad. She can't speak, can't go anywhere. I bet the people from her homeland cut out her tongue so she couldn't call out the names of the gods.",
         dialogue_zh: '说到这边，你应该也见过了吧？......那系火女呀。她的职责似乎就是一直待在那边，避免不死营火熄灭。唉，真是够惨的了。话也没办法说，哪儿都去不了。我猜那女的，她故乡的人一定是拔了她的舌头，让她喊不出神的名字。',
         location_en: 'Firelink Shrine',
@@ -156,7 +156,7 @@ export const STORYLINES: Storyline[] = [
       },
       {
         npcName_en: 'Crestfallen Warrior',
-        npcName_zh: '灰心男',
+        npcName_zh: '灰心哥',
         dialogue_en: "Your face is just like a Hollow. You've died too many times. You need to collect Humanity quickly. How to collect Humanity? You can search corpses... or like those clerics, summon each other... The fastest way is to kill normal Undead and take their Humanity.",
         dialogue_zh: '你那张脸简直就和游魂没两样嘛。大概是因为死得太过头了，照这样下去可是马上就会变成真的游魂喔。得要赶紧取得人性呀。怎样收集人性？看是要踏实地捡尸体收集……或是和那票圣职一样，狼狈为奸地相互召唤彼此……另外，最快的方法就是杀害正常的不死人来夺取人性。',
         location_en: 'Firelink Shrine',
@@ -164,7 +164,7 @@ export const STORYLINES: Storyline[] = [
       },
       {
         npcName_en: 'Crestfallen Warrior',
-        npcName_zh: '灰心男',
+        npcName_zh: '灰心哥',
         dialogue_en: "I heard there's an Undead Breaker in New Londo. Even if you don't find him, it's worth a try since you're already like this.",
         dialogue_zh: '我曾听说小隆德有一位解咒师。反正就算没找到也不过是和现在一样而已，去走一遭也没差吧？',
         location_en: 'Firelink Shrine',
@@ -837,6 +837,35 @@ export const STORYLINES: Storyline[] = [
     reason_zh: '你已经获得了王器。你必须收集四位伟大薪王的灵魂。混沌温床是其中之一。',
   },
 
+  // ==================== 恶魔火焰司祭后：太阳虫引导 ====================
+  {
+    id: 'sunlight_maggot_guide',
+    name_en: 'The Sunlight Maggot',
+    name_zh: '⚠️警告：太阳虫',
+    theme_en: 'Light in the Darkness',
+    theme_zh: '黑暗中的光芒',
+    items: [
+      {
+        id: '190000',
+        name_en: 'Sunlight Maggot',
+        name_zh: '太阳虫',
+        description_en: 'Head armor worn by the sunlight maggots that nest in the Demon Ruins. Emits a gentle light that illuminates the darkness. The maggots are said to be born from the remnants of the Sunlight Brace.',
+        description_zh: '恶魔废墟中巢穴的太阳虫所戴的头盔。发出柔和的光芒照亮黑暗。据说这些太阳虫是从太阳手环的残余中诞生的。',
+        hint_en: 'This item emits light and is essential for navigating the dark passages of Lost Izalith. It also protects a certain NPC from a tragic fate.',
+        hint_zh: '这个物品会发光，对于探索失落伊扎里斯的黑暗通道至关重要。它还能保护某个NPC免遭悲惨的命运。',
+        requiredItemIds: [],
+      },
+    ],
+    npcDialogues: [],
+    nextArea: AreaId.DemonRuins,
+    prerequisities: [GamePhase.ObtainedLordvessel],
+    alternativeBosses: ['demonFiresage'],
+    recommendation_en: 'You have defeated the Demon Firesage. Before proceeding deeper into Lost Izalith, check your equipment for the Sunlight Maggot. If you don\'t have it, DO NOT proceed further!\n\nTo obtain it safely:\n1. Join the Chaos Servant covenant at the Daughter of Chaos (the spider girl behind Quelaag)\n2. Offer 30 Humanity to increase your covenant rank\n3. Do NOT leave the covenant during this process\n4. The Daughter of Chaos will open a shortcut for you\n5. Take the passage to the right outside the Demon Firesage boss room\n6. Kill ALL Sunlight Maggots in that passage (including red-eyed ones)\n7. IMPORTANT: Do NOT chase them out of the passage exit!\n\nThis is critical for saving a certain NPC\'s life. The Sunlight Maggot prevents the spread of the Chaos Flame\'s corruption, and if they escape, a beloved character will meet a tragic end.',
+    recommendation_zh: '你已经击败了恶魔火焰司祭。在继续深入失落伊扎里斯之前，请检查你的装备中是否有太阳虫。如果你没有它，请不要继续前进！\n\n安全获取方法：\n1. 在克拉格住处的混沌女儿处加入混沌仆从誓约\n2. 献出30个人性来提升誓约等级\n3. 在此期间不要离开誓约\n4. 混沌女儿会为你开启一条捷径\n5. 从恶魔火焰司祭Boss房外面右侧的通道进入\n6. 击杀通道内所有的太阳虫（包括红眼太阳虫）\n7. 重要：追杀太阳虫时，切勿走出通道另一端的出口！\n\n这对拯救某个NPC的生命至关重要。太阳虫能阻止混沌火焰腐蚀的扩散，如果它们逃出去，一个深受喜爱的角色将会遭遇悲惨的结局。',
+    reason_en: 'The Sunlight Maggot holds back the spread of the Chaos Flame\'s corruption. Without it, the darkness of Lost Izalith will consume everything, including a certain NPC who ventures too deep. This is one of the most important side quests in the game.',
+    reason_zh: '太阳虫能抑制混沌火焰腐蚀的扩散。没有它，失落伊扎里斯的黑暗将吞噬一切，包括一个深入其中的NPC。这是游戏中最重要的支线任务之一。',
+  },
+
   // ==================== DLC区域 ====================
   {
     id: 'oolacile',
@@ -969,14 +998,25 @@ export function getStorylineForPhase(
 ): Storyline | null {
   let storyline: Storyline | null = null;
 
+  // 最高优先级：恶魔火焰司祭后检查太阳虫
+  // 无论处于什么阶段，只要击败了恶魔火焰司祭且没有太阳虫，就显示警告
+  if (ownedItemIds && bossesDefeated) {
+    const demonFiresageDefeated = bossesDefeated.demonFiresage;
+    const hasSunlightMaggot = ownedItemIds.includes('190000'); // 太阳虫ID
+
+    if (demonFiresageDefeated && !hasSunlightMaggot) {
+      return STORYLINES.find(s => s.id === 'sunlight_maggot_guide') || null;
+    }
+  }
+
   // 如果是SeekingLordSouls阶段，需要根据未击败的薪王BOSS来选择故事线
   if (phase === GamePhase.SeekingLordSouls && bossesDefeated) {
     // 按推荐顺序选择未击败的薪王BOSS
     const lordSoulsBosses = [
-      { id: 'seath', storylineId: 'lord_souls_seath' },
-      { id: 'nito', storylineId: 'lord_souls_nito' },
-      { id: 'fourKings', storylineId: 'lord_souls_four_kings' },
-      { id: 'BedOfChaos', storylineId: 'lord_souls_bed_of_chaos' },
+      { id: 'seath', storylineId: 'lord_souls_seath' },           // 白龙希斯
+      { id: 'BedOfChaos', storylineId: 'lord_souls_bed_of_chaos' }, // 混沌温床
+      { id: 'nito', storylineId: 'lord_souls_nito' },             // 墓王尼特
+      { id: 'fourKings', storylineId: 'lord_souls_four_kings' },   // 小隆德四王
     ];
 
     // 找到第一个未击败的薪王BOSS

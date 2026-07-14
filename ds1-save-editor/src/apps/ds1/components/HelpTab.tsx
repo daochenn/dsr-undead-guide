@@ -55,6 +55,7 @@ const BOSS_NAMES: Record<string, { en: string; zh: string }> = {
   ornsteinAndSmough: { en: 'Ornstein & Smough', zh: '翁斯坦与斯摩' },
   moonlightButterfly: { en: 'Moonlight Butterfly', zh: '月光蝶' },
   sif: { en: 'Great Grey Wolf Sif', zh: '大狼希夫' },
+  demonFiresage: { en: 'Demon Firesage', zh: '恶魔火焰司祭' },
   pinwheel: { en: 'Pinwheel', zh: '三面魔' },
   nito: { en: 'Gravelord Nito', zh: '墓王尼特' },
   seath: { en: 'Seath the Scaleless', zh: '白龙希斯' },
@@ -656,6 +657,7 @@ export const HelpTab: React.FC<HelpTabProps> = ({ character }) => {
           color: #b0b0b0;
           line-height: 1.5;
           margin-bottom: 0.5rem;
+          white-space: pre-line;
         }
 
         .recommendation-reason {
