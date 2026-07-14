@@ -323,21 +323,19 @@ export class ProgressAnalyzer {
     const fourKingsDefeated = bosses.fourKings;
     const bedOfChaosDefeated = bosses.BedOfChaos;
     const allLordSoulsDefeated = seathDefeated && nitoDefeated && fourKingsDefeated && bedOfChaosDefeated;
-    const anyLordSoulDefeated = seathDefeated || nitoDefeated || fourKingsDefeated || bedOfChaosDefeated;
 
     // 如果所有薪王BOSS都被击败，准备前往初火之炉
     if (allLordSoulsDefeated) {
       return GamePhase.ReadyForKiln;
     }
 
-    // 如果有至少一个薪王BOSS被击败，说明已经放置了王器，正在收集灵魂
-    if (anyLordSoulDefeated) {
-      return GamePhase.SeekingLordSouls;
-    }
-
-    // 如果击败了翁斯坦与斯摩，但没有任何薪王BOSS被击败
-    // 说明刚获得王器，还没放置
+    // 如果击败了翁斯坦与斯摩
     if (bosses.ornsteinAndSmough) {
+      // 王器不在背包中，说明已经放置了王器，正在收集灵魂
+      if (!_keyItems.lordvessel) {
+        return GamePhase.SeekingLordSouls;
+      }
+      // 王器还在背包中，说明刚获得王器，还没放置
       return GamePhase.AfterOrnsteinSmough;
     }
 
@@ -346,7 +344,6 @@ export class ProgressAnalyzer {
     if (bosses.bellGargoyles && bosses.queelaag) return GamePhase.SensFortress;
 
     // 第二阶段
-    if (bells.bell2Rung) return GamePhase.AfterBell2;
     if (bosses.gapingDragon) return GamePhase.Blighttown;
     if (bosses.capraDemon) return GamePhase.Depths;
     if (bells.bell1Rung) return GamePhase.AfterBell1;

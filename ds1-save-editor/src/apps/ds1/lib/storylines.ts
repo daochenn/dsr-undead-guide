@@ -349,6 +349,16 @@ export const STORYLINES: Storyline[] = [
     theme_zh: '狼骑士的森林',
     items: [
       {
+        id: '2002',
+        name_en: 'Crest of Artorias',
+        name_zh: '亚尔特留斯徽章',
+        description_en: 'Crest bearing the symbol of Knight Artorias.\n\nThis crest opens the sealed gate in Darkroot Garden, leading to the forest of the Great Grey Wolf Sif.',
+        description_zh: '可开启大致位于黑森林庭院中心位置，受远古法术封锁的门扉徽章。\n\n门的后方就是"漫步深渊"亚尔特留斯的坟墓，但是森林中有个盗贼团专门狩猎为了坟墓前来的战士。',
+        hint_en: 'This crest opens the gate to the deeper forest. You need it to reach Sif and other secrets.',
+        hint_zh: '这个纹章可以打开通往森林深处的大门。你需要它才能到达希夫和其他秘密。',
+        requiredItemIds: [],
+      },
+      {
         id: '138',
         name_en: 'Covenant of Artorias',
         name_zh: '亚尔特留斯的契约戒指',
@@ -361,6 +371,14 @@ export const STORYLINES: Storyline[] = [
     ],
     npcDialogues: [
       {
+        npcName_en: 'Andre of Astora',
+        npcName_zh: '安德烈',
+        dialogue_en: "You want to enter the sealed forest? I have the Crest of Artorias that opens the gate. It costs 20,000 souls. Are you interested?",
+        dialogue_zh: '你想进入封印的森林吗？我有可以打开大门的亚尔特留斯徽章。需要20,000灵魂。你有兴趣吗？',
+        location_en: 'Undead Parish',
+        location_zh: '不死人教区',
+      },
+      {
         npcName_en: 'Alvina',
         npcName_zh: '雅薇娜',
         dialogue_en: "I am Alvina, of the Darkroot Wood. ... Sif, the great grey wolf, guards the grave of Knight Artorias. He will not let you pass easily. But you need the Covenant of Artorias ring to enter the Abyss. Defeat Sif, and the ring is yours.",
@@ -370,7 +388,7 @@ export const STORYLINES: Storyline[] = [
       },
       {
         npcName_en: 'Andre of Astora',
-        npcName_zh: '亚斯特拉的安德烈',
+        npcName_zh: '安德烈',
         dialogue_en: "Over there is the grave of Knight Artorias, who 'walked the Abyss'. I heard that people who went to the forest... none of them came back.",
         dialogue_zh: '啊，对了，还有一件关于黑森林庭院的传闻。据说那边有"漫步深渊"的骑士，亚尔特留斯的坟墓。不过，告诉我传闻的那些到森林去的人，一个都没回来……',
         fullDialogue_zh: '啊，对了，还有一件关于黑森林庭院的传闻。据说那边有"漫步深渊"的骑士，亚尔特留斯的坟墓。不过，告诉我传闻的那些到森林去的人，一个都没回来……',
@@ -380,8 +398,8 @@ export const STORYLINES: Storyline[] = [
     ],
     nextArea: AreaId.DarkrootGarden,
     prerequisities: [GamePhase.SeekingLordSouls],
-    recommendation_en: 'To enter the Abyss and challenge the Four Kings, you need the Covenant of Artorias ring. This ring is guarded by Great Grey Wolf Sif in the Darkroot Garden. Travel to the forest, defeat Sif, and obtain the ring. Only then can you survive the darkness of the Abyss.',
-    recommendation_zh: '要进入深渊挑战四王，你需要亚尔特留斯的契约戒指。这枚戒指由黑森林庭院的大狼希夫守护。前往森林，击败希夫，获得戒指。只有这样，你才能在深渊的黑暗中存活。',
+    recommendation_en: "Before challenging the Abyss, you need the Covenant of Artorias ring. First, purchase the Crest of Artorias from Blacksmith Andre in Undead Parish (20,000 souls). Use it to open the sealed gate in Darkroot Garden. Navigate through the forest, avoiding or defeating the forest hunters. In the latter half of the forest, you will find Great Grey Wolf Sif guarding the grave of Knight Artorias. Defeat Sif to obtain the Covenant of Artorias ring.",
+    recommendation_zh: '在挑战深渊之前，你需要亚尔特留斯的契约戒指。首先，在不死人教区的安德烈铁匠处购买亚尔特留斯徽章（20,000灵魂）。用它打开黑森林庭院的封印之门。穿过森林，避开或击败森林狩猎者。在森林后半段，你会找到守护骑士亚尔特留斯坟墓的大狼希夫。击败希夫获得亚尔特留斯的契约戒指。',
     reason_en: 'The Abyss is a realm of absolute darkness. Without the Covenant of Artorias ring, you will be consumed by the dark the moment you enter. Sif guards this ring at the grave of Knight Artorias.',
     reason_zh: '深渊是绝对黑暗的领域。没有亚尔特留斯的契约戒指，你一进入就会被黑暗吞噬。希夫在亚尔特留斯的墓前守护着这枚戒指。',
   },
@@ -558,9 +576,9 @@ export const STORYLINES: Storyline[] = [
       },
     ],
     nextArea: AreaId.SensFortress,
-    prerequisities: [GamePhase.AfterBell2],
-    recommendation_en: "The gate to Sen's Fortress is now open. Cross this treacherous castle to reach Anor Londo. Talk to Siegmeyer and Frampt for guidance.",
-    recommendation_zh: '赛恩古城的大门现在打开了。穿过这座危险的城堡到达亚诺尔隆德。与杰克麦雅和芙拉姆特交谈获取指引。',
+    prerequisities: [GamePhase.SensFortress],
+    recommendation_en: "You have entered Sen's Fortress. This treacherous castle is filled with traps, boulders, and powerful enemies. Your goal is to reach the top and defeat the Iron Golem to proceed to Anor Londo.\n\nTips:\n- Watch out for the rolling boulders - they can knock you off bridges\n- The narrow walkways are dangerous, move carefully\n- Look for lever mechanisms to change boulder directions\n- Talk to NPCs for hints about the path ahead",
+    recommendation_zh: '你已经进入赛恩古城。这座危险的城堡充满了陷阱、滚石和强大的敌人。你的目标是到达顶部，击败钢铁巨偶，前往亚诺尔隆德。\n\n提示：\n- 小心滚石——它们会把你撞下桥\n- 狭窄的走道很危险，小心前进\n- 寻找机关装置来改变滚石方向\n- 与NPC交谈获取前进的提示',
     reason_en: "You have rung both bells. The way to Sen's Fortress is open. Beyond lies Anor Londo, the city of gods.",
     reason_zh: '你已经敲响了两口钟。通往赛恩古城的道路打开了。亚诺尔隆德就在前方。',
   },
@@ -631,11 +649,11 @@ export const STORYLINES: Storyline[] = [
       },
     ],
     nextArea: AreaId.AnorLondo,
-    prerequisities: [GamePhase.SensFortress],
-    recommendation_en: "Cross Sen's Fortress and reach Anor Londo. Defeat Ornstein and Smough to meet Gwynevere and receive the Lordvessel.",
-    recommendation_zh: '穿过赛恩古城，到达亚诺尔隆德。击败翁斯坦与斯摩，会见葛温艾薇雅，获得王器。',
-    reason_en: "You have rung both bells. The gate to Sen's Fortress is now open. Beyond lies Anor Londo.",
-    reason_zh: '你已经敲响了两口钟。赛恩古城的大门现在打开了。亚诺尔隆德就在前方。',
+    prerequisities: [GamePhase.AnorLondo],
+    recommendation_en: "You have defeated the Iron Golem and reached Anor Londo, the city of gods. Now you must defeat Ornstein and Smough to meet Gwynevere and receive the Lordvessel.",
+    recommendation_zh: '你已经击败了钢铁巨偶，到达了神之城亚诺尔隆德。现在你必须击败翁斯坦与斯摩，会见葛温艾薇雅，获得王器。',
+    reason_en: "You have defeated the Iron Golem. The path to Anor Londo is now open. Defeat Ornstein and Smough to receive the Lordvessel.",
+    reason_zh: '你已经击败了钢铁巨偶。通往亚诺尔隆德的道路打开了。击败翁斯坦与斯摩，获得王器。',
   },
 
   // ==================== 第五阶段：击败翁斯坦与斯摩后 ====================
@@ -801,15 +819,15 @@ export const STORYLINES: Storyline[] = [
         description_zh: '堕入黑暗的小隆德四王的灵魂。此乃在火的时代，最初找到的部分王的灵魂。\n\n过去，这四人乃是小隆德一地的伟大领袖，因此得以谒见葛温王，被授与王公地位，分得葛温王的伟大灵魂。\n\n虽然这只是部分灵魂，但仍足以用来装满王器。',
         hint_en: 'The Four Kings rule the Abyss below New Londo. You must have the Covenant of Artorias ring to survive there.',
         hint_zh: '四王统治着小隆德下方的深渊。你必须拥有亚尔特留斯的契约戒指才能在那里生存。',
-        requiredItemIds: ['138'], // 亚尔特留斯的契约戒指
+        requiredItemIds: [],
       },
     ],
     npcDialogues: [
       {
         npcName_en: 'Ingward',
         npcName_zh: '英果德',
-        dialogue_en: "I am Ingward, keeper of the seal. ... The Four Kings fell to the Abyss. They were seduced by the power of humanity. To enter the Abyss, you must have the Covenant of Artorias ring. Defeat Great Grey Wolf Sif to obtain it.",
-        dialogue_zh: '我是英果德，封印的守护者。......四王堕入了深渊。他们被人性的力量所诱惑。要进入深渊，你必须拥有亚尔特留斯的契约戒指。击败大狼希夫来获得它。',
+        dialogue_en: "I am Ingward, keeper of the seal. ... The Four Kings fell to the Abyss. They were seduced by the power of humanity. To enter the Abyss, you must have the Covenant of Artorias ring.",
+        dialogue_zh: '我是英果德，封印的守护者。......四王堕入了深渊。他们被人性的力量所诱惑。要进入深渊，你必须拥有亚尔特留斯的契约戒指。',
         location_en: 'New Londo Ruins',
         location_zh: '小隆德遗迹',
       },
@@ -1066,20 +1084,29 @@ export function getStorylineForPhase(
   }
 
   // 如果是SeekingLordSouls阶段，需要根据未击败的薪王BOSS来选择故事线
-  if (phase === GamePhase.SeekingLordSouls && bossesDefeated) {
-    // 按推荐顺序选择未击败的薪王BOSS
-    const lordSoulsBosses = [
-      { id: 'seath', storylineId: 'lord_souls_seath' },           // 白龙希斯
-      { id: 'BedOfChaos', storylineId: 'lord_souls_bed_of_chaos' }, // 混沌温床
-      { id: 'nito', storylineId: 'lord_souls_nito' },             // 墓王尼特
-      { id: 'fourKings', storylineId: 'lord_souls_four_kings' },   // 小隆德四王
-    ];
+  if (phase === GamePhase.SeekingLordSouls && bossesDefeated && ownedItemIds) {
+    // 特殊处理：如果有封印钥匙但没有契约戒指，推荐去黑森林庭院
+    const hasSealKey = ownedItemIds.includes('2013'); // 封印钥匙ID
+    const hasCovenantRing = ownedItemIds.includes('138'); // 亚尔特留斯的契约戒指ID
 
-    // 找到第一个未击败的薪王BOSS
-    for (const boss of lordSoulsBosses) {
-      if (!bossesDefeated[boss.id as keyof typeof bossesDefeated]) {
-        storyline = STORYLINES.find(s => s.id === boss.storylineId) || null;
-        if (storyline) break;
+    if (hasSealKey && !hasCovenantRing) {
+      // 有封印钥匙但没有契约戒指，推荐去黑森林庭院
+      storyline = STORYLINES.find(s => s.id === 'darkroot_garden') || null;
+    } else {
+      // 按推荐顺序选择未击败的薪王BOSS
+      const lordSoulsBosses = [
+        { id: 'seath', storylineId: 'lord_souls_seath' },           // 白龙希斯
+        { id: 'BedOfChaos', storylineId: 'lord_souls_bed_of_chaos' }, // 混沌温床
+        { id: 'nito', storylineId: 'lord_souls_nito' },             // 墓王尼特
+        { id: 'fourKings', storylineId: 'lord_souls_four_kings' },   // 小隆德四王
+      ];
+
+      // 找到第一个未击败的薪王BOSS
+      for (const boss of lordSoulsBosses) {
+        if (!bossesDefeated[boss.id as keyof typeof bossesDefeated]) {
+          storyline = STORYLINES.find(s => s.id === boss.storylineId) || null;
+          if (storyline) break;
+        }
       }
     }
   }
@@ -1094,18 +1121,6 @@ export function getStorylineForPhase(
     } else {
       // 有生锈铁环，推荐去病村
       storyline = STORYLINES.find(s => s.id === 'bell_of_awakening_2') || null;
-    }
-  }
-
-  // 特殊处理：SeekingLordSouls阶段
-  // 如果要打四王但没有深渊戒指，推荐先去黑森林庭院打希夫
-  if (!storyline && phase === GamePhase.SeekingLordSouls && ownedItemIds && bossesDefeated) {
-    const hasCovenantRing = ownedItemIds.includes('138'); // 亚尔特留斯的契约戒指ID
-    const fourKingsDefeated = bossesDefeated.fourKings;
-
-    // 如果四王还没打且没有戒指，推荐去黑森林庭院
-    if (!fourKingsDefeated && !hasCovenantRing) {
-      storyline = STORYLINES.find(s => s.id === 'darkroot_garden') || null;
     }
   }
 
@@ -1139,8 +1154,18 @@ export function getStorylineForPhase(
     const currentIndex = priorityOrder.indexOf(phase);
 
     // 从当前阶段的下一个开始，向后查找匹配的故事线
+    // 跳过return_to_asylum，它只能在Blighttown阶段通过特殊处理触发
     for (let i = currentIndex + 1; i < priorityOrder.length; i++) {
-      storyline = STORYLINES.find(s => s.prerequisities.includes(priorityOrder[i])) || null;
+      storyline = STORYLINES.find(s => {
+        if (s.prerequisities.includes(priorityOrder[i])) {
+          // 跳过return_to_asylum，它只能在Blighttown阶段通过特殊处理触发
+          if (s.id === 'return_to_asylum') {
+            return false;
+          }
+          return true;
+        }
+        return false;
+      }) || null;
       if (storyline) break;
     }
   }
