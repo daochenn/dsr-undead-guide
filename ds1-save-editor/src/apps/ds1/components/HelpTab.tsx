@@ -344,75 +344,101 @@ export const HelpTab: React.FC<HelpTabProps> = ({ character }) => {
                   <div className="npc-header">
                     {lang === 'zh' ? 'NPC指引' : 'NPC Guidance'}
                   </div>
-                  {recommended.npcDialogues.map((npc, index) => {
-                    const npcId = `${npc.npcName_en}_${index}`;
-                    const dialogue = lang === 'zh' ? npc.dialogue_zh : npc.dialogue_en;
-                    const isExpanded = expandedNpcs.has(npcId);
+                  {/* 按NPC名字分组 */}
+                  {(() => {
+                    // 按NPC名字分组
+                    const groupedNpcs: Record<string, typeof recommended.npcDialogues> = {};
+                    recommended.npcDialogues.forEach(npc => {
+                      const key = lang === 'zh' ? npc.npcName_zh : npc.npcName_en;
+                      if (!groupedNpcs[key]) {
+                        groupedNpcs[key] = [];
+                      }
+                      groupedNpcs[key].push(npc);
+                    });
 
-                    return (
-                      <div key={index} className="npc-card">
-                        <div className="npc-name">
-                          {lang === 'zh' ? npc.npcName_zh : npc.npcName_en}
-                        </div>
-                        <div className="npc-location">
-                          {lang === 'zh' ? npc.location_zh : npc.location_en}
-                        </div>
+                    // 渲染分组后的NPC
+                    return Object.entries(groupedNpcs).map(([npcName, dialogues]) => {
+                      const hasMultipleDialogues = dialogues.length > 1;
 
-                        {/* 获取完整版对话 */}
-                        {(() => {
-                          const fullDialogue = lang === 'zh' ? npc.fullDialogue_zh : npc.fullDialogue_en;
-                          const hasFullDialogue = fullDialogue && fullDialogue !== dialogue;
+                      // 渲染对话内容的函数
+                      const renderDialogue = (npc: typeof dialogues[0], dialogueIndex: number) => {
+                        const npcId = `${npc.npcName_en}_${dialogueIndex}`;
+                        const dialogue = lang === 'zh' ? npc.dialogue_zh : npc.dialogue_en;
+                        const isExpanded = expandedNpcs.has(npcId);
+                        const fullDialogue = lang === 'zh' ? npc.fullDialogue_zh : npc.fullDialogue_en;
+                        const hasFullDialogue = fullDialogue && fullDialogue !== dialogue;
 
-                          if (!hasFullDialogue) {
-                            // 没有完整版或完整版与简化版相同，直接显示
-                            return (
-                              <div className="npc-dialogue-full">
+                        if (!hasFullDialogue) {
+                          return (
+                            <div className="npc-dialogue-full">
+                              {dialogue}
+                            </div>
+                          );
+                        }
+
+                        if (dialogue.length <= 80) {
+                          return (
+                            <div className="npc-dialogue-full">
+                              {fullDialogue}
+                            </div>
+                          );
+                        }
+
+                        return (
+                          <>
+                            {!isExpanded && (
+                              <div className="npc-dialogue-preview">
                                 {dialogue}
                               </div>
-                            );
-                          }
-
-                          // 有完整版，判断是否需要展开按钮
-                          const previewLength = 80;
-                          const isShortEnough = dialogue.length <= previewLength;
-
-                          if (isShortEnough) {
-                            // 简化版很短，直接显示完整版
-                            return (
+                            )}
+                            <button
+                              className="expand-btn"
+                              onClick={() => handleNpcExpand(npcId)}
+                            >
+                              {isExpanded
+                                ? (lang === 'zh' ? '收起对话' : 'Hide Dialogue')
+                                : (lang === 'zh' ? '查看完整对话' : 'Show Full Dialogue')
+                              }
+                            </button>
+                            {isExpanded && (
                               <div className="npc-dialogue-full">
                                 {fullDialogue}
                               </div>
-                            );
-                          }
+                            )}
+                          </>
+                        );
+                      };
 
-                          // 需要预览和展开按钮
-                          return (
-                            <>
-                              {!isExpanded && (
-                                <div className="npc-dialogue-preview">
-                                  {dialogue}
-                                </div>
-                              )}
-                              <button
-                                className="expand-btn"
-                                onClick={() => handleNpcExpand(npcId)}
-                              >
-                                {isExpanded
-                                  ? (lang === 'zh' ? '收起对话' : 'Hide Dialogue')
-                                  : (lang === 'zh' ? '查看完整对话' : 'Show Full Dialogue')
-                                }
-                              </button>
-                              {isExpanded && (
-                                <div className="npc-dialogue-full">
-                                  {fullDialogue}
-                                </div>
-                              )}
-                            </>
-                          );
-                        })()}
-                      </div>
-                    );
-                  })}
+                      // 单个对话 - 无块状背景
+                      if (!hasMultipleDialogues) {
+                        return (
+                          <div key={npcName} className="npc-single-dialogue">
+                            <div className="npc-name">{npcName}</div>
+                            <div className="npc-location">
+                              {lang === 'zh' ? dialogues[0].location_zh : dialogues[0].location_en}
+                            </div>
+                            {renderDialogue(dialogues[0], 0)}
+                          </div>
+                        );
+                      }
+
+                      // 多个对话 - 每个对话块状背景
+                      return (
+                        <div key={npcName} className="npc-card">
+                          <div className="npc-name">{npcName}</div>
+                          <div className="npc-location">
+                            {lang === 'zh' ? dialogues[0].location_zh : dialogues[0].location_en}
+                          </div>
+
+                          {dialogues.map((npc, dialogueIndex) => (
+                            <div key={dialogueIndex} className="npc-dialogue-item">
+                              {renderDialogue(npc, dialogueIndex)}
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    });
+                  })()}
                 </div>
               )}
             </div>
@@ -714,6 +740,14 @@ export const HelpTab: React.FC<HelpTabProps> = ({ character }) => {
           margin-bottom: 0.5rem;
         }
 
+        .npc-single-dialogue {
+          margin-bottom: 0.5rem;
+          background: rgba(255, 255, 255, 0.02);
+          border: 1px solid rgba(255, 255, 255, 0.04);
+          border-radius: 3px;
+          padding: 0.5rem;
+        }
+
         .item-name, .npc-name {
           font-size: 0.8rem;
           font-weight: 500;
@@ -749,13 +783,26 @@ export const HelpTab: React.FC<HelpTabProps> = ({ character }) => {
         }
 
         .item-description, .npc-dialogue-full {
-          margin-top: 0.5rem;
-          padding-top: 0.5rem;
-          border-top: 1px solid rgba(255, 255, 255, 0.04);
+          background: rgba(255, 255, 255, 0.02);
+          border: 1px solid rgba(255, 255, 255, 0.04);
+          border-radius: 3px;
           font-size: 0.75rem;
           color: #999;
           line-height: 1.5;
           white-space: pre-line;
+          padding: 0.5rem;
+        }
+
+        .npc-dialogue-item {
+          margin-bottom: 0.75rem;
+          padding-bottom: 0.75rem;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .npc-dialogue-item:last-child {
+          margin-bottom: 0;
+          padding-bottom: 0;
+          border-bottom: none;
         }
 
         .optional-bosses-section {

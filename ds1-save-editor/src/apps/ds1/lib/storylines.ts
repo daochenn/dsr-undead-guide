@@ -333,7 +333,7 @@ export const STORYLINES: Storyline[] = [
       },
     ],
     nextArea: AreaId.UndeadParish,
-    prerequisities: [GamePhase.UndeadBurg],
+    prerequisities: [GamePhase.UndeadBurg, GamePhase.UndeadParish],
     recommendation_en: 'Climb to the top of the Undead Parish and ring the First Bell of Awakening. Seek out Solaire for guidance.',
     recommendation_zh: '爬到不死人教区的顶部，敲响第一口苏醒之钟。寻找索拉尔获取指引。',
     reason_en: 'You have reached the Undead Parish. The bell tower awaits above.',
