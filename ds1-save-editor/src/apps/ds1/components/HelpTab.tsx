@@ -347,7 +347,6 @@ export const HelpTab: React.FC<HelpTabProps> = ({ character }) => {
                   {recommended.npcDialogues.map((npc, index) => {
                     const npcId = `${npc.npcName_en}_${index}`;
                     const dialogue = lang === 'zh' ? npc.dialogue_zh : npc.dialogue_en;
-                    const isShortDialogue = dialogue.length <= 100; // 短对话直接显示
                     const isExpanded = expandedNpcs.has(npcId);
 
                     return (
@@ -359,35 +358,58 @@ export const HelpTab: React.FC<HelpTabProps> = ({ character }) => {
                           {lang === 'zh' ? npc.location_zh : npc.location_en}
                         </div>
 
-                        {isShortDialogue ? (
-                          // 短对话直接显示
-                          <div className="npc-dialogue-full">
-                            {dialogue}
-                          </div>
-                        ) : (
-                          // 长对话显示预览和展开按钮
-                          <>
-                            {!isExpanded && (
-                              <div className="npc-dialogue-preview">
-                                {dialogue.substring(0, 100) + '...'}
-                              </div>
-                            )}
-                            <button
-                              className="expand-btn"
-                              onClick={() => handleNpcExpand(npcId)}
-                            >
-                              {isExpanded
-                                ? (lang === 'zh' ? '收起对话' : 'Hide Dialogue')
-                                : (lang === 'zh' ? '查看完整对话' : 'Show Full Dialogue')
-                              }
-                            </button>
-                            {isExpanded && (
+                        {/* 获取完整版对话 */}
+                        {(() => {
+                          const fullDialogue = lang === 'zh' ? npc.fullDialogue_zh : npc.fullDialogue_en;
+                          const hasFullDialogue = fullDialogue && fullDialogue !== dialogue;
+
+                          if (!hasFullDialogue) {
+                            // 没有完整版或完整版与简化版相同，直接显示
+                            return (
                               <div className="npc-dialogue-full">
                                 {dialogue}
                               </div>
-                            )}
-                          </>
-                        )}
+                            );
+                          }
+
+                          // 有完整版，判断是否需要展开按钮
+                          const previewLength = 80;
+                          const isShortEnough = dialogue.length <= previewLength;
+
+                          if (isShortEnough) {
+                            // 简化版很短，直接显示完整版
+                            return (
+                              <div className="npc-dialogue-full">
+                                {fullDialogue}
+                              </div>
+                            );
+                          }
+
+                          // 需要预览和展开按钮
+                          return (
+                            <>
+                              {!isExpanded && (
+                                <div className="npc-dialogue-preview">
+                                  {dialogue}
+                                </div>
+                              )}
+                              <button
+                                className="expand-btn"
+                                onClick={() => handleNpcExpand(npcId)}
+                              >
+                                {isExpanded
+                                  ? (lang === 'zh' ? '收起对话' : 'Hide Dialogue')
+                                  : (lang === 'zh' ? '查看完整对话' : 'Show Full Dialogue')
+                                }
+                              </button>
+                              {isExpanded && (
+                                <div className="npc-dialogue-full">
+                                  {fullDialogue}
+                                </div>
+                              )}
+                            </>
+                          );
+                        })()}
                       </div>
                     );
                   })}
