@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
+import { watchFileMtime, MtimeWatcher } from '../../../shared/utils/watchFileMtime';
 import { decryptAesCbc, encryptAesCbc, calculateMD5 } from '../lib/crypto';
 import { Character } from '../lib/Character';
 import {
@@ -70,12 +71,6 @@ function sanitizeLabel(label: string): string {
 async function readSaveFile(path: string): Promise<Uint8Array> {
   const fs = await import('@tauri-apps/plugin-fs');
   return fs.readFile(path);
-}
-
-async function getMtimeMs(path: string): Promise<number> {
-  const fs = await import('@tauri-apps/plugin-fs');
-  const info = await fs.stat(path);
-  return info.mtime ? new Date(info.mtime).getTime() : 0;
 }
 
 /** Decrypt one character slot out of raw DRAKS0005.sl2 bytes (PC/DSR layout) */
@@ -194,26 +189,22 @@ export function useSaveWatcher() {
     isBusy: false,
   });
 
-  // Mutable watcher internals (interval callback must not see stale state)
-  const timerRef = useRef<number | null>(null);
-  const lastMtimeRef = useRef<number>(0);
+  // Mutable watcher internals (poll callback must not see stale state)
+  const watcherRef = useRef<MtimeWatcher | null>(null);
   const captureCountRef = useRef<number>(0);
-  const pollBusyRef = useRef<boolean>(false);
   const watchParamsRef = useRef<{ filePath: string; slot: number; eventDir: string; eventName: string } | null>(null);
   const prevSl2Ref = useRef<Uint8Array | null>(null);
 
   const setStatus = useCallback((status: string) =>
     setState(s => ({ ...s, status })), []);
 
-  const stopTimer = () => {
-    if (timerRef.current !== null) {
-      window.clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
+  const stopWatcher = () => {
+    watcherRef.current?.stop();
+    watcherRef.current = null;
   };
 
   // Cleanup on unmount
-  useEffect(() => stopTimer, []);
+  useEffect(() => stopWatcher, []);
 
   // Persist settings + rescan checkpoints from disk whenever file/outDir change
   useEffect(() => {
@@ -342,14 +333,14 @@ export function useSaveWatcher() {
       );
       if (!ok) return;
 
-      if (watching) stopTimer();
+      if (watching) stopWatcher();
       setState(s => ({ ...s, watching: false, isBusy: true, status: 'Rolling back...' }));
 
       const fs = await import('@tauri-apps/plugin-fs');
       const bytes = await fs.readFile(cp.path);
       await fs.writeFile(filePath, bytes);
       // the rollback itself bumps mtime — resync so a running watch doesn't capture it
-      lastMtimeRef.current = await getMtimeMs(filePath);
+      await watcherRef.current?.resync();
       setStatus(`Rolled back to "${cp.label}" (${bytes.length.toLocaleString()} bytes)`);
     } catch (e) {
       setStatus(`Rollback error: ${e instanceof Error ? e.message : String(e)}`);
@@ -389,7 +380,7 @@ export function useSaveWatcher() {
       );
       if (!ok) return;
 
-      if (watching) stopTimer();
+      if (watching) stopWatcher();
       setState(s => ({ ...s, watching: false, isBusy: true, status: 'Writing capture...' }));
 
       const fs = await import('@tauri-apps/plugin-fs');
@@ -411,7 +402,7 @@ export function useSaveWatcher() {
       await fs.writeFile(filePath, sl2);
 
       // the rollback itself bumps mtime — resync so a running watch doesn't capture it
-      lastMtimeRef.current = await getMtimeMs(filePath);
+      await watcherRef.current?.resync();
       prevSl2Ref.current = sl2;
       setStatus(`Capture "${cap.fileName}" written into slot ${slot} (${slotBytes.length.toLocaleString()} bytes)`);
     } catch (e) {
@@ -421,22 +412,17 @@ export function useSaveWatcher() {
     }
   }, [state, setStatus]);
 
-  /** One poll tick: capture the slot if the file mtime advanced */
-  const pollOnce = useCallback(async () => {
-    if (pollBusyRef.current) return;
+  /** One change tick: capture the slot. Returns false to retry the same change next tick. */
+  const captureTick = useCallback(async (): Promise<boolean | void> => {
     const params = watchParamsRef.current;
     if (!params) return;
-    pollBusyRef.current = true;
     try {
-      const mtime = await getMtimeMs(params.filePath);
-      if (mtime === lastMtimeRef.current) return;
-
-      // mtime moved: read + decrypt; on failure (e.g. partial write) retry next tick
+      // read + decrypt; on failure (e.g. partial write) retry next tick
       let sl2: Uint8Array;
       try {
         sl2 = await readSaveFile(params.filePath);
       } catch {
-        return; // lastMtime not updated — next tick retries
+        return false; // baseline not advanced — next tick retries
       }
 
       // The game only rewrites the slots it touched. If the save changed but the
@@ -456,7 +442,6 @@ export function useSaveWatcher() {
         }
         if (!changedSlots.includes(params.slot)) {
           prevSl2Ref.current = sl2;
-          lastMtimeRef.current = mtime;
           setStatus(
             `⚠ Save changed (slot ${changedSlots.join(', ') || 'none'}) but watched slot ${params.slot} is unchanged — wrong slot? No capture written.`
           );
@@ -468,10 +453,9 @@ export function useSaveWatcher() {
       try {
         slotBytes = await decryptSlot(sl2, params.slot);
       } catch {
-        return; // lastMtime not updated — next tick retries
+        return false; // baseline not advanced — next tick retries
       }
       prevSl2Ref.current = sl2;
-      lastMtimeRef.current = mtime;
 
       const index = captureCountRef.current + 1;
       const fileName = `${params.eventName}_${String(index).padStart(3, '0')}.bin`;
@@ -482,7 +466,7 @@ export function useSaveWatcher() {
 
       const entry: CaptureEntry = { index, fileName, path, capturedAt: new Date(), size: slotBytes.length };
       const reachedLimit = index >= MAX_CAPTURES_PER_EVENT;
-      if (reachedLimit) stopTimer();
+      if (reachedLimit) stopWatcher();
       setState(s => ({
         ...s,
         captures: [...s.captures, entry],
@@ -493,8 +477,6 @@ export function useSaveWatcher() {
       }));
     } catch (e) {
       setStatus(`Watch error: ${e instanceof Error ? e.message : String(e)}`);
-    } finally {
-      pollBusyRef.current = false;
     }
   }, [setStatus]);
 
@@ -522,13 +504,12 @@ export function useSaveWatcher() {
       // never overwrite older captures of the same event — continue numbering
       const existing = await maxExistingIndex(eventDir, name);
 
-      lastMtimeRef.current = await getMtimeMs(filePath);
       captureCountRef.current = existing;
       watchParamsRef.current = { filePath, slot, eventDir, eventName: name };
       prevSl2Ref.current = sl2;
 
-      stopTimer();
-      timerRef.current = window.setInterval(() => { void pollOnce(); }, POLL_INTERVAL_MS);
+      stopWatcher();
+      watcherRef.current = await watchFileMtime(filePath, captureTick, POLL_INTERVAL_MS);
       setState(s => ({
         ...s,
         watching: true,
@@ -546,10 +527,10 @@ export function useSaveWatcher() {
         status: `Error: ${e instanceof Error ? e.message : String(e)}`,
       }));
     }
-  }, [state, pollOnce, createCheckpoint, setStatus]);
+  }, [state, captureTick, createCheckpoint, setStatus]);
 
   const stopWatch = useCallback(() => {
-    stopTimer();
+    stopWatcher();
     setState(s => {
       // auto-increment a trailing number in the event name for the next run
       let next = s.eventName;
