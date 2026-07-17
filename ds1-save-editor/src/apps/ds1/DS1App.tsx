@@ -51,6 +51,7 @@ export const DS1App: React.FC<DS1AppProps> = ({ onHome }) => {
     originalFilename,
     platform,
     autoDetect,
+    autoDetectAvailable,
     handleFileLoaded,
     handleCharacterSelect,
     handleCharacterUpdate,
@@ -217,17 +218,19 @@ export const DS1App: React.FC<DS1AppProps> = ({ onHome }) => {
               <button className="ds1-action-btn" onClick={handleReload}>
                 ⟳ {t('reload', lang)}
               </button>
-              <button
-                className="ds1-safemode-btn"
-                onClick={() => setAutoDetect(!autoDetect)}
-                title={t('autoDetectChangesTitle', lang)}
-              >
-                <span className={`ds1-safemode-dot ${autoDetect ? 'on' : 'off'}`}>●</span>
-                {t('autoDetectChanges', lang)}
-                <span className={`ds1-safemode-badge ${autoDetect ? 'on' : 'off'}`}>
-                  {autoDetect ? t('on', lang) : t('off', lang)}
-                </span>
-              </button>
+              {autoDetectAvailable && (
+                <button
+                  className="ds1-safemode-btn"
+                  onClick={() => setAutoDetect(!autoDetect)}
+                  title={t('autoDetectChangesTitle', lang)}
+                >
+                  <span className={`ds1-safemode-dot ${autoDetect ? 'on' : 'off'}`}>●</span>
+                  {t('autoDetectChanges', lang)}
+                  <span className={`ds1-safemode-badge ${autoDetect ? 'on' : 'off'}`}>
+                    {autoDetect ? t('on', lang) : t('off', lang)}
+                  </span>
+                </button>
+              )}
               <button
                 className="ds1-safemode-btn"
                 onClick={() => setSafeMode(v => !v)}

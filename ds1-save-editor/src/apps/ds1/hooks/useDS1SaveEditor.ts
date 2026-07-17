@@ -3,10 +3,13 @@ import { SaveFileEditor } from '../lib/SaveFileEditor';
 import { SaveFileEditorNintendo, detectPlatform } from '../lib/SaveFileEditorNintendo';
 import { SaveFileEditorPS4 } from '../lib/SaveFileEditorPS4';
 import { Character } from '../lib/Character';
-import { FileHandle, getFileSystemAdapter } from '../lib/adapters';
+import { FileHandle, getFileSystemAdapter, detectEnvironment } from '../lib/adapters';
 import { getFilePathFromHandle, extractFilename } from '../lib/filePathUtils';
 
 type SaveEditor = SaveFileEditor | SaveFileEditorNintendo | SaveFileEditorPS4;
+
+// Auto-detect works reliably only in Tauri (web FileSystemObserver/permissions are flaky)
+const AUTO_DETECT_AVAILABLE = detectEnvironment() === 'tauri';
 
 export interface UseDS1SaveEditorResult {
   saveEditor: SaveEditor | null;
@@ -15,6 +18,7 @@ export interface UseDS1SaveEditorResult {
   originalFilename: string;
   platform: 'pc' | 'nintendo' | 'ps4' | 'unknown';
   autoDetect: boolean;
+  autoDetectAvailable: boolean;
 
   handleFileLoaded: (file: File, fileHandle: FileHandle | null, opts?: { preserveSelection?: boolean }) => Promise<void>;
   handleCharacterSelect: (index: number) => void;
@@ -33,7 +37,8 @@ export const useDS1SaveEditor = (): UseDS1SaveEditorResult => {
   const [, setUpdateTrigger] = useState(0);
   const [originalFilename, setOriginalFilename] = useState<string>('DRAKS0005.sl2');
   const [autoDetect, setAutoDetect] = useState(() => {
-    return localStorage.getItem('ds1-auto-detect') !== 'off';
+    // Tauri-only, off by default — the user opts in explicitly
+    return AUTO_DETECT_AVAILABLE && localStorage.getItem('ds1-auto-detect') === 'on';
   });
   const stopWatchRef = useRef<(() => void) | null>(null);
 
@@ -146,7 +151,7 @@ export const useDS1SaveEditor = (): UseDS1SaveEditorResult => {
 
   // Auto-detect file changes
   useEffect(() => {
-    if (!saveEditor?.hasFileHandle() || !autoDetect) {
+    if (!AUTO_DETECT_AVAILABLE || !saveEditor?.hasFileHandle() || !autoDetect) {
       // Stop watching if no file handle or auto-detect is off
       if (stopWatchRef.current) {
         stopWatchRef.current();
@@ -193,6 +198,7 @@ export const useDS1SaveEditor = (): UseDS1SaveEditorResult => {
     originalFilename,
     platform,
     autoDetect,
+    autoDetectAvailable: AUTO_DETECT_AVAILABLE,
     handleFileLoaded,
     handleCharacterSelect,
     handleCharacterUpdate,
