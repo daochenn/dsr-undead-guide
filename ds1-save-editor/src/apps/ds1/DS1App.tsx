@@ -68,6 +68,17 @@ export const DS1App: React.FC<DS1AppProps> = ({ onHome }) => {
     if (saveEditor) setLoadedAt(new Date());
   }, [saveEditor]);
 
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (import.meta.env.DEV && e.ctrlKey && e.shiftKey && e.key === 'W') {
+        e.preventDefault();
+        navigate('/ds1/save-watcher');
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [navigate]);
+
   const handleTutorial = () => navigate('/ds1/tutorial');
 
   const selectedCharacter = selectedCharacterIndex !== null
