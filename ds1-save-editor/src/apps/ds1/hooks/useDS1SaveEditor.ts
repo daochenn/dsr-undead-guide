@@ -124,9 +124,10 @@ export const useDS1SaveEditor = (): UseDS1SaveEditorResult => {
       if (saveEditor.hasFileHandle()) {
         const fileHandle = saveEditor.getFileHandle();
         if (fileHandle) {
-          // Read file directly from handle instead of relying on loadLastFile
-          const fileHandleRaw = fileHandle as unknown as FileSystemFileHandle;
-          const file = await fileHandleRaw.getFile();
+          // Re-read through the adapter — a web handle exposes getFile(),
+          // a Tauri handle is just { path } and must be read via plugin-fs
+          const adapter = getFileSystemAdapter();
+          const file = await adapter.readFile(fileHandle);
           await handleFileLoaded(file, fileHandle);
         }
       } else {

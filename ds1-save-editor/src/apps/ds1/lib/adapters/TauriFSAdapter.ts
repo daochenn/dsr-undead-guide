@@ -126,6 +126,20 @@ export class TauriFSAdapter extends IFileSystemAdapter {
     await this.fs.writeFile(tauriHandle.path, data);
   }
 
+  async readFile(handle: FileHandle): Promise<File> {
+    await this.ensurePluginsLoaded();
+
+    const tauriHandle = handle as unknown as TauriFileHandle;
+    if (!tauriHandle.path) {
+      throw new Error('Invalid file handle');
+    }
+
+    const fileData = await this.fs.readFile(tauriHandle.path);
+    const blob = new Blob([fileData], { type: 'application/octet-stream' });
+    const fileName = this.getFileNameFromPath(tauriHandle.path);
+    return new File([blob], fileName, { type: 'application/octet-stream' });
+  }
+
   async saveAsNewFile(data: Uint8Array, options?: SaveOptions): Promise<FileHandle | null> {
     await this.ensurePluginsLoaded();
 
