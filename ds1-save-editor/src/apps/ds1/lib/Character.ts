@@ -392,9 +392,11 @@ export class Character {
 
     return [
       // byte 0x6B bits 0-7
+
       ((byte6B >> 0) & 1) === 1, // bit 0: warp
       ((byte6B >> 1) & 1) === 1, // bit 1: warp
       ((byte6B >> 2) & 1) === 1, // bit 2: warp
+
       ((byte6B >> 3) & 1) === 1, // bit 3: The Catacombs
       ((byte6B >> 4) & 1) === 1, // bit 4: Crystal Cave
       ((byte6B >> 5) & 1) === 1, // bit 5: The Duke's Archives
@@ -448,6 +450,7 @@ export class Character {
     }
   }
 
+
   getWarpFlag(): boolean {
     const baseOffset = this.findPattern1();
     if (baseOffset === -1) return false;
@@ -459,6 +462,7 @@ export class Character {
     if (baseOffset === -1) return;
     this.data[baseOffset + BONFIRE_RELATIVE_FLAG_OFFSET] = enabled ? 0x22 : 0x00;
   }
+
 
   // World event flags
   getWorldEventFlag(offset: string, bit: number, reverse: boolean): boolean {

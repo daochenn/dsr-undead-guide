@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { SaveFileEditor } from '../lib/SaveFileEditor';
 import { SaveFileEditorNintendo, detectPlatform } from '../lib/SaveFileEditorNintendo';
 import { SaveFileEditorPS4 } from '../lib/SaveFileEditorPS4';
@@ -14,6 +14,7 @@ export interface UseDS1SaveEditorResult {
   selectedCharacterIndex: number | null;
   originalFilename: string;
   platform: 'pc' | 'nintendo' | 'ps4' | 'unknown';
+  autoDetect: boolean;
 
   handleFileLoaded: (file: File, fileHandle: FileHandle | null) => Promise<void>;
   handleCharacterSelect: (index: number) => void;
@@ -21,6 +22,7 @@ export interface UseDS1SaveEditorResult {
   handleSave: () => Promise<void>;
   handleSaveAs: () => Promise<void>;
   handleReload: () => Promise<void>;
+  setAutoDetect: (value: boolean) => void;
 }
 
 export const useDS1SaveEditor = (): UseDS1SaveEditorResult => {
@@ -30,6 +32,10 @@ export const useDS1SaveEditor = (): UseDS1SaveEditorResult => {
   const [selectedCharacterIndex, setSelectedCharacterIndex] = useState<number | null>(null);
   const [, setUpdateTrigger] = useState(0);
   const [originalFilename, setOriginalFilename] = useState<string>('DRAKS0005.sl2');
+  const [autoDetect, setAutoDetect] = useState(() => {
+    return localStorage.getItem('ds1-auto-detect') !== 'off';
+  });
+  const stopWatchRef = useRef<(() => void) | null>(null);
 
   const handleFileLoaded = useCallback(async (file: File, fileHandle: FileHandle | null) => {
     try {
@@ -118,14 +124,10 @@ export const useDS1SaveEditor = (): UseDS1SaveEditorResult => {
       if (saveEditor.hasFileHandle()) {
         const fileHandle = saveEditor.getFileHandle();
         if (fileHandle) {
-          const adapter = getFileSystemAdapter();
-          const fileData = await adapter.loadLastFile();
-
-          if (fileData) {
-            await handleFileLoaded(fileData.file, fileData.handle);
-          } else {
-            alert('Cannot reload: unable to access the file. Please load the file again.');
-          }
+          // Read file directly from handle instead of relying on loadLastFile
+          const fileHandleRaw = fileHandle as unknown as FileSystemFileHandle;
+          const file = await fileHandleRaw.getFile();
+          await handleFileLoaded(file, fileHandle);
         }
       } else {
         alert('Cannot reload: no file handle available. Please load the file again.');
@@ -136,17 +138,61 @@ export const useDS1SaveEditor = (): UseDS1SaveEditorResult => {
     }
   }, [saveEditor, handleFileLoaded]);
 
+  // Auto-detect file changes
+  useEffect(() => {
+    if (!saveEditor?.hasFileHandle() || !autoDetect) {
+      // Stop watching if no file handle or auto-detect is off
+      if (stopWatchRef.current) {
+        stopWatchRef.current();
+        stopWatchRef.current = null;
+      }
+      return;
+    }
+
+    const adapter = getFileSystemAdapter();
+    const fileHandle = saveEditor.getFileHandle();
+
+    if (!fileHandle) return;
+
+    console.log('[useDS1SaveEditor] Starting file watcher');
+
+    adapter.watchFile(fileHandle, () => {
+      console.log('[useDS1SaveEditor] File changed, auto-reloading...');
+      handleReload();
+    }).then(stop => {
+      stopWatchRef.current = stop;
+    });
+
+    return () => {
+      if (stopWatchRef.current) {
+        stopWatchRef.current();
+        stopWatchRef.current = null;
+      }
+    };
+  }, [saveEditor, autoDetect, handleReload]);
+
+  // Persist autoDetect preference
+  useEffect(() => {
+    localStorage.setItem('ds1-auto-detect', autoDetect ? 'on' : 'off');
+  }, [autoDetect]);
+
+  const setAutoDetectValue = useCallback((value: boolean) => {
+    setAutoDetect(value);
+  }, []);
+
   return {
     saveEditor,
     characters,
     selectedCharacterIndex,
     originalFilename,
     platform,
+    autoDetect,
     handleFileLoaded,
     handleCharacterSelect,
     handleCharacterUpdate,
     handleSave,
     handleSaveAs,
     handleReload,
+    setAutoDetect: setAutoDetectValue,
   };
 };

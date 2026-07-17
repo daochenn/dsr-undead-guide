@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Character } from '../lib/Character';
+
 import { NumberInput } from './NumberInput';
 import { useLang } from '../../../core/context/LanguageContext';
 import { t } from '../lib/i18n';
@@ -218,7 +219,7 @@ export const TableTab: React.FC<TableTabProps> = ({ character, onCharacterUpdate
               />
             </div>
             <button onClick={handleValueChange} className="action-button">
-              Apply
+              {t('apply', lang)}
             </button>
           </div>
         </div>

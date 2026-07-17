@@ -42,7 +42,18 @@ export const EntityListTab: React.FC<EntityListTabProps> = ({ character, onChara
       const npcCollection = await npcEditor.loadNpcData();
 
       // Filter entities based on config
-      const entityList = npcCollection.npcs.filter(config.filterFn);
+      let entityList = npcCollection.npcs.filter(config.filterFn);
+
+      // If showOnlyDead, filter to only killed entities
+      if (config.showOnlyDead) {
+        entityList = entityList.filter(entity => {
+          try {
+            return !npcEditor.getNpcAlive(entity.name);
+          } catch {
+            return false;
+          }
+        });
+      }
 
       setEntities(entityList);
       setError(null);

@@ -64,4 +64,29 @@ export abstract class IFileSystemAdapter {
    * Gets the adapter name for debugging
    */
   abstract getAdapterName(): string;
+
+  /**
+   * Check if there's a stored last file without requiring permission
+   * @returns The file name if available, null otherwise
+   */
+  abstract getLastFileName(): Promise<string | null>;
+
+  /**
+   * Request permission for last file - MUST be called from user gesture context
+   * @returns FileData if permission granted, null otherwise
+   */
+  abstract requestLastFilePermission(): Promise<FileData | null>;
+
+  /**
+   * Watch a file for external changes
+   * @param handle - File handle to watch
+   * @param callback - Called when the file changes
+   * @returns Cleanup function to stop watching
+   */
+  abstract watchFile(handle: FileHandle, callback: () => void): Promise<() => void>;
+
+  /**
+   * Stop watching the current file
+   */
+  abstract unwatchFile(): Promise<void>;
 }

@@ -16,6 +16,8 @@ export class TauriFSAdapter extends IFileSystemAdapter {
   private fs: any = null;
   private pluginsLoaded: Promise<void> | null = null;
   private readonly storageKey: string;
+  private pollInterval: ReturnType<typeof setInterval> | null = null;
+  private lastModified: number = 0;
 
   constructor(storageKey = 'ds1_last_file_path') {
     super();
@@ -207,9 +209,72 @@ export class TauriFSAdapter extends IFileSystemAdapter {
     }
   }
 
+  async getLastFileName(): Promise<string | null> {
+    const lastFileInfoStr = localStorage.getItem(this.storageKey);
+    if (!lastFileInfoStr) {
+      return null;
+    }
+
+    try {
+      const lastFileInfo = JSON.parse(lastFileInfoStr);
+      return lastFileInfo.fileName || null;
+    } catch {
+      return null;
+    }
+  }
+
+  async requestLastFilePermission(): Promise<FileData | null> {
+    // Tauri doesn't need permission requests, just load the file
+    return this.loadLastFile();
+  }
+
   private getFileNameFromPath(path: string): string {
     // Handle both Windows and Unix paths
     const parts = path.replace(/\\/g, '/').split('/');
     return parts[parts.length - 1] || 'unknown.sl2';
+  }
+
+  async watchFile(handle: FileHandle, callback: () => void): Promise<() => void> {
+    await this.unwatchFile();
+    await this.ensurePluginsLoaded();
+
+    const tauriHandle = handle as unknown as TauriFileHandle;
+    if (!tauriHandle.path) {
+      return () => {};
+    }
+
+    // Check initial file modification time
+    try {
+      const stat = await this.fs.stat(tauriHandle.path);
+      this.lastModified = stat.mtime?.getTime?.() || Date.now();
+    } catch {
+      this.lastModified = Date.now();
+    }
+
+    // Poll for changes every 3 seconds
+    this.pollInterval = setInterval(async () => {
+      try {
+        const stat = await this.fs.stat(tauriHandle.path);
+        const currentModified = stat.mtime?.getTime?.() || 0;
+        if (currentModified > this.lastModified) {
+          this.lastModified = currentModified;
+          console.log('[TauriFSAdapter] Detected file change via polling');
+          callback();
+        }
+      } catch (err) {
+        console.warn('[TauriFSAdapter] Polling error:', err);
+      }
+    }, 3000);
+
+    console.log('[TauriFSAdapter] File watching started (3s polling)');
+    return () => this.unwatchFile();
+  }
+
+  async unwatchFile(): Promise<void> {
+    if (this.pollInterval) {
+      clearInterval(this.pollInterval);
+      this.pollInterval = null;
+    }
+    this.lastModified = 0;
   }
 }
