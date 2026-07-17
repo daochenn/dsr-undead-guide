@@ -16,7 +16,7 @@ export interface UseDS1SaveEditorResult {
   platform: 'pc' | 'nintendo' | 'ps4' | 'unknown';
   autoDetect: boolean;
 
-  handleFileLoaded: (file: File, fileHandle: FileHandle | null) => Promise<void>;
+  handleFileLoaded: (file: File, fileHandle: FileHandle | null, opts?: { preserveSelection?: boolean }) => Promise<void>;
   handleCharacterSelect: (index: number) => void;
   handleCharacterUpdate: () => void;
   handleSave: () => Promise<void>;
@@ -37,7 +37,7 @@ export const useDS1SaveEditor = (): UseDS1SaveEditorResult => {
   });
   const stopWatchRef = useRef<(() => void) | null>(null);
 
-  const handleFileLoaded = useCallback(async (file: File, fileHandle: FileHandle | null) => {
+  const handleFileLoaded = useCallback(async (file: File, fileHandle: FileHandle | null, opts?: { preserveSelection?: boolean }) => {
     try {
       const filePath = await getFilePathFromHandle(
         file,
@@ -68,7 +68,12 @@ export const useDS1SaveEditor = (): UseDS1SaveEditorResult => {
       setCharacters(displayedCharacters);
 
       const firstNonEmptyIndex = displayedCharacters.findIndex(char => !char.isEmpty);
-      setSelectedCharacterIndex(firstNonEmptyIndex !== -1 ? firstNonEmptyIndex : null);
+      // On reload keep the current selection as long as that slot still has a character
+      setSelectedCharacterIndex(prev =>
+        opts?.preserveSelection && prev !== null && displayedCharacters[prev] && !displayedCharacters[prev].isEmpty
+          ? prev
+          : (firstNonEmptyIndex !== -1 ? firstNonEmptyIndex : null)
+      );
     } catch (error) {
       console.error('Error loading save file:', error);
       alert('Error loading save file. Please make sure it is a valid Dark Souls save file.');
@@ -128,7 +133,7 @@ export const useDS1SaveEditor = (): UseDS1SaveEditorResult => {
           // a Tauri handle is just { path } and must be read via plugin-fs
           const adapter = getFileSystemAdapter();
           const file = await adapter.readFile(fileHandle);
-          await handleFileLoaded(file, fileHandle);
+          await handleFileLoaded(file, fileHandle, { preserveSelection: true });
         }
       } else {
         alert('Cannot reload: no file handle available. Please load the file again.');
